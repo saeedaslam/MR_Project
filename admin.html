@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Customer Data Upload</title>
+<style>
+  :root{
+    --bg: #12161D;
+    --surface: #1B212B;
+    --surface-raised: #232A36;
+    --accent: #2FE6CB;
+    --accent-deep: #18B79F;
+    --text: #ECF0F4;
+    --text-muted: #828B9B;
+    --error: #FF6B5E;
+    --warn: #E0A93A;
+    --line: #2A313D;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding: 40px 16px 60px;
+  }
+  .wrap{ width:100%; max-width: 480px; }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  h1{ font-size: 20px; margin: 0 0 6px; }
+  .hint{ color: var(--text-muted); font-size: 13.5px; margin: 0 0 20px; }
+
+  input[type="email"], input[type="password"], input[type="file"]{
+    width: 100%;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    outline: none;
+    margin-top: 10px;
+  }
+  input:focus{ border-color: var(--accent); }
+
+  .btn-primary{
+    width: 100%;
+    margin-top: 16px;
+    background: var(--accent);
+    color: #0B2622;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .btn-primary:disabled{ opacity: 0.5; cursor: not-allowed; }
+  .btn-danger{
+    width: 100%;
+    margin-top: 12px;
+    background: var(--error);
+    color: #2A0E0B;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .btn-danger:disabled{ opacity: 0.4; cursor: not-allowed; }
+
+  .error{ color: var(--error); font-size: 13px; margin-top: 10px; }
+  .status{ color: var(--text-muted); font-size: 13px; margin-top: 10px; }
+  .status.ok{ color: var(--accent); }
+
+  .preview{
+    margin-top: 16px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+  }
+  .preview-row{
+    display:flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+  .confirm-box{
+    display:flex;
+    align-items:flex-start;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--warn);
+  }
+  .confirm-box input{ width:auto; margin-top: 2px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ADMIN LOGIN -->
+    <section id="loginView" class="card">
+      <div class="eyebrow">Admin Access</div>
+      <h1>Sign in</h1>
+      <p class="hint">This page is for uploading the customer list. Not for customers.</p>
+      <form id="adminLoginForm">
+        <input type="email" id="adminEmail" placeholder="Admin email" autocomplete="username" />
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password" />
+        <div class="error" id="loginError" hidden></div>
+        <button type="submit" class="btn-primary">Sign in</button>
+      </form>
+    </section>
+
+    <!-- UPLOAD VIEW -->
+    <section id="uploadView" class="card" hidden>
+      <div class="eyebrow">Admin Access</div>
+      <h1>Upload customer list</h1>
+      <p class="hint">Choose an Excel (.xlsx) or CSV file with columns: Customer ID, Customer Name, Contact, Expiration Date, Balance.</p>
+      <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" />
+      <div class="status" id="parseStatus"></div>
+
+      <div class="preview" id="previewBox" hidden></div>
+
+      <div class="confirm-box" id="confirmBox" hidden>
+        <input type="checkbox" id="confirmCheck" />
+        <label for="confirmCheck">I understand this will permanently replace all existing customer records (a backup of the current data is kept automatically).</label>
+      </div>
+
+      <button id="uploadBtn" class="btn-danger" disabled>Replace all customer data</button>
+      <div class="status" id="uploadStatus"></div>
+    </section>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let parsedRows = null;
+
+    const loginView = document.getElementById('loginView');
+    const uploadView = document.getElementById('uploadView');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const adminEmail = document.getElementById('adminEmail');
+    const adminPassword = document.getElementById('adminPassword');
+    const loginError = document.getElementById('loginError');
+    const fileInput = document.getElementById('fileInput');
+    const parseStatus = document.getElementById('parseStatus');
+    const previewBox = document.getElementById('previewBox');
+    const confirmBox = document.getElementById('confirmBox');
+    const confirmCheck = document.getElementById('confirmCheck');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadStatus = document.getElementById('uploadStatus');
+
+    adminLoginForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      loginError.hidden = true;
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: adminEmail.value.trim(),
+        password: adminPassword.value
+      });
+      if (error){
+        loginError.textContent = 'Sign in failed: ' + error.message;
+        loginError.hidden = false;
+        return;
+      }
+      loginView.hidden = true;
+      uploadView.hidden = false;
+    });
+
+    function normalizeDate(val){
+      if (!val) return null;
+      if (val instanceof Date){
+        const y = val.getFullYear();
+        const m = String(val.getMonth() + 1).padStart(2, '0');
+        const d = String(val.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+      // Fallback for text dates like "7/1/2026" — assumed M/D/YYYY
+      // (typical Excel default). Verify this matches your file after
+      // your first test upload; flip the order below if it's backwards.
+      const parts = String(val).trim().split('/');
+      if (parts.length === 3){
+        const [m, d, y] = parts;
+        return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+      }
+      return String(val).trim();
+    }
+
+    function normalizeBalance(val){
+      if (val === null || val === undefined || val === '') return null;
+      const num = parseFloat(String(val).replace(/[^0-9.-]/g, ''));
+      return isNaN(num) ? null : num;
+    }
+
+    function findKey(row, names){
+      const keys = Object.keys(row);
+      for (const n of names){
+        const k = keys.find(k2 => k2.trim().toLowerCase() === n);
+        if (k) return k;
+      }
+      return null;
+    }
+
+    fileInput.addEventListener('change', function(e){
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt){
+        try{
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+          parsedRows = json.map(row => {
+            const kId = findKey(row, ['customer id']);
+            const kName = findKey(row, ['customer name']);
+            const kContact = findKey(row, ['contact']);
+            const kExpiry = findKey(row, ['expiration date']);
+            const kBalance = findKey(row, ['balance']);
+            return {
+              customer_id: kId ? String(row[kId]).trim() : '',
+              customer_name: kName ? String(row[kName]).trim() : '',
+              contact: kContact ? String(row[kContact]).trim() : '',
+              expiration_date: kExpiry ? normalizeDate(row[kExpiry]) : null,
+              balance: kBalance ? normalizeBalance(row[kBalance]) : null,
+            };
+          }).filter(r => r.customer_id);
+
+          if (parsedRows.length === 0){
+            parseStatus.textContent = 'No usable rows found in that file.';
+            previewBox.hidden = true;
+            confirmBox.hidden = true;
+            uploadBtn.disabled = true;
+            return;
+          }
+
+          parseStatus.textContent = parsedRows.length + ' customers ready to upload.';
+          previewBox.hidden = false;
+          previewBox.innerHTML = parsedRows.slice(0, 3).map(r =>
+            `<div class="preview-row"><span>${r.customer_id} — ${r.customer_name}</span><span>${r.contact}</span></div>`
+          ).join('') + (parsedRows.length > 3 ? `<div class="preview-row"><span>...and ${parsedRows.length - 3} more</span></div>` : '');
+
+          confirmBox.hidden = false;
+          confirmCheck.checked = false;
+          uploadBtn.disabled = true;
+        } catch (err){
+          parseStatus.textContent = 'Could not read that file: ' + err.message;
+          previewBox.hidden = true;
+          confirmBox.hidden = true;
+          uploadBtn.disabled = true;
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    confirmCheck.addEventListener('change', function(){
+      uploadBtn.disabled = !confirmCheck.checked || !parsedRows;
+    });
+
+    uploadBtn.addEventListener('click', async function(){
+      if (!parsedRows) return;
+      uploadBtn.disabled = true;
+      uploadStatus.textContent = 'Uploading...';
+      uploadStatus.className = 'status';
+      try{
+        const { data, error } = await supabaseClient.functions.invoke('admin-upload-customers', {
+          body: { rows: parsedRows }
+        });
+        if (error || !data || data.error){
+          uploadStatus.textContent = 'Failed: ' + (data && data.error ? data.error : 'unknown error');
+          uploadStatus.className = 'status';
+          uploadBtn.disabled = false;
+        } else {
+          uploadStatus.textContent = `Done — ${data.count} customers are now live.`;
+          uploadStatus.className = 'status ok';
+          confirmCheck.checked = false;
+          fileInput.value = '';
+          parsedRows = null;
+          previewBox.hidden = true;
+          confirmBox.hidden = true;
+        }
+      } catch (err){
+        uploadStatus.textContent = 'Failed: ' + err.message;
+        uploadBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
