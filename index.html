@@ -277,15 +277,15 @@
       <div class="sim" aria-hidden="true">
         <div class="sim-bars"><span></span><span></span><span></span><span></span></div>
       </div>
-      <h1>Enter your account number</h1>
-      <p class="hint">Use the account number and password your provider gave you.</p>
+      <h1>Check your account</h1>
+      <p class="hint">Enter your phone number and the last 4 digits of that same number.</p>
       <form id="loginForm">
         <div class="field">
-          <input type="text" id="accountInput" inputmode="numeric" autocomplete="off" placeholder="Account number, e.g. 300256" />
+          <input type="text" id="accountInput" inputmode="numeric" autocomplete="off" placeholder="Phone number, e.g. 03144003910" />
         </div>
         <div class="field password-field">
-          <input type="password" id="passwordInput" autocomplete="off" placeholder="Password" />
-          <button type="button" id="togglePass" class="toggle-pass" aria-label="Show password">Show</button>
+          <input type="password" id="passwordInput" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Last 4 digits" />
+          <button type="button" id="togglePass" class="toggle-pass" aria-label="Show">Show</button>
         </div>
         <div class="error" id="loginError" hidden></div>
         <button type="submit" class="btn-primary">View my account</button>
@@ -307,22 +307,23 @@
         <div class="id-name" id="custName"></div>
         <div class="id-meta">
           <div><span class="meta-label">Customer ID</span><span class="meta-val mono" id="custId"></span></div>
-          <div><span class="meta-label">Account No.</span><span class="meta-val mono" id="custAcct"></span></div>
+          <div><span class="meta-label">Phone</span><span class="meta-val mono" id="custAcct"></span></div>
         </div>
       </div>
 
       <div class="package-row">
-        <span class="package-label">Active package</span>
-        <span class="package-pill" id="custPackage"></span>
+        <span class="package-label">Expires</span>
+        <span class="package-pill" id="custExpiry"></span>
+      </div>
+      <div class="package-row">
+        <span class="package-label">Balance</span>
+        <span class="package-pill" id="custBalance"></span>
       </div>
 
       <div class="details-card">
-        <div class="details-title">Usage &amp; Billing</div>
+        <div class="details-title">Other Details</div>
         <div id="detailsList"></div>
       </div>
-
-      <button id="emailBillBtn" class="btn-ghost" style="width:100%; margin-top:16px; padding:12px;">Email me my bill</button>
-      <p class="hint" id="emailStatus" style="margin-top:8px; margin-bottom:0;" hidden></p>
     </section>
 
   </div>
@@ -333,8 +334,7 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let currentCustomer = null;
-    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'account_number', 'package_detail', 'email'];
+    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'contact', 'expiration_date', 'balance'];
 
     function prettyLabel(key){
       return key
@@ -373,8 +373,6 @@
     const togglePass = document.getElementById('togglePass');
     const loginError = document.getElementById('loginError');
     const logoutBtn = document.getElementById('logoutBtn');
-    const emailBillBtn = document.getElementById('emailBillBtn');
-    const emailStatus = document.getElementById('emailStatus');
 
     function showError(msg){
       loginError.textContent = msg;
@@ -388,10 +386,10 @@
     loginForm.addEventListener('submit', async function(e){
       e.preventDefault();
       clearError();
-      const acctVal = accountInput.value.trim();
-      const passVal = passwordInput.value.trim();
-      if (!acctVal || !passVal){
-        showError('Enter your account number and password.');
+      const phoneVal = accountInput.value.trim();
+      const last4Val = passwordInput.value.trim();
+      if (!phoneVal || !last4Val){
+        showError('Enter your phone number and the last 4 digits.');
         return;
       }
       const submitBtn = loginForm.querySelector('button[type="submit"]');
@@ -399,10 +397,10 @@
       submitBtn.textContent = 'Checking...';
       try{
         const { data, error } = await supabaseClient.functions.invoke('login', {
-          body: { accountNumber: acctVal, password: passVal }
+          body: { phone: phoneVal, last4: last4Val }
         });
         if (error || !data || data.error || !data.customer){
-          showError('Account number or password is incorrect.');
+          showError('Phone number or last 4 digits is incorrect.');
           return;
         }
         renderProfile(data.customer);
@@ -415,13 +413,12 @@
     });
 
     function renderProfile(customer){
-      currentCustomer = customer;
-
-      document.getElementById('signedInAcct').textContent = customer.account_number || '—';
+      document.getElementById('signedInAcct').textContent = customer.contact || '—';
       document.getElementById('custName').textContent = customer.customer_name || '—';
       document.getElementById('custId').textContent = customer.customer_id || '—';
-      document.getElementById('custAcct').textContent = customer.account_number || '—';
-      document.getElementById('custPackage').textContent = customer.package_detail || '—';
+      document.getElementById('custAcct').textContent = customer.contact || '—';
+      document.getElementById('custExpiry').textContent = formatValue('expiration_date', customer.expiration_date);
+      document.getElementById('custBalance').textContent = formatValue('balance', customer.balance);
 
       const extraKeys = Object.keys(customer).filter(k => !KNOWN_FIELDS.includes(k));
 
@@ -431,7 +428,7 @@
       if (extraKeys.length === 0){
         const empty = document.createElement('div');
         empty.className = 'empty-state';
-        empty.textContent = 'No usage or billing data yet. Add columns to the customers table in Supabase and they will show up here automatically.';
+        empty.textContent = 'No other details on file.';
         list.appendChild(empty);
       } else {
         extraKeys.forEach(k => {
@@ -454,8 +451,6 @@
       loginView.hidden = false;
       accountInput.value = '';
       passwordInput.value = '';
-      currentCustomer = null;
-      emailStatus.hidden = true;
       clearError();
     });
 
@@ -463,28 +458,7 @@
       const isHidden = passwordInput.type === 'password';
       passwordInput.type = isHidden ? 'text' : 'password';
       togglePass.textContent = isHidden ? 'Hide' : 'Show';
-      togglePass.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-    });
-
-    emailBillBtn.addEventListener('click', async function(){
-      if (!currentCustomer) return;
-      emailBillBtn.disabled = true;
-      emailStatus.hidden = false;
-      emailStatus.textContent = 'Sending...';
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('send-bill-email', {
-          body: { accountNumber: currentCustomer.account_number }
-        });
-        if (error || !data || data.error){
-          emailStatus.textContent = 'Could not send the email. Please try again later.';
-        } else {
-          emailStatus.textContent = 'Sent! Check your inbox.';
-        }
-      } catch (err){
-        emailStatus.textContent = 'Could not send the email. Please try again later.';
-      } finally {
-        emailBillBtn.disabled = false;
-      }
+      togglePass.setAttribute('aria-label', isHidden ? 'Hide' : 'Show');
     });
   </script>
 </body>
