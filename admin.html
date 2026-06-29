@@ -160,9 +160,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-  const SUPABASE_URL = 'https://iuzwdjgagcxqwtpihpmb.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';  
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = 'https://iuzwdjgagcxqwtpihpmb.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let parsedRows = null;
 
@@ -296,19 +296,35 @@
         const { data, error } = await supabaseClient.functions.invoke('admin-upload-customers', {
           body: { rows: parsedRows }
         });
-        if (error || !data || data.error){
-          uploadStatus.textContent = 'Failed: ' + (data && data.error ? data.error : 'unknown error');
+
+        if (error){
+          let message = error.message || 'Unknown error';
+          if (error.context && typeof error.context.json === 'function'){
+            try{
+              const errBody = await error.context.json();
+              if (errBody && errBody.error) message = errBody.error;
+            } catch(parseErr){ /* response wasn't JSON, keep the default message */ }
+          }
+          uploadStatus.textContent = 'Failed: ' + message;
           uploadStatus.className = 'status';
           uploadBtn.disabled = false;
-        } else {
-          uploadStatus.textContent = `Done — ${data.count} customers are now live.`;
-          uploadStatus.className = 'status ok';
-          confirmCheck.checked = false;
-          fileInput.value = '';
-          parsedRows = null;
-          previewBox.hidden = true;
-          confirmBox.hidden = true;
+          return;
         }
+
+        if (!data || data.error){
+          uploadStatus.textContent = 'Failed: ' + (data && data.error ? data.error : 'Unknown error');
+          uploadStatus.className = 'status';
+          uploadBtn.disabled = false;
+          return;
+        }
+
+        uploadStatus.textContent = `Done — ${data.count} customers are now live.`;
+        uploadStatus.className = 'status ok';
+        confirmCheck.checked = false;
+        fileInput.value = '';
+        parsedRows = null;
+        previewBox.hidden = true;
+        confirmBox.hidden = true;
       } catch (err){
         uploadStatus.textContent = 'Failed: ' + err.message;
         uploadBtn.disabled = false;
