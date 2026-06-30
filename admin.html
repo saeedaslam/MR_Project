@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin — Customer Data Upload</title>
+<title>MR Cable & Networks — Admin</title>
 <style>
   :root{
     --bg: #12161D;
@@ -118,6 +118,48 @@
     color: var(--warn);
   }
   .confirm-box input{ width:auto; margin-top: 2px; }
+
+  .nav-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .nav-btn{
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 16px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .nav-btn:hover{ border-color: var(--accent-deep); }
+  .nav-btn.active{
+    background: var(--accent);
+    color: #0B2622;
+    border-color: var(--accent);
+  }
+  .back-link{
+    display: inline-block;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .export-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .export-row:last-child{ border-bottom: none; }
 </style>
 </head>
 <body>
@@ -136,11 +178,23 @@
       </form>
     </section>
 
-    <!-- UPLOAD VIEW -->
-    <section id="uploadView" class="card" hidden>
-      <div class="eyebrow">Admin Access</div>
-      <h1>Add or update one customer</h1>
-      <p class="hint">If the Customer ID already exists, this updates that record instead of creating a duplicate.</p>
+    <!-- DASHBOARD: 4 buttons -->
+    <section id="dashboardView" class="card" hidden>
+      <div class="eyebrow">MR Cable &amp; Networks — Admin</div>
+      <h1>What would you like to do?</h1>
+      <div class="nav-grid">
+        <button class="nav-btn" data-target="panelAddEdit">Add / Edit Customer</button>
+        <button class="nav-btn" data-target="panelRenew">Find &amp; Renew Customer</button>
+        <button class="nav-btn" data-target="panelUpload">Upload Customer List</button>
+        <button class="nav-btn" data-target="panelExport">Export Customer List</button>
+      </div>
+    </section>
+
+    <!-- PANEL 1: Add / Edit -->
+    <section id="panelAddEdit" class="card" hidden>
+      <span class="back-link" data-back>← Back</span>
+      <h1>Add or edit a customer</h1>
+      <p class="hint">If the Customer ID already exists, this updates that record (e.g. change the package) instead of creating a duplicate.</p>
       <form id="addCustomerForm">
         <input type="text" id="addCustomerId" placeholder="Customer ID (e.g. Mikrotik5)" />
         <input type="text" id="addCustomerName" placeholder="Customer Name" style="margin-top:10px;" />
@@ -154,9 +208,11 @@
         <button type="submit" class="btn-primary">Save customer</button>
       </form>
       <div class="status" id="addCustomerStatus"></div>
+    </section>
 
-      <hr style="border:none; border-top:1px solid var(--line); margin:28px 0;" />
-
+    <!-- PANEL 2: Find & Renew -->
+    <section id="panelRenew" class="card" hidden>
+      <span class="back-link" data-back>← Back</span>
       <h1>Find &amp; renew a customer</h1>
       <p class="hint">Search by phone number or Customer ID.</p>
       <input type="text" id="searchQuery" placeholder="Phone number or Customer ID" />
@@ -170,11 +226,13 @@
         <button id="renewBtn" class="btn-primary" style="margin-top:10px;">Set new expiry &amp; activate</button>
         <div class="status" id="renewStatus"></div>
       </div>
+    </section>
 
-      <hr style="border:none; border-top:1px solid var(--line); margin:28px 0;" />
-
+    <!-- PANEL 3: Upload -->
+    <section id="panelUpload" class="card" hidden>
+      <span class="back-link" data-back>← Back</span>
       <h1>Upload customer list</h1>
-      <p class="hint">Choose an Excel (.xlsx) or CSV file with columns: Customer ID, Customer Name, Contact, Expiration Date, Balance.</p>
+      <p class="hint">Choose an Excel (.xlsx) or CSV file with columns: Customer ID, Customer Name, Contact, CNIC, Address, Package, Expiration Date, Balance.</p>
       <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" />
       <div class="status" id="parseStatus"></div>
 
@@ -187,6 +245,15 @@
 
       <button id="uploadBtn" class="btn-danger" disabled>Replace all customer data</button>
       <div class="status" id="uploadStatus"></div>
+    </section>
+
+    <!-- PANEL 4: Export -->
+    <section id="panelExport" class="card" hidden>
+      <span class="back-link" data-back>← Back</span>
+      <h1>Export customer list</h1>
+      <p class="hint">Download every customer record as a CSV file you can open in Excel.</p>
+      <button id="exportBtn" class="btn-primary">Download CSV</button>
+      <div class="status" id="exportStatus"></div>
     </section>
 
   </div>
@@ -349,7 +416,7 @@
     });
 
     const loginView = document.getElementById('loginView');
-    const uploadView = document.getElementById('uploadView');
+    const dashboardView = document.getElementById('dashboardView');
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminEmail = document.getElementById('adminEmail');
     const adminPassword = document.getElementById('adminPassword');
@@ -361,6 +428,24 @@
     const confirmCheck = document.getElementById('confirmCheck');
     const uploadBtn = document.getElementById('uploadBtn');
     const uploadStatus = document.getElementById('uploadStatus');
+
+    const allPanels = ['panelAddEdit', 'panelRenew', 'panelUpload', 'panelExport'];
+
+    function showPanel(id){
+      dashboardView.hidden = true;
+      allPanels.forEach(p => document.getElementById(p).hidden = (p !== id));
+    }
+    function showDashboard(){
+      allPanels.forEach(p => document.getElementById(p).hidden = true);
+      dashboardView.hidden = false;
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => showPanel(btn.dataset.target));
+    });
+    document.querySelectorAll('[data-back]').forEach(el => {
+      el.addEventListener('click', showDashboard);
+    });
 
     adminLoginForm.addEventListener('submit', async function(e){
       e.preventDefault();
@@ -375,7 +460,7 @@
         return;
       }
       loginView.hidden = true;
-      uploadView.hidden = false;
+      showDashboard();
     });
 
     function normalizeDate(val){
@@ -516,6 +601,56 @@
       } catch (err){
         uploadStatus.textContent = 'Failed: ' + err.message;
         uploadBtn.disabled = false;
+      }
+    });
+
+    const exportBtn = document.getElementById('exportBtn');
+    const exportStatus = document.getElementById('exportStatus');
+
+    function toCsv(rows){
+      if (!rows || rows.length === 0) return '';
+      const headers = Object.keys(rows[0]);
+      const escape = (val) => {
+        if (val === null || val === undefined) return '';
+        const str = String(val);
+        return /[",\n]/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str;
+      };
+      const lines = [headers.join(',')];
+      rows.forEach(row => {
+        lines.push(headers.map(h => escape(row[h])).join(','));
+      });
+      return lines.join('\n');
+    }
+
+    exportBtn.addEventListener('click', async function(){
+      exportBtn.disabled = true;
+      exportStatus.textContent = 'Preparing file...';
+      try{
+        const { data, error } = await supabaseClient.functions.invoke('admin-export-customers', {});
+        if (error){
+          exportStatus.textContent = 'Failed: ' + await extractErrorMessage(error, 'Unknown error');
+          return;
+        }
+        if (!data || data.error || !data.customers){
+          exportStatus.textContent = 'Failed: ' + ((data && data.error) ? data.error : 'Unknown error');
+          return;
+        }
+        const csv = toCsv(data.customers);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const today = new Date().toISOString().split('T')[0];
+        a.download = `mr-cable-customers-${today}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        exportStatus.textContent = `Downloaded ${data.customers.length} customers.`;
+      } catch (err){
+        exportStatus.textContent = 'Failed: ' + err.message;
+      } finally {
+        exportBtn.disabled = false;
       }
     });
   </script>
