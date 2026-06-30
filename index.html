@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<title>Subscriber Account</title>
+<title>MR Cable & Networks — My Account</title>
 <style>
   :root{
     --bg: #12161D;
@@ -262,6 +262,10 @@
     border-bottom: 1px dashed var(--line);
     font-size: 14px;
   }
+  .bill-row.wrap{
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
   .bill-row:last-child{ border-bottom: none; }
   .bill-label{ color: var(--text-muted); white-space: nowrap; }
   .bill-leader{
@@ -269,7 +273,14 @@
     border-bottom: 1px dotted #3A4150;
     transform: translateY(-3px);
   }
+  .bill-row.wrap .bill-leader{ display: none; }
   .bill-value{ font-family: var(--mono); white-space: nowrap; }
+  .bill-row.wrap .bill-value{
+    white-space: normal;
+    text-align: right;
+    flex: 1;
+    max-width: 60%;
+  }
 
   .empty-state{
     font-size: 13px;
@@ -283,7 +294,7 @@
 
     <!-- LOGIN VIEW -->
     <section id="loginView" class="card login-card">
-      <div class="eyebrow">Subscriber Access</div>
+      <div class="eyebrow">MR Cable &amp; Networks</div>
       <div class="sim" aria-hidden="true">
         <div class="sim-bars"><span></span><span></span><span></span><span></span></div>
       </div>
@@ -349,7 +360,7 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'contact', 'package', 'expiration_date', 'balance', 'status'];
+    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'contact', 'cnic', 'package', 'expiration_date', 'balance', 'status'];
 
     function prettyLabel(key){
       return key
@@ -459,7 +470,7 @@
       } else {
         extraKeys.forEach(k => {
           const row = document.createElement('div');
-          row.className = 'bill-row';
+          row.className = 'bill-row' + (k.toLowerCase() === 'address' ? ' wrap' : '');
           row.innerHTML =
             '<span class="bill-label">' + prettyLabel(k) + '</span>' +
             '<span class="bill-leader"></span>' +
