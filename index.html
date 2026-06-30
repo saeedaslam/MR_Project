@@ -235,6 +235,11 @@
     background: rgba(255,107,94,0.10);
     border: 1px solid rgba(255,107,94,0.35);
   }
+  .package-pill.active{
+    color: #5FE07E;
+    background: rgba(95,224,126,0.10);
+    border: 1px solid rgba(95,224,126,0.35);
+  }
 
   .details-card{
     background: var(--surface-raised);
@@ -313,9 +318,14 @@
         <div class="id-meta">
           <div><span class="meta-label">Customer ID</span><span class="meta-val mono" id="custId"></span></div>
           <div><span class="meta-label">Phone</span><span class="meta-val mono" id="custAcct"></span></div>
+          <div><span class="meta-label">Package</span><span class="meta-val mono" id="custPackage"></span></div>
         </div>
       </div>
 
+      <div class="package-row">
+        <span class="package-label">Status</span>
+        <span class="package-pill" id="custStatus"></span>
+      </div>
       <div class="package-row">
         <span class="package-label">Expires</span>
         <span class="package-pill" id="custExpiry"></span>
@@ -339,7 +349,7 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'contact', 'expiration_date', 'balance'];
+    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'contact', 'package', 'expiration_date', 'balance', 'status'];
 
     function prettyLabel(key){
       return key
@@ -422,13 +432,18 @@
       document.getElementById('custName').textContent = customer.customer_name || '—';
       document.getElementById('custId').textContent = customer.customer_id || '—';
       document.getElementById('custAcct').textContent = customer.contact || '—';
+      document.getElementById('custPackage').textContent = customer.package || '—';
+
+      const isExpired = customer.status === 'Deactive';
+      const statusEl = document.getElementById('custStatus');
+      statusEl.textContent = customer.status || '—';
+      statusEl.classList.toggle('expired', isExpired);
+      statusEl.classList.toggle('active', !isExpired);
+
       document.getElementById('custExpiry').textContent = formatValue('expiration_date', customer.expiration_date);
       const expiryEl = document.getElementById('custExpiry');
-      const expiryDate = customer.expiration_date ? new Date(customer.expiration_date) : null;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const isExpired = expiryDate && !isNaN(expiryDate.getTime()) && expiryDate < today;
-      expiryEl.classList.toggle('expired', !!isExpired);
+      expiryEl.classList.toggle('expired', isExpired);
+
       document.getElementById('custBalance').textContent = formatValue('balance', customer.balance);
 
       const extraKeys = Object.keys(customer).filter(k => !KNOWN_FIELDS.includes(k));
