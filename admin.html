@@ -139,6 +139,21 @@
     <!-- UPLOAD VIEW -->
     <section id="uploadView" class="card" hidden>
       <div class="eyebrow">Admin Access</div>
+      <h1>Add or update one customer</h1>
+      <p class="hint">If the Customer ID already exists, this updates that record instead of creating a duplicate.</p>
+      <form id="addCustomerForm">
+        <input type="text" id="addCustomerId" placeholder="Customer ID (e.g. Mikrotik5)" />
+        <input type="text" id="addCustomerName" placeholder="Customer Name" style="margin-top:10px;" />
+        <input type="text" id="addCustomerContact" placeholder="Contact (phone number)" style="margin-top:10px;" />
+        <input type="date" id="addCustomerExpiry" style="margin-top:10px;" />
+        <input type="text" id="addCustomerBalance" placeholder="Balance" inputmode="decimal" style="margin-top:10px;" />
+        <div class="error" id="addCustomerError" hidden></div>
+        <button type="submit" class="btn-primary">Save customer</button>
+      </form>
+      <div class="status" id="addCustomerStatus"></div>
+
+      <hr style="border:none; border-top:1px solid var(--line); margin:28px 0;" />
+
       <h1>Upload customer list</h1>
       <p class="hint">Choose an Excel (.xlsx) or CSV file with columns: Customer ID, Customer Name, Contact, Expiration Date, Balance.</p>
       <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" />
@@ -165,6 +180,63 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let parsedRows = null;
+
+    const addCustomerForm = document.getElementById('addCustomerForm');
+    const addCustomerError = document.getElementById('addCustomerError');
+    const addCustomerStatus = document.getElementById('addCustomerStatus');
+
+    addCustomerForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      addCustomerError.hidden = true;
+      addCustomerStatus.textContent = '';
+
+      const customer_id = document.getElementById('addCustomerId').value.trim();
+      const customer_name = document.getElementById('addCustomerName').value.trim();
+      const contact = document.getElementById('addCustomerContact').value.trim();
+      const expiration_date = document.getElementById('addCustomerExpiry').value || null;
+      const balanceRaw = document.getElementById('addCustomerBalance').value.trim();
+      const balance = balanceRaw ? parseFloat(balanceRaw.replace(/[^0-9.-]/g, '')) : null;
+
+      if (!customer_id || !customer_name || !contact){
+        addCustomerError.textContent = 'Customer ID, Name, and Contact are required.';
+        addCustomerError.hidden = false;
+        return;
+      }
+
+      const submitBtn = addCustomerForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving...';
+
+      try{
+        const { data, error } = await supabaseClient.functions.invoke('admin-add-customer', {
+          body: { customer_id, customer_name, contact, expiration_date, balance }
+        });
+
+        if (error){
+          let message = error.message || 'Unknown error';
+          if (error.context && typeof error.context.json === 'function'){
+            try{
+              const errBody = await error.context.json();
+              if (errBody && errBody.error) message = errBody.error;
+            } catch(parseErr){}
+          }
+          addCustomerError.textContent = message;
+          addCustomerError.hidden = false;
+        } else if (!data || data.error){
+          addCustomerError.textContent = (data && data.error) ? data.error : 'Unknown error';
+          addCustomerError.hidden = false;
+        } else {
+          addCustomerStatus.textContent = `Saved — ${customer_id} is up to date.`;
+          addCustomerForm.reset();
+        }
+      } catch (err){
+        addCustomerError.textContent = err.message;
+        addCustomerError.hidden = false;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save customer';
+      }
+    });
 
     const loginView = document.getElementById('loginView');
     const uploadView = document.getElementById('uploadView');
