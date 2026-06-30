@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-<title>M.R. Cable & Internet Network (R) — My Account</title>
+<title>MR Cable & Networks — My Account</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -127,6 +127,33 @@
   .status-pill.expired{background:rgba(255,79,123,0.1);color:var(--rose);border:1px solid rgba(255,79,123,0.2);}
   .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
 
+  .payment-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+  .payment-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
+    font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--orange);
+    text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px;}
+  .payment-header i{font-size:13px;}
+  .payment-body{padding:18px;}
+  .payment-row{display:flex;align-items:center;gap:10px;padding:9px 0;
+    border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
+  .payment-row:last-child{border-bottom:none;}
+  .payment-row .p-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;
+    justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,140,66,0.1);color:var(--orange);}
+  .payment-row .p-label{color:var(--fg-muted);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+  .payment-row .p-value{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-top:1px;}
+  .payment-note{margin-top:14px;padding:10px 14px;border-radius:var(--radius-sm);
+    background:rgba(255,140,66,0.06);border:1px solid rgba(255,140,66,0.15);
+    font-size:12px;color:var(--orange);line-height:1.5;}
+  .payment-note i{margin-right:4px;}
+
+  .quick-action{width:100%;padding:14px;border:none;border-radius:var(--radius);cursor:pointer;
+    font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;transition:all .25s;
+    display:flex;align-items:center;justify-content:center;gap:8px;}
+  .quick-action:hover{transform:translateY(-2px);}
+  .quick-action:active{transform:scale(0.98);}
+  .action-renew{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;
+    box-shadow:0 4px 20px rgba(0,212,255,0.15);margin-bottom:20px;}
+  .action-renew:hover{box-shadow:0 6px 28px rgba(0,212,255,0.25);}
+
   .details-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
   .details-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
     font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
@@ -143,15 +170,6 @@
   .detail-row.wrap .detail-value{white-space:normal;text-align:right;flex:1;max-width:60%;line-height:1.4;}
 
   .empty-state{padding:18px;text-align:center;color:var(--fg-dim);font-size:13px;}
-
-  .quick-action{width:100%;padding:14px;border:none;border-radius:var(--radius);cursor:pointer;
-    font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;transition:all .25s;
-    display:flex;align-items:center;justify-content:center;gap:8px;}
-  .quick-action:hover{transform:translateY(-2px);}
-  .quick-action:active{transform:scale(0.98);}
-  .action-renew{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;
-    box-shadow:0 4px 20px rgba(0,212,255,0.15);}
-  .action-renew:hover{box-shadow:0 6px 28px rgba(0,212,255,0.25);}
 
   .toast-container{position:fixed;top:16px;right:16px;left:16px;z-index:99999;
     display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none;}
@@ -175,6 +193,7 @@
   @media(max-width:400px){
     .id-meta{gap:14px;}
     .info-row{padding:12px 14px;}
+    .payment-body{padding:14px;}
     .main-content{padding:18px 12px 40px;}
     .topbar{padding:10px 14px;}
   }
@@ -185,7 +204,7 @@
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="sim-icon" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-    <div class="login-logo">M.R. Cable & Internet Network (R)</div>
+    <div class="login-logo">MR Cable & Networks</div>
     <div class="login-sub">Enter your phone number and the last 4 digits of that same number to view your account.</div>
     <div class="login-field">
       <label>Phone Number</label>
@@ -208,7 +227,7 @@
 <div class="dashboard" id="dashboard">
   <nav class="topbar">
     <div class="topbar-left">
-      <div class="topbar-logo">M.R. Cable & Internet Network (R)</div>
+      <div class="topbar-logo">MR Cable</div>
       <div class="topbar-divider"></div>
       <span class="topbar-page">My Account</span>
     </div>
@@ -356,6 +375,7 @@ function renderProfile() {
   const sLabel = statusLabel(status);
   const isExpired = status === 'expired';
   const isPending = status === 'pending';
+  const needsRenew = isExpired || isPending;
   const phone = c.contact || '—';
 
   document.getElementById('userPhoneDisplay').textContent = phone;
@@ -427,13 +447,44 @@ function renderProfile() {
       </div>
     </div>
 
-    ${isExpired || isPending ? `
-    <button class="quick-action action-renew fade-up fade-up-d4" onclick="showToast('Please contact M.R. Cable & Internet Network (R) to renew your package.','info')">
+    ${needsRenew ? `
+    <button class="quick-action action-renew fade-up fade-up-d4" onclick="showToast('Please contact MR Cable & Networks to renew your package.','info')">
       <i class="fa-solid fa-rotate"></i>
       Request Renewal
     </button>` : ''}
 
-    <div class="details-card fade-up fade-up-d5">
+    <div class="payment-card fade-up fade-up-d5">
+      <div class="payment-header"><i class="fa-solid fa-money-bill-wave"></i> Payment Methods</div>
+      <div class="payment-body">
+        <div class="payment-row">
+          <div class="p-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+          <div>
+            <div class="p-label">JazzCash / EasyPaisa</div>
+            <div class="p-value">0300 4884733</div>
+          </div>
+        </div>
+        <div class="payment-row">
+          <div class="p-icon"><i class="fa-solid fa-user"></i></div>
+          <div>
+            <div class="p-label">Account Name</div>
+            <div class="p-value">Musharraf Iqbal</div>
+          </div>
+        </div>
+        <div class="payment-row">
+          <div class="p-icon"><i class="fa-solid fa-hashtag"></i></div>
+          <div>
+            <div class="p-label">TILL-ID</div>
+            <div class="p-value">981 985 260</div>
+          </div>
+        </div>
+        <div class="payment-note">
+          <i class="fa-solid fa-circle-info"></i>
+          Send payment screenshot to the given number after transfer. Your account will be renewed once payment is confirmed.
+        </div>
+      </div>
+    </div>
+
+    <div class="details-card fade-up fade-up-d6">
       <div class="details-header"><i class="fa-solid fa-list"></i> Other Details</div>
       ${extraHTML}
     </div>
