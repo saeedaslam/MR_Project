@@ -21,6 +21,7 @@
     background:radial-gradient(ellipse 500px 350px at 20% 10%,rgba(0,212,255,0.04),transparent 70%),
     radial-gradient(ellipse 400px 400px at 80% 90%,rgba(0,230,138,0.03),transparent 70%);}
 
+  /* ── LOGIN ── */
   .login-screen{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;
     background:var(--bg);transition:opacity .45s,visibility .45s;padding:20px;}
   .login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
@@ -28,7 +29,6 @@
     border-radius:16px;text-align:center;position:relative;overflow:hidden;}
   .login-box::before{content:'';position:absolute;top:-50%;left:-20%;width:140%;height:100%;
     background:radial-gradient(ellipse,rgba(0,212,255,0.06),transparent 70%);pointer-events:none;}
-
   .sim-icon{display:inline-flex;align-items:flex-end;gap:4px;margin-bottom:20px;padding:12px 18px;
     background:var(--bg-input);border:1px solid var(--border);border-radius:10px;position:relative;z-index:1;}
   .sim-icon span{display:block;width:5px;background:var(--cyan);border-radius:2px;animation:barPulse 1.2s ease-in-out infinite;}
@@ -37,7 +37,6 @@
   .sim-icon span:nth-child(3){height:22px;animation-delay:.3s;}
   .sim-icon span:nth-child(4){height:28px;animation-delay:.45s;}
   @keyframes barPulse{0%,100%{opacity:.35;}50%{opacity:1;}}
-
   .login-logo{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:4px;
     background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;
     -webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1;}
@@ -61,9 +60,9 @@
   .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
   .login-error{color:var(--rose);font-size:13px;margin-top:12px;min-height:20px;position:relative;z-index:1;}
 
+  /* ── DASHBOARD ── */
   .dashboard{display:none;min-height:100vh;position:relative;z-index:1;}
   .dashboard.active{display:block;}
-
   .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
     padding:12px 20px;background:rgba(12,14,20,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
   .topbar-left{display:flex;align-items:center;gap:10px;}
@@ -82,9 +81,9 @@
     font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;}
   .btn-logout:hover{background:rgba(255,79,123,0.14);border-color:rgba(255,79,123,0.4);
     box-shadow:0 2px 14px rgba(255,79,123,0.15);transform:translateY(-1px);}
-
   .main-content{max-width:600px;margin:0 auto;padding:24px 16px 60px;}
 
+  /* ── ID CARD ── */
   .id-card{background:linear-gradient(160deg,var(--bg-card-alt),#171c28);border:1px solid var(--border);
     border-radius:16px;padding:22px 20px;margin-bottom:20px;position:relative;overflow:hidden;}
   .id-card::before{content:'';position:absolute;top:-40%;right:-20%;width:200px;height:200px;
@@ -98,28 +97,25 @@
   .signal-mini span{width:4px;background:var(--cyan);border-radius:1px;}
   .signal-mini span:nth-child(1){height:6px;} .signal-mini span:nth-child(2){height:9px;}
   .signal-mini span:nth-child(3){height:12px;} .signal-mini span:nth-child(4){height:15px;}
-  .id-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:14px;
-    position:relative;z-index:1;letter-spacing:-0.01em;}
+  .id-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:14px;position:relative;z-index:1;letter-spacing:-0.01em;}
   .id-meta{display:flex;gap:20px;flex-wrap:wrap;position:relative;z-index:1;}
   .id-meta>div{display:flex;flex-direction:column;gap:3px;}
   .meta-label{font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
   .meta-val{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;}
 
+  /* ── INFO GRID ── */
   .info-grid{display:grid;gap:10px;margin-bottom:20px;}
   .info-row{display:flex;align-items:center;justify-content:space-between;
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;
-    transition:border-color .2s;}
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;transition:border-color .2s;}
   .info-row:hover{border-color:var(--border-light);}
   .info-left{display:flex;align-items:center;gap:10px;}
-  .info-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;
-    justify-content:center;font-size:15px;flex-shrink:0;}
+  .info-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
   .info-icon.cyan{background:var(--cyan-dim);color:var(--cyan);}
   .info-icon.green{background:var(--green-dim);color:var(--green);}
   .info-icon.orange{background:rgba(255,140,66,0.08);color:var(--orange);}
   .info-icon.rose{background:rgba(255,79,123,0.08);color:var(--rose);}
   .info-label{font-size:11px;color:var(--fg-muted);font-weight:500;}
   .info-value{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;margin-top:1px;}
-
   .status-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;
     font-size:12px;font-weight:700;font-family:'Space Grotesk',sans-serif;}
   .status-pill.active{background:rgba(0,230,138,0.1);color:var(--green);border:1px solid rgba(0,230,138,0.2);}
@@ -127,24 +123,73 @@
   .status-pill.expired{background:rgba(255,79,123,0.1);color:var(--rose);border:1px solid rgba(255,79,123,0.2);}
   .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
 
+  /* ── SECTION HEADERS ── */
+  .section-header{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;
+    display:flex;align-items:center;gap:8px;}
+  .section-header i{font-size:14px;}
+
+  /* ── PACKAGE PRICING CARDS ── */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+  .pricing-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:20px 16px;text-align:center;position:relative;overflow:hidden;transition:all .3s;}
+  .pricing-card:hover{border-color:var(--border-light);transform:translateY(-2px);}
+  .pricing-card.current{border-color:rgba(0,212,255,0.4);background:linear-gradient(160deg,rgba(0,212,255,0.08),rgba(0,212,255,0.02));}
+  .pricing-tag{position:absolute;top:0;right:0;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+    padding:4px 10px;border-radius:0 0 0 var(--radius-sm);background:var(--cyan);color:#051520;}
+  .pricing-card:not(.current) .pricing-tag{display:none;}
+  .pricing-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;margin-top:4px;}
+  .pricing-speed{font-size:11px;color:var(--fg-muted);margin-bottom:14px;font-weight:500;}
+  .pricing-price{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:16px;}
+  .pricing-price span{font-size:13px;font-weight:500;color:var(--fg-muted);}
+  .pricing-features{list-style:none;text-align:left;margin-bottom:16px;}
+  .pricing-features li{font-size:12px;color:var(--fg-muted);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);
+    display:flex;align-items:center;gap:7px;}
+  .pricing-features li:last-child{border:none;}
+  .pricing-features li i{font-size:10px;color:var(--green);width:14px;text-align:center;flex-shrink:0;}
+  .pricing-btn{width:100%;padding:9px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    background:var(--bg-input);color:var(--fg);font-family:'Space Grotesk',sans-serif;font-size:12px;
+    font-weight:600;cursor:pointer;transition:all .2s;}
+  .pricing-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+  .pricing-card.current .pricing-btn{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;border:none;}
+  .pricing-card.current .pricing-btn:hover{box-shadow:0 4px 16px rgba(0,212,255,0.3);}
+
+  /* ── PAYMENT SECTION ── */
   .payment-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
   .payment-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
     font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--orange);
     text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px;}
   .payment-header i{font-size:13px;}
   .payment-body{padding:18px;}
-  .payment-row{display:flex;align-items:center;gap:10px;padding:9px 0;
-    border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
+  .payment-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
   .payment-row:last-child{border-bottom:none;}
-  .payment-row .p-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;
-    justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,140,66,0.1);color:var(--orange);}
+  .payment-row .p-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;flex-shrink:0;background:rgba(255,140,66,0.1);color:var(--orange);}
   .payment-row .p-label{color:var(--fg-muted);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
   .payment-row .p-value{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-top:1px;}
+
+  /* ── QR CODE SECTION ── */
+  .qr-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+  .qr-tabs{display:flex;gap:8px;margin-bottom:14px;}
+  .qr-tab{flex:1;padding:9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);
+    color:var(--fg-muted);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;
+    text-align:center;transition:all .2s;}
+  .qr-tab.active{background:rgba(255,140,66,0.1);border-color:rgba(255,140,66,0.3);color:var(--orange);}
+  .qr-tab:hover:not(.active){border-color:var(--fg-dim);color:var(--fg);}
+  .qr-display{text-align:center;}
+  .qr-frame{display:inline-block;background:#fff;border-radius:var(--radius);padding:12px;margin-bottom:10px;position:relative;}
+  .qr-frame img{display:block;width:180px;height:180px;border-radius:4px;}
+  .qr-label{font-size:13px;color:var(--fg);font-weight:600;margin-bottom:2px;}
+  .qr-sublabel{font-size:11px;color:var(--fg-muted);}
+  .qr-ep-badge{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:5px 12px;border-radius:100px;
+    background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.25);font-size:11px;color:#66BB6A;font-weight:600;}
+  .qr-jc-badge{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:5px 12px;border-radius:100px;
+    background:rgba(255,72,0,0.1);border:1px solid rgba(255,72,0,0.25);font-size:11px;color:#FF5030;font-weight:600;}
   .payment-note{margin-top:14px;padding:10px 14px;border-radius:var(--radius-sm);
     background:rgba(255,140,66,0.06);border:1px solid rgba(255,140,66,0.15);
     font-size:12px;color:var(--orange);line-height:1.5;}
   .payment-note i{margin-right:4px;}
 
+  /* ── RENEW CTA ── */
   .quick-action{width:100%;padding:14px;border:none;border-radius:var(--radius);cursor:pointer;
     font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;transition:all .25s;
     display:flex;align-items:center;justify-content:center;gap:8px;}
@@ -154,13 +199,13 @@
     box-shadow:0 4px 20px rgba(0,212,255,0.15);margin-bottom:20px;}
   .action-renew:hover{box-shadow:0 6px 28px rgba(0,212,255,0.25);}
 
+  /* ── DETAILS CARD ── */
   .details-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
   .details-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
     font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
     text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px;}
   .details-header i{color:var(--cyan);font-size:13px;}
-  .detail-row{display:flex;align-items:baseline;gap:8px;padding:11px 18px;
-    border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
+  .detail-row{display:flex;align-items:baseline;gap:8px;padding:11px 18px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
   .detail-row:last-child{border-bottom:none;}
   .detail-row.wrap{align-items:flex-start;}
   .detail-label{color:var(--fg-muted);white-space:nowrap;font-weight:500;min-width:90px;}
@@ -168,9 +213,9 @@
   .detail-row.wrap .detail-leader{display:none;}
   .detail-value{font-family:'Space Grotesk',sans-serif;white-space:nowrap;font-weight:600;}
   .detail-row.wrap .detail-value{white-space:normal;text-align:right;flex:1;max-width:60%;line-height:1.4;}
-
   .empty-state{padding:18px;text-align:center;color:var(--fg-dim);font-size:13px;}
 
+  /* ── TOAST ── */
   .toast-container{position:fixed;top:16px;right:16px;left:16px;z-index:99999;
     display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none;}
   .toast{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:var(--radius);
@@ -186,9 +231,10 @@
   @keyframes toastOut{to{opacity:0;transform:translateY(-10px) scale(.96);}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
   .fade-up{animation:fadeUp .4s ease-out both;}
-  .fade-up-d1{animation-delay:.08s;} .fade-up-d2{animation-delay:.16s;}
-  .fade-up-d3{animation-delay:.24s;} .fade-up-d4{animation-delay:.32s;}
-  .fade-up-d5{animation-delay:.40s;} .fade-up-d6{animation-delay:.48s;}
+  .fade-up-d1{animation-delay:.06s;} .fade-up-d2{animation-delay:.12s;}
+  .fade-up-d3{animation-delay:.18s;} .fade-up-d4{animation-delay:.24s;}
+  .fade-up-d5{animation-delay:.30s;} .fade-up-d6{animation-delay:.36s;}
+  .fade-up-d7{animation-delay:.42s;} .fade-up-d8{animation-delay:.48s;}
 
   @media(max-width:400px){
     .id-meta{gap:14px;}
@@ -196,6 +242,16 @@
     .payment-body{padding:14px;}
     .main-content{padding:18px 12px 40px;}
     .topbar{padding:10px 14px;}
+    .pricing-grid{grid-template-columns:1fr;gap:10px;}
+    .pricing-card{padding:16px 14px;}
+    .qr-frame img{width:160px;height:160px;}
+  }
+  @media(min-width:401px) and (max-width:500px){
+    .pricing-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .pricing-card{padding:16px 10px;}
+    .pricing-name{font-size:14px;}
+    .pricing-price{font-size:24px;}
+    .pricing-features li{font-size:11px;}
   }
 </style>
 </head>
@@ -237,8 +293,7 @@
         <span id="userPhoneDisplay">—</span>
       </div>
       <button class="btn-logout" onclick="handleLogout()">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        Logout
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
       </button>
     </div>
   </nav>
@@ -254,241 +309,216 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const KNOWN_FIELDS = ['customer_id','customer_name','contact','cnic','package','expiration_date','balance','status'];
+const PACKAGES = [
+  { name:'SUPER-10', speed:'10 Mbps', price:1700, features:['10 Mbps download speed','Unlimited data usage','24/7 support','Free router (if available)'] },
+  { name:'SUPER-15', speed:'15 Mbps', price:2200, features:['15 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] },
+  { name:'SUPER-20', speed:'20 Mbps', price:2500, features:['20 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] }
+];
 let customerData = null;
 
-function esc(str) {
-  const d = document.createElement('div');
-  d.textContent = str == null ? '' : str;
-  return d.innerHTML;
-}
-
-function prettyLabel(key) {
-  return key.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2').trim()
-    .split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
-
-function formatValue(key, val) {
-  if (val === '' || val === null || val === undefined) return '—';
-  const k = key.toLowerCase();
-  const str = String(val).trim();
-  const isNumeric = str !== '' && !isNaN(parseFloat(str.replace(/,/g,''))) && /^[\d.,\s]+$/.test(str);
-  if (isNumeric && /(amount|bill|balance|due|charge|cost|fee)/.test(k)) {
-    return 'Rs. ' + parseFloat(str.replace(/,/g,'')).toLocaleString('en-PK');
-  }
-  if (/(date|expiry|renew)/.test(k)) {
-    const d = new Date(val);
-    if (!isNaN(d.getTime())) return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  }
+function esc(s){ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+function prettyLabel(k){ return k.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2').trim().split(/\s+/).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '); }
+function formatValue(key,val){
+  if(val===''||val===null||val===undefined) return '—';
+  const k=key.toLowerCase(), str=String(val).trim();
+  const isNum=str!==''&&!isNaN(parseFloat(str.replace(/,/g,'')))&&/^[\d.,\s]+$/.test(str);
+  if(isNum&&/(amount|bill|balance|due|charge|cost|fee)/.test(k)) return 'Rs. '+parseFloat(str.replace(/,/g,'')).toLocaleString('en-PK');
+  if(/(date|expiry|renew)/.test(k)){ const d=new Date(val); if(!isNaN(d.getTime())) return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
   return str;
 }
-
-function calcStatus(expiryStr, dbStatus) {
-  if (dbStatus === 'Deactive') return 'expired';
-  if (dbStatus === 'Active') {
-    if (expiryStr) {
-      const exp = new Date(expiryStr + 'T00:00:00');
-      const now = new Date(); now.setHours(0,0,0,0);
-      if ((exp - now) / 86400000 < 0) return 'expired';
-      if ((exp - now) / 86400000 <= 7) return 'pending';
-    }
-    return 'active';
-  }
-  if (!expiryStr) return 'expired';
-  const exp = new Date(expiryStr + 'T00:00:00');
-  const now = new Date(); now.setHours(0,0,0,0);
-  const diff = (exp - now) / 86400000;
-  if (diff < 0) return 'expired';
-  if (diff <= 7) return 'pending';
-  return 'active';
+function calcStatus(exp,db){
+  if(db==='Deactive') return 'expired';
+  if(db==='Active'){ if(exp){ const e=new Date(exp+'T00:00:00'),n=new Date(); n.setHours(0,0,0,0); const d=(e-n)/864e5; if(d<0) return 'expired'; if(d<=7) return 'pending'; } return 'active'; }
+  if(!exp) return 'expired';
+  const e=new Date(exp+'T00:00:00'),n=new Date(); n.setHours(0,0,0,0); const d=(e-n)/864e5;
+  if(d<0) return 'expired'; if(d<=7) return 'pending'; return 'active';
 }
+function statusLabel(s){ return {active:'Active',pending:'Expiring Soon',expired:'Expired'}[s]||s; }
 
-function statusLabel(s) {
-  return {active:'Active',pending:'Expiring Soon',expired:'Expired'}[s] || s;
-}
-
-function showToast(msg, type) {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  const icons = {success:'fa-circle-check',error:'fa-circle-xmark',info:'fa-circle-info',warning:'fa-triangle-exclamation'};
-  t.innerHTML = `<i class="fa-solid ${icons[type]||icons.info}"></i><span>${msg}</span>`;
+function showToast(msg,type){
+  const c=document.getElementById('toastContainer'), t=document.createElement('div');
+  t.className='toast '+type;
+  const icons={success:'fa-circle-check',error:'fa-circle-xmark',info:'fa-circle-info',warning:'fa-triangle-exclamation'};
+  t.innerHTML=`<i class="fa-solid ${icons[type]||icons.info}"></i><span>${msg}</span>`;
   c.appendChild(t);
-  setTimeout(() => { t.classList.add('toast-exit'); setTimeout(() => t.remove(), 300); }, 4000);
+  setTimeout(()=>{ t.classList.add('toast-exit'); setTimeout(()=>t.remove(),300); },4000);
 }
 
-const loginScreen = document.getElementById('loginScreen');
-const dashboard = document.getElementById('dashboard');
-const phoneInput = document.getElementById('phoneInput');
-const last4Input = document.getElementById('last4Input');
-const loginBtn = document.getElementById('loginBtn');
-const loginError = document.getElementById('loginError');
-const togglePass = document.getElementById('togglePass');
+const loginScreen=document.getElementById('loginScreen'), dashboard=document.getElementById('dashboard'),
+  phoneInput=document.getElementById('phoneInput'), last4Input=document.getElementById('last4Input'),
+  loginBtn=document.getElementById('loginBtn'), loginError=document.getElementById('loginError'),
+  togglePass=document.getElementById('togglePass');
 
-function showLogin() { loginScreen.classList.remove('hidden'); dashboard.classList.remove('active'); }
-function showDash() { loginScreen.classList.add('hidden'); dashboard.classList.add('active'); }
+function showLogin(){ loginScreen.classList.remove('hidden'); dashboard.classList.remove('active'); }
+function showDash(){ loginScreen.classList.add('hidden'); dashboard.classList.add('active'); }
 
-loginBtn.addEventListener('click', handleLogin);
-last4Input.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+loginBtn.addEventListener('click',handleLogin);
+last4Input.addEventListener('keydown',e=>{ if(e.key==='Enter') handleLogin(); });
 
-async function handleLogin() {
-  const phone = phoneInput.value.trim();
-  const last4 = last4Input.value.trim();
-  loginError.textContent = '';
-  if (!phone || !last4) { loginError.textContent = 'Enter your phone number and the last 4 digits.'; return; }
-  loginBtn.disabled = true;
-  loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Checking...';
-  try {
-    const { data, error } = await sb.functions.invoke('login', { body: { phone, last4 } });
-    if (error || !data || data.error || !data.customer) {
-      loginError.textContent = 'Phone number or last 4 digits is incorrect.';
-    } else {
-      customerData = data.customer;
-      renderProfile();
-      showDash();
-      showToast('Welcome, ' + (customerData.customer_name || 'Customer'), 'success');
-    }
-  } catch (err) { loginError.textContent = 'Could not reach the server. Please try again.'; }
-  loginBtn.disabled = false;
-  loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account';
+async function handleLogin(){
+  const phone=phoneInput.value.trim(), last4=last4Input.value.trim();
+  loginError.textContent='';
+  if(!phone||!last4){ loginError.textContent='Enter your phone number and the last 4 digits.'; return; }
+  loginBtn.disabled=true; loginBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Checking...';
+  try{
+    const {data,error}=await sb.functions.invoke('login',{body:{phone,last4}});
+    if(error||!data||data.error||!data.customer){ loginError.textContent='Phone number or last 4 digits is incorrect.'; }
+    else{ customerData=data.customer; renderProfile(); showDash(); showToast('Welcome, '+(customerData.customer_name||'Customer'),'success'); }
+  }catch(err){ loginError.textContent='Could not reach the server. Please try again.'; }
+  loginBtn.disabled=false; loginBtn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account';
 }
 
-function handleLogout() {
-  customerData = null;
-  phoneInput.value = '';
-  last4Input.value = '';
-  loginError.textContent = '';
-  document.getElementById('profileContent').innerHTML = '';
-  showLogin();
-  showToast('Logged out successfully.', 'info');
+function handleLogout(){
+  customerData=null; phoneInput.value=''; last4Input.value=''; loginError.textContent='';
+  document.getElementById('profileContent').innerHTML=''; showLogin(); showToast('Logged out successfully.','info');
 }
 
-togglePass.addEventListener('click', function() {
-  const show = last4Input.type === 'password';
-  last4Input.type = show ? 'text' : 'password';
-  togglePass.textContent = show ? 'Hide' : 'Show';
+togglePass.addEventListener('click',function(){
+  const show=last4Input.type==='password'; last4Input.type=show?'text':'password'; togglePass.textContent=show?'Hide':'Show';
 });
 
-function renderProfile() {
-  const c = customerData;
-  if (!c) return;
-  const status = calcStatus(c.expiration_date, c.status);
-  const sLabel = statusLabel(status);
-  const isExpired = status === 'expired';
-  const isPending = status === 'pending';
-  const needsRenew = isExpired || isPending;
-  const phone = c.contact || '—';
+function renderProfile(){
+  const c=customerData; if(!c) return;
+  const status=calcStatus(c.expiration_date,c.status), sLabel=statusLabel(status),
+    isExpired=status==='expired', isPending=status==='pending', needsRenew=isExpired||isPending,
+    phone=c.contact||'—', currentPkg=(c.package||'').toUpperCase().trim();
 
-  document.getElementById('userPhoneDisplay').textContent = phone;
-  document.getElementById('userAvatar').textContent = (c.customer_name || '?').charAt(0).toUpperCase();
+  document.getElementById('userPhoneDisplay').textContent=phone;
+  document.getElementById('userAvatar').textContent=(c.customer_name||'?').charAt(0).toUpperCase();
 
-  const extraKeys = Object.keys(c).filter(k => !KNOWN_FIELDS.includes(k));
-  const expiryFormatted = formatValue('expiration_date', c.expiration_date);
-  const balanceFormatted = formatValue('balance', c.balance);
+  const extraKeys=Object.keys(c).filter(k=>!KNOWN_FIELDS.includes(k));
+  const expiryF=formatValue('expiration_date',c.expiration_date), balF=formatValue('balance',c.balance);
 
-  let extraHTML = '';
-  if (extraKeys.length === 0) {
-    extraHTML = '<div class="empty-state">No other details on file.</div>';
-  } else {
-    extraHTML = extraKeys.map(k => {
-      const isAddress = k.toLowerCase() === 'address';
-      return `<div class="detail-row${isAddress ? ' wrap' : ''}">
-        <span class="detail-label">${esc(prettyLabel(k))}</span>
-        ${isAddress ? '' : '<span class="detail-leader"></span>'}
-        <span class="detail-value">${esc(formatValue(k, c[k]))}</span>
-      </div>`;
-    }).join('');
-  }
+  let extraHTML='';
+  if(!extraKeys.length) extraHTML='<div class="empty-state">No other details on file.</div>';
+  else extraHTML=extraKeys.map(k=>{
+    const isAddr=k.toLowerCase()==='address';
+    return `<div class="detail-row${isAddr?' wrap':''}"><span class="detail-label">${esc(prettyLabel(k))}</span>${isAddr?'':'<span class="detail-leader"></span>'}<span class="detail-value">${esc(formatValue(k,c[k]))}</span></div>`;
+  }).join('');
 
-  document.getElementById('profileContent').innerHTML = `
+  const pricingCards=PACKAGES.map(p=>{
+    const isCurrent=currentPkg.includes(p.name);
+    return `<div class="pricing-card${isCurrent?' current':''}">
+      <div class="pricing-tag">CURRENT</div>
+      <div class="pricing-name">${p.name}</div>
+      <div class="pricing-speed">${p.speed}</div>
+      <div class="pricing-price">Rs. ${p.price.toLocaleString()}<span>/mo</span></div>
+      <ul class="pricing-features">${p.features.map(f=>`<li><i class="fa-solid fa-check"></i>${f}</li>`).join('')}</ul>
+      <button class="pricing-btn" onclick="showToast('${isCurrent?'You are already on this plan.':'Please contact MR Cable & Networks to switch to '+p.name+'.'}','${isCurrent?'info':'info'}')">${isCurrent?'Current Plan':'Upgrade'}</button>
+    </div>`;
+  }).join('');
+
+  document.getElementById('profileContent').innerHTML=`
     <div class="id-card fade-up">
       <div class="id-card-top">
         <div class="id-chip" aria-hidden="true"></div>
         <div class="signal-mini" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       </div>
-      <div class="id-name">${esc(c.customer_name || '—')}</div>
+      <div class="id-name">${esc(c.customer_name||'—')}</div>
       <div class="id-meta">
-        <div><span class="meta-label">Customer ID</span><span class="meta-val">${esc(c.customer_id || '—')}</span></div>
+        <div><span class="meta-label">Customer ID</span><span class="meta-val">${esc(c.customer_id||'—')}</span></div>
         <div><span class="meta-label">Phone</span><span class="meta-val">${esc(phone)}</span></div>
-        <div><span class="meta-label">Package</span><span class="meta-val">${esc(c.package || '—')}</span></div>
+        <div><span class="meta-label">Package</span><span class="meta-val">${esc(c.package||'—')}</span></div>
       </div>
     </div>
 
     <div class="info-grid">
       <div class="info-row fade-up fade-up-d1">
         <div class="info-left">
-          <div class="info-icon ${isExpired ? 'rose' : status === 'active' ? 'green' : 'orange'}">
-            <i class="fa-solid ${isExpired ? 'fa-circle-xmark' : status === 'active' ? 'fa-circle-check' : 'fa-clock'}"></i>
+          <div class="info-icon ${isExpired?'rose':status==='active'?'green':'orange'}">
+            <i class="fa-solid ${isExpired?'fa-circle-xmark':status==='active'?'fa-circle-check':'fa-clock'}"></i>
           </div>
-          <div>
-            <div class="info-label">Status</div>
-            <div class="info-value"><span class="status-pill ${status}"><span class="status-dot"></span>${sLabel}</span></div>
-          </div>
+          <div><div class="info-label">Status</div><div class="info-value"><span class="status-pill ${status}"><span class="status-dot"></span>${sLabel}</span></div></div>
         </div>
       </div>
-
       <div class="info-row fade-up fade-up-d2">
         <div class="info-left">
           <div class="info-icon cyan"><i class="fa-solid fa-calendar-days"></i></div>
-          <div>
-            <div class="info-label">Expiry Date</div>
-            <div class="info-value" style="${isExpired ? 'color:var(--rose)' : isPending ? 'color:var(--orange)' : ''}">${expiryFormatted}</div>
-          </div>
+          <div><div class="info-label">Expiry Date</div><div class="info-value" style="${isExpired?'color:var(--rose)':isPending?'color:var(--orange)':''}">${expiryF}</div></div>
         </div>
       </div>
-
       <div class="info-row fade-up fade-up-d3">
         <div class="info-left">
           <div class="info-icon green"><i class="fa-solid fa-wallet"></i></div>
-          <div>
-            <div class="info-label">Balance</div>
-            <div class="info-value">${balanceFormatted}</div>
-          </div>
+          <div><div class="info-label">Balance</div><div class="info-value">${balF}</div></div>
         </div>
       </div>
     </div>
 
-    ${needsRenew ? `
+    ${needsRenew?`
     <button class="quick-action action-renew fade-up fade-up-d4" onclick="showToast('Please contact MR Cable & Networks to renew your package.','info')">
-      <i class="fa-solid fa-rotate"></i>
-      Request Renewal
-    </button>` : ''}
+      <i class="fa-solid fa-rotate"></i> Request Renewal
+    </button>`:''}
 
-    <div class="payment-card fade-up fade-up-d5">
+    <div class="fade-up fade-up-d5" style="margin-bottom:24px;">
+      <div class="section-header" style="color:var(--cyan);"><i class="fa-solid fa-bolt"></i> Our Packages</div>
+      <div class="pricing-grid">${pricingCards}</div>
+    </div>
+
+    <div class="payment-card fade-up fade-up-d6">
       <div class="payment-header"><i class="fa-solid fa-money-bill-wave"></i> Payment Methods</div>
       <div class="payment-body">
         <div class="payment-row">
           <div class="p-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-          <div>
-            <div class="p-label">JazzCash / EasyPaisa</div>
-            <div class="p-value">0300 4884733</div>
-          </div>
+          <div><div class="p-label">JazzCash / EasyPaisa</div><div class="p-value">0300 4884733</div></div>
         </div>
         <div class="payment-row">
           <div class="p-icon"><i class="fa-solid fa-user"></i></div>
-          <div>
-            <div class="p-label">Account Name</div>
-            <div class="p-value">Musharraf Iqbal</div>
-          </div>
+          <div><div class="p-label">Account Name</div><div class="p-value">Musharraf Iqbal</div></div>
         </div>
         <div class="payment-row">
           <div class="p-icon"><i class="fa-solid fa-hashtag"></i></div>
-          <div>
-            <div class="p-label">TILL-ID</div>
-            <div class="p-value">981 985 260</div>
+          <div><div class="p-label">TILL-ID</div><div class="p-value">981 985 260</div></div>
+        </div>
+
+        <div class="qr-section">
+          <div class="qr-tabs">
+            <button class="qr-tab active" id="tabEasypaisa" onclick="switchQR('easypaisa')"><i class="fa-solid fa-qrcode"></i>&nbsp; EasyPaisa</button>
+            <button class="qr-tab" id="tabJazzcash" onclick="switchQR('jazzcash')"><i class="fa-solid fa-qrcode"></i>&nbsp; JazzCash</button>
+          </div>
+          <div class="qr-display" id="qrDisplay">
+            <div class="qr-frame">
+              <img src="https://z-cdn-media.chatglm.cn/files/56ed0d24-3caa-4dc3-87f6-a03cc89e4a76.png?auth_key=1882827082-ca4a2c980ee74d178f87e9a1fc96fb19-0-71b61f3ba666d2266c940970702833ac" alt="EasyPaisa QR Code" id="qrImg">
+            </div>
+            <div class="qr-label" id="qrTitle">Scan to pay via EasyPaisa</div>
+            <div class="qr-sublabel" id="qrSubtitle">MUSHARRAF IQBAL &middot; 0300******4733</div>
+            <div id="qrBadge"><div class="qr-ep-badge"><i class="fa-solid fa-shield-check"></i> EasyPaisa Verified</div></div>
           </div>
         </div>
+
         <div class="payment-note">
           <i class="fa-solid fa-circle-info"></i>
-          Send payment screenshot to the given number after transfer. Your account will be renewed once payment is confirmed.
+          Scan the QR code to send payment directly. After transfer, send a screenshot to <strong>0300 4884733</strong> with your Customer ID. Your account will be renewed once payment is confirmed.
         </div>
       </div>
     </div>
 
-    <div class="details-card fade-up fade-up-d6">
+    <div class="details-card fade-up fade-up-d7">
       <div class="details-header"><i class="fa-solid fa-list"></i> Other Details</div>
       ${extraHTML}
     </div>
   `;
+}
+
+function switchQR(type){
+  const img=document.getElementById('qrImg'), title=document.getElementById('qrTitle'),
+    sub=document.getElementById('qrSubtitle'), badge=document.getElementById('qrBadge'),
+    tabEp=document.getElementById('tabEasypaisa'), tabJc=document.getElementById('tabJazzcash');
+  if(type==='easypaisa'){
+    img.src='https://z-cdn-media.chatglm.cn/files/56ed0d24-3caa-4dc3-87f6-a03cc89e4a76.png?auth_key=1882827082-ca4a2c980ee74d178f87e9a1fc96fb19-0-71b61f3ba666d2266c940970702833ac';
+    img.alt='EasyPaisa QR Code';
+    title.textContent='Scan to pay via EasyPaisa';
+    sub.innerHTML='MUSHARRAF IQBAL &middot; 0300******4733';
+    badge.innerHTML='<div class="qr-ep-badge"><i class="fa-solid fa-shield-check"></i> EasyPaisa Verified</div>';
+    tabEp.classList.add('active'); tabJc.classList.remove('active');
+  } else {
+    img.src='https://z-cdn-media.chatglm.cn/files/56ed0d24-3caa-4dc3-87f6-a03cc89e4a76.png?auth_key=1882827082-ca4a2c980ee74d178f87e9a1fc96fb19-0-71b61f3ba666d2266c940970702833ac';
+    img.alt='JazzCash QR Code';
+    title.textContent='Send payment via JazzCash';
+    sub.innerHTML='MUSHARRAF IQBAL &middot; 0300 4884733';
+    badge.innerHTML='<div class="qr-jc-badge"><i class="fa-solid fa-shield-check"></i> JazzCash Account</div>';
+    tabJc.classList.add('active'); tabEp.classList.remove('active');
+  }
 }
 </script>
 </body>
