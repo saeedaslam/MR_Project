@@ -145,12 +145,31 @@
         <input type="text" id="addCustomerId" placeholder="Customer ID (e.g. Mikrotik5)" />
         <input type="text" id="addCustomerName" placeholder="Customer Name" style="margin-top:10px;" />
         <input type="text" id="addCustomerContact" placeholder="Contact (phone number)" style="margin-top:10px;" />
+        <input type="text" id="addCustomerCnic" placeholder="CNIC" style="margin-top:10px;" />
+        <input type="text" id="addCustomerAddress" placeholder="Address" style="margin-top:10px;" />
+        <input type="text" id="addCustomerPackage" placeholder="Package" style="margin-top:10px;" />
         <input type="date" id="addCustomerExpiry" style="margin-top:10px;" />
         <input type="text" id="addCustomerBalance" placeholder="Balance" inputmode="decimal" style="margin-top:10px;" />
         <div class="error" id="addCustomerError" hidden></div>
         <button type="submit" class="btn-primary">Save customer</button>
       </form>
       <div class="status" id="addCustomerStatus"></div>
+
+      <hr style="border:none; border-top:1px solid var(--line); margin:28px 0;" />
+
+      <h1>Find &amp; renew a customer</h1>
+      <p class="hint">Search by phone number or Customer ID.</p>
+      <input type="text" id="searchQuery" placeholder="Phone number or Customer ID" />
+      <button id="searchBtn" class="btn-primary" style="margin-top:10px;">Search</button>
+      <div class="error" id="searchError" hidden></div>
+
+      <div class="preview" id="searchResult" hidden></div>
+
+      <div id="renewSection" hidden style="margin-top:14px;">
+        <input type="date" id="renewExpiry" />
+        <button id="renewBtn" class="btn-primary" style="margin-top:10px;">Set new expiry &amp; activate</button>
+        <div class="status" id="renewStatus"></div>
+      </div>
 
       <hr style="border:none; border-top:1px solid var(--line); margin:28px 0;" />
 
@@ -180,6 +199,94 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let parsedRows = null;
+    let foundCustomer = null;
+
+    const searchBtn = document.getElementById('searchBtn');
+    const searchQuery = document.getElementById('searchQuery');
+    const searchError = document.getElementById('searchError');
+    const searchResult = document.getElementById('searchResult');
+    const renewSection = document.getElementById('renewSection');
+    const renewBtn = document.getElementById('renewBtn');
+    const renewExpiry = document.getElementById('renewExpiry');
+    const renewStatus = document.getElementById('renewStatus');
+
+    async function extractErrorMessage(error, fallback){
+      let message = error.message || fallback;
+      if (error.context && typeof error.context.json === 'function'){
+        try{
+          const errBody = await error.context.json();
+          if (errBody && errBody.error) message = errBody.error;
+        } catch(parseErr){}
+      }
+      return message;
+    }
+
+    searchBtn.addEventListener('click', async function(){
+      const q = searchQuery.value.trim();
+      searchError.hidden = true;
+      searchResult.hidden = true;
+      renewSection.hidden = true;
+      renewStatus.textContent = '';
+      if (!q){
+        searchError.textContent = 'Enter a phone number or Customer ID.';
+        searchError.hidden = false;
+        return;
+      }
+      searchBtn.disabled = true;
+      searchBtn.textContent = 'Searching...';
+      try{
+        const { data, error } = await supabaseClient.functions.invoke('admin-search-customer', {
+          body: { query: q }
+        });
+        if (error){
+          searchError.textContent = await extractErrorMessage(error, 'Search failed.');
+          searchError.hidden = false;
+          return;
+        }
+        if (!data || data.error || !data.customer){
+          searchError.textContent = (data && data.error) ? data.error : 'No customer found.';
+          searchError.hidden = false;
+          return;
+        }
+        foundCustomer = data.customer;
+        searchResult.hidden = false;
+        searchResult.innerHTML = `
+          <div class="preview-row"><span>${foundCustomer.customer_name}</span><span>${foundCustomer.status}</span></div>
+          <div class="preview-row"><span>${foundCustomer.customer_id}</span><span>${foundCustomer.contact}</span></div>
+          <div class="preview-row"><span>Expires</span><span>${foundCustomer.expiration_date || '—'}</span></div>
+        `;
+        renewExpiry.value = foundCustomer.expiration_date || '';
+        renewSection.hidden = false;
+      } catch (err){
+        searchError.textContent = err.message;
+        searchError.hidden = false;
+      } finally {
+        searchBtn.disabled = false;
+        searchBtn.textContent = 'Search';
+      }
+    });
+
+    renewBtn.addEventListener('click', async function(){
+      if (!foundCustomer || !renewExpiry.value) return;
+      renewBtn.disabled = true;
+      renewStatus.textContent = 'Saving...';
+      try{
+        const { data, error } = await supabaseClient.functions.invoke('admin-renew-customer', {
+          body: { customer_id: foundCustomer.customer_id, new_expiry: renewExpiry.value }
+        });
+        if (error){
+          renewStatus.textContent = 'Failed: ' + await extractErrorMessage(error, 'Unknown error');
+        } else if (!data || data.error){
+          renewStatus.textContent = 'Failed: ' + ((data && data.error) ? data.error : 'Unknown error');
+        } else {
+          renewStatus.textContent = `Done — ${foundCustomer.customer_id} now expires ${renewExpiry.value} and is Active.`;
+        }
+      } catch (err){
+        renewStatus.textContent = 'Failed: ' + err.message;
+      } finally {
+        renewBtn.disabled = false;
+      }
+    });
 
     const addCustomerForm = document.getElementById('addCustomerForm');
     const addCustomerError = document.getElementById('addCustomerError');
@@ -193,6 +300,9 @@
       const customer_id = document.getElementById('addCustomerId').value.trim();
       const customer_name = document.getElementById('addCustomerName').value.trim();
       const contact = document.getElementById('addCustomerContact').value.trim();
+      const cnic = document.getElementById('addCustomerCnic').value.trim();
+      const address = document.getElementById('addCustomerAddress').value.trim();
+      const pkg = document.getElementById('addCustomerPackage').value.trim();
       const expiration_date = document.getElementById('addCustomerExpiry').value || null;
       const balanceRaw = document.getElementById('addCustomerBalance').value.trim();
       const balance = balanceRaw ? parseFloat(balanceRaw.replace(/[^0-9.-]/g, '')) : null;
@@ -209,7 +319,7 @@
 
       try{
         const { data, error } = await supabaseClient.functions.invoke('admin-add-customer', {
-          body: { customer_id, customer_name, contact, expiration_date, balance }
+          body: { customer_id, customer_name, contact, cnic, address, package: pkg, expiration_date, balance }
         });
 
         if (error){
@@ -317,12 +427,18 @@
             const kId = findKey(row, ['customer id']);
             const kName = findKey(row, ['customer name']);
             const kContact = findKey(row, ['contact']);
+            const kCnic = findKey(row, ['cnic']);
+            const kAddress = findKey(row, ['address']);
+            const kPackage = findKey(row, ['package']);
             const kExpiry = findKey(row, ['expiration date']);
             const kBalance = findKey(row, ['balance']);
             return {
               customer_id: kId ? String(row[kId]).trim() : '',
               customer_name: kName ? String(row[kName]).trim() : '',
               contact: kContact ? String(row[kContact]).trim() : '',
+              cnic: kCnic ? String(row[kCnic]).trim() : null,
+              address: kAddress ? String(row[kAddress]).trim() : null,
+              package: kPackage ? String(row[kPackage]).trim() : null,
               expiration_date: kExpiry ? normalizeDate(row[kExpiry]) : null,
               balance: kBalance ? normalizeBalance(row[kBalance]) : null,
             };
