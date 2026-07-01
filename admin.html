@@ -789,7 +789,7 @@ function renderTable() {
       <td title="${esc(c.address)}">${esc(c.address)}</td>
       <td>${esc(c.package)}</td>
       <td>${esc(c.expiration_date)}</td>
-      <td>${esc(c.balance != null ? c.balance : '')}</td>
+      <td>${c.balance != null ? 'RS ' + parseFloat(String(c.balance).replace(/,/g, '')).toLocaleString('en-PK') : '—'}</td>
       <td><span class="status-pill ${sc}"><span class="status-dot"></span>${status}</span></td>
       <td><a class="action-link" onclick="editCustomer(${customersCache.indexOf(c)})"><i class="fa-solid fa-pen-to-square"></i> Edit</a></td>
     </tr>`;
