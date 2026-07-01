@@ -21,7 +21,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse 500px 350px at 20% 10%,rgba(0,212,255,0.04),transparent 70%),
   radial-gradient(ellipse 400px 400px at 80% 90%,rgba(0,230,138,0.03),transparent 70%);}
 
-/* ── LOGIN SCREEN ── */
 .login-screen{position:fixed;inset:0;z-index:10000;overflow-y:auto;
   background:var(--bg);transition:opacity .45s,visibility .45s;}
 .login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
@@ -60,7 +59,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
 .login-error{color:var(--rose);font-size:12px;margin-top:10px;min-height:18px;position:relative;z-index:1;}
 
-/* ── SLIDER ── */
 .slider-section{width:100%;max-width:400px;margin-top:28px;flex-shrink:0;}
 .slider-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
   text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
@@ -76,7 +74,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .slider-arrow.left{left:2px;}
 .slider-arrow.right{right:2px;}
 
-/* Package slide (login) */
 .pkg-slide{scroll-snap-align:start;flex-shrink:0;width:135px;background:var(--bg-card);border:1px solid var(--border);
   border-radius:var(--radius);padding:14px 12px;text-align:center;transition:all .25s;}
 .pkg-slide:hover{border-color:var(--border-light);transform:translateY(-2px);}
@@ -88,7 +85,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .pkg-slide-features li{font-size:10px;color:var(--fg-dim);padding:3px 0;display:flex;align-items:center;gap:5px;}
 .pkg-slide-features li i{font-size:8px;color:var(--green);width:12px;text-align:center;flex-shrink:0;}
 
-/* ── PAYMENT SECTION (shared) ── */
 .payment-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
 .payment-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
   font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--orange);
@@ -114,9 +110,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:rgba(255,140,66,0.06);border:1px solid rgba(255,140,66,0.15);font-size:12px;color:var(--orange);line-height:1.5;}
 .payment-note i{margin-right:4px;}
 
-/* Office info */
 .office-card{width:100%;max-width:400px;background:var(--bg-card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:18px;margin-top:24px;flex-shrink:0;}
+  border-radius:var(--radius);margin-top:24px;flex-shrink:0;}
 .office-inner{padding:16px 18px;}
 .office-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
   text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
@@ -135,7 +130,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .office-row-text a{color:var(--cyan);text-decoration:none;font-weight:600;}
 .office-row-text a:hover{text-decoration:underline;}
 
-/* ── DASHBOARD ── */
 .dashboard{display:none;min-height:100vh;position:relative;z-index:1;}
 .dashboard.active{display:block;}
 .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
@@ -157,7 +151,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   box-shadow:0 2px 14px rgba(255,79,123,0.15);transform:translateY(-1px);}
 .main-content{max-width:600px;margin:0 auto;padding:24px 16px 60px;}
 
-/* ── ID CARD ── */
 .id-card{background:linear-gradient(160deg,var(--bg-card-alt),#171c28);border:1px solid var(--border);
   border-radius:16px;padding:22px 20px;margin-bottom:20px;position:relative;overflow:hidden;}
 .id-card::before{content:'';position:absolute;top:-40%;right:-20%;width:200px;height:200px;
@@ -177,7 +170,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .meta-label{font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
 .meta-val{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;}
 
-/* ── INFO GRID ── */
 .info-grid{display:grid;gap:10px;margin-bottom:20px;}
 .info-row{display:flex;align-items:center;justify-content:space-between;
   background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;transition:border-color .2s;}
@@ -201,7 +193,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   display:flex;align-items:center;gap:8px;}
 .section-header i{font-size:14px;}
 
-/* ── DASH PACKAGE SLIDER ── */
 .dash-pkg-track{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
   -webkit-overflow-scrolling:touch;padding:6px 40px;scrollbar-width:none;}
 .dash-pkg-track::-webkit-scrollbar{display:none;}
@@ -227,7 +218,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .dash-pkg-card.current .dash-pkg-btn{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;border:none;}
 .dash-pkg-card.current .dash-pkg-btn:hover{box-shadow:0 4px 16px rgba(0,212,255,0.3);}
 
-/* ── RENEW CTA ── */
 .quick-action{width:100%;padding:14px;border:none;border-radius:var(--radius);cursor:pointer;
   font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;transition:all .25s;
   display:flex;align-items:center;justify-content:center;gap:8px;}
@@ -237,7 +227,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   box-shadow:0 4px 20px rgba(0,212,255,0.15);margin-bottom:20px;}
 .action-renew:hover{box-shadow:0 6px 28px rgba(0,212,255,0.25);}
 
-/* ── DETAILS / OFFICE CARDS ── */
 .details-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
 .details-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
   font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
@@ -253,7 +242,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .detail-row.wrap .detail-value{white-space:normal;text-align:right;flex:1;max-width:60%;line-height:1.4;}
 .empty-state{padding:18px;text-align:center;color:var(--fg-dim);font-size:13px;}
 
-/* ── TOAST ── */
 .toast-container{position:fixed;top:16px;right:16px;left:16px;z-index:99999;
   display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none;}
 .toast{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:var(--radius);
@@ -272,7 +260,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .fade-up-d1{animation-delay:.06s;} .fade-up-d2{animation-delay:.12s;}
 .fade-up-d3{animation-delay:.18s;} .fade-up-d4{animation-delay:.24s;}
 .fade-up-d5{animation-delay:.30s;} .fade-up-d6{animation-delay:.36s;}
-.fade-up-d7{animation-delay:.42s;} .fade-up-d8{animation-delay:.48s;}
+.fade-up-d7{animation-delay:.42s;}
 
 @media(max-width:400px){
   .id-meta{gap:14px;}.info-row{padding:12px 14px;}.payment-body{padding:14px;}
@@ -284,7 +272,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 </head>
 <body>
 
-<!-- ═══════ LOGIN ═══════ -->
 <div class="login-screen" id="loginScreen">
   <div class="login-inner">
     <div class="login-box">
@@ -306,17 +293,21 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="login-error" id="loginError"></div>
     </div>
 
-    <!-- Login: Packages slider -->
+    <!-- Login: Auto-moving packages -->
     <div class="slider-section">
       <div class="slider-title"><i class="fa-solid fa-bolt"></i> Our Packages</div>
-      <div class="slider-wrap">
+      <div class="slider-wrap" id="loginPkgWrap"
+           onmouseenter="pauseSlider('loginPkg')"
+           onmouseleave="resumeSlider('loginPkg')"
+           ontouchstart="pauseSlider('loginPkg')"
+           ontouchend="resumeSlider('loginPkg')">
         <button class="slider-arrow left" onclick="scrollSlider('loginPkgTrack',-150)"><i class="fa-solid fa-chevron-left"></i></button>
         <div class="slider-track" id="loginPkgTrack"></div>
-        <button class="slider-arrow right" onclick="scrollSlider('loginPkgTrack',150)"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="slider-arrow right" onclick="scrollSlider('loginPkgTrack',150)"><i class="fa-solid fa-chevron-right"></button>
       </div>
     </div>
 
-    <!-- Login: Payment methods -->
+    <!-- Login: Payment methods (same as dashboard) -->
     <div class="slider-section">
       <div id="loginPayment"></div>
     </div>
@@ -326,7 +317,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   </div>
 </div>
 
-<!-- ═══════ DASHBOARD ═══════ -->
 <div class="dashboard" id="dashboard">
   <nav class="topbar">
     <div class="topbar-left">
@@ -407,10 +397,24 @@ function showToast(msg,type){
   c.appendChild(t);setTimeout(()=>{t.classList.add('toast-exit');setTimeout(()=>t.remove(),300);},4000);
 }
 
-/* ── Slider scroll ── */
-function scrollSlider(id,amount){document.getElementById(id).scrollBy({left:amount,behavior:'smooth'});}
+/* ── Auto-scroll sliders ── */
+const autoSliders={};
+function initAutoSlider(id,speed){
+  autoSliders[id]={interval:null,speed:speed||2500,running:true};
+  autoSliders[id].interval=setInterval(()=>{
+    if(!autoSliders[id].running) return;
+    const track=document.getElementById(id);
+    if(!track) return;
+    const max=track.scrollWidth-track.clientWidth;
+    if(track.scrollLeft>=max-2){track.scrollTo({left:0,behavior:'smooth'});}
+    else{track.scrollBy({left:150,behavior:'smooth'});}
+  },autoSliders[id].speed);
+}
+function pauseSlider(id){if(autoSliders[id]) autoSliders[id].running=false;}
+function resumeSlider(id){if(autoSliders[id]) autoSliders[id].running=true;}
+function scrollSlider(id,amount){const t=document.getElementById(id);if(t) t.scrollBy({left:amount,behavior:'smooth'});}
 
-/* ── Payment HTML builder (shared) ── */
+/* ── Payment HTML (shared for login + dashboard) ── */
 function buildPaymentHTML(prefix){
   const tabs=PAYMENT_METHODS.map((m,i)=>
     `<button class="pay-tab${i===0?' active':''}" id="${prefix}Tab${i}" onclick="switchPayTab('${prefix}',${i})">
@@ -428,14 +432,21 @@ function buildPaymentHTML(prefix){
     <div class="payment-body"><div class="pay-tabs">${tabs}</div><div id="${prefix}Details">${details}</div>
     <div class="payment-note"><i class="fa-solid fa-circle-info"></i>After payment, send screenshot to <strong>0300 4884 733</strong> with your Customer ID.</div></div></div>`;
 }
+function switchPayTab(prefix,idx){
+  PAYMENT_METHODS.forEach((_,i)=>{
+    const tab=document.getElementById(prefix+'Tab'+i),det=document.getElementById(prefix+'Detail'+i);
+    if(tab) tab.classList.toggle('active',i===idx);
+    if(det) det.classList.toggle('show',i===idx);
+  });
+}
 
-/* ── Office HTML builder (shared) ── */
+/* ── Office HTML ── */
 function buildOfficeHTML(){
   return `<div class="office-title"><i class="fa-solid fa-building"></i> Office Information</div>`+
     OFFICE_INFO.map(o=>`<div class="office-row"><i class="${o.icon} ${o.fa}"></i><div class="office-row-text">${o.text}</div></div>`).join('');
 }
 
-/* ── Build login page sliders ── */
+/* ── Build login sliders ── */
 function buildLoginSliders(){
   document.getElementById('loginPkgTrack').innerHTML=PACKAGES.map(p=>
     `<div class="pkg-slide"><div class="pkg-slide-name">${p.name}</div><div class="pkg-slide-speed">${p.speed}</div>
@@ -446,25 +457,13 @@ function buildLoginSliders(){
   document.getElementById('loginOffice').innerHTML=buildOfficeHTML();
 }
 
-/* ── Pay tab switch ── */
-function switchPayTab(prefix,idx){
-  PAYMENT_METHODS.forEach((_,i)=>{
-    const tab=document.getElementById(prefix+'Tab'+i);
-    const det=document.getElementById(prefix+'Detail'+i);
-    if(tab) tab.classList.toggle('active',i===idx);
-    if(det) det.classList.toggle('show',i===idx);
-  });
-}
-
 /* ── AUTH ── */
 const loginScreen=document.getElementById('loginScreen'),dashboard=document.getElementById('dashboard'),
   phoneInput=document.getElementById('phoneInput'),last4Input=document.getElementById('last4Input'),
   loginBtn=document.getElementById('loginBtn'),loginError=document.getElementById('loginError'),
   togglePass=document.getElementById('togglePass');
-
 function showLogin(){loginScreen.classList.remove('hidden');dashboard.classList.remove('active');}
 function showDash(){loginScreen.classList.add('hidden');dashboard.classList.add('active');}
-
 loginBtn.addEventListener('click',handleLogin);
 last4Input.addEventListener('keydown',e=>{if(e.key==='Enter') handleLogin();});
 
@@ -497,14 +496,7 @@ function renderProfile(){
   document.getElementById('userPhoneDisplay').textContent=phone;
   document.getElementById('userAvatar').textContent=(c.customer_name||'?').charAt(0).toUpperCase();
 
-  const extraKeys=Object.keys(c).filter(k=>!KNOWN_FIELDS.includes(k));
   const expiryF=formatValue('expiration_date',c.expiration_date),balF=formatValue('balance',c.balance);
-  let extraHTML='';
-  if(!extraKeys.length) extraHTML='<div class="empty-state">No other details on file.</div>';
-  else extraHTML=extraKeys.map(k=>{
-    const isAddr=k.toLowerCase()==='address';
-    return `<div class="detail-row${isAddr?' wrap':''}"><span class="detail-label">${esc(prettyLabel(k))}</span>${isAddr?'':'<span class="detail-leader"></span>'}<span class="detail-value">${esc(formatValue(k,c[k]))}</span></div>`;
-  }).join('');
 
   const dashPkgCards=PACKAGES.map(p=>{
     const isCurrent=currentPkg.includes(p.name);
@@ -546,10 +538,14 @@ function renderProfile(){
 
     <div class="fade-up fade-up-d5" style="margin-bottom:24px;">
       <div class="section-header" style="color:var(--cyan);"><i class="fa-solid fa-bolt"></i> Our Packages</div>
-      <div class="slider-wrap">
+      <div class="slider-wrap" id="dashPkgWrap"
+           onmouseenter="pauseSlider('dashPkg')"
+           onmouseleave="resumeSlider('dashPkg')"
+           ontouchstart="pauseSlider('dashPkg')"
+           ontouchend="resumeSlider('dashPkg')">
         <button class="slider-arrow left" onclick="scrollSlider('dashPkgTrack',-170)"><i class="fa-solid fa-chevron-left"></i></button>
         <div class="dash-pkg-track" id="dashPkgTrack">${dashPkgCards}</div>
-        <button class="slider-arrow right" onclick="scrollSlider('dashPkgTrack',170)"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="slider-arrow right" onclick="scrollSlider('dashPkgTrack',170)"><i class="fa-solid fa-chevron-right"></button>
       </div>
     </div>
 
@@ -558,15 +554,13 @@ function renderProfile(){
     <div class="details-card fade-up fade-up-d7">
       <div class="details-header"><i class="fa-solid fa-building"></i> Office Information</div>
       <div class="office-inner">${buildOfficeHTML()}</div>
-    </div>
-
-    <div class="details-card fade-up fade-up-d8">
-      <div class="details-header"><i class="fa-solid fa-list"></i> Other Details</div>
-      ${extraHTML}
     </div>`;
 }
 
+/* ── Init ── */
 buildLoginSliders();
+initAutoSlider('loginPkgTrack',2500);
+initAutoSlider('dashPkgTrack',3000);
 </script>
 </body>
 </html>
