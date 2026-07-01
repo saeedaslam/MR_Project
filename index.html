@@ -242,9 +242,10 @@
     .payment-body{padding:14px;}
     .main-content{padding:18px 12px 40px;}
     .topbar{padding:10px 14px;}
-    .pricing-grid{grid-template-columns:1fr;gap:10px;}
-    .pricing-card{padding:16px 14px;}
+    .pricing-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+    .pricing-card{padding:14px 10px;}
     .qr-frame img{width:160px;height:160px;}
+    .pay3d-wrap{width:calc(33.33% - 8px);}
   }
   @media(min-width:401px) and (max-width:500px){
     .pricing-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
@@ -253,12 +254,71 @@
     .pricing-price{font-size:24px;}
     .pricing-features li{font-size:11px;}
   }
+
+  /* ── MULTI-RING LOADER ── */
+  .ring-loader{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;position:relative;vertical-align:middle;}
+  .ring-loader span{position:absolute;width:100%;height:100%;border-radius:50%;border:2px solid transparent;animation:ringSpinA 1.2s linear infinite;}
+  .ring-loader span:nth-child(1){border-top-color:#00d4ff;animation-duration:1.1s;}
+  .ring-loader span:nth-child(2){border-right-color:#00e68a;animation-duration:1.5s;animation-direction:reverse;width:70%;height:70%;}
+  .ring-loader span:nth-child(3){border-bottom-color:rgba(0,212,255,0.4);animation-duration:2s;width:40%;height:40%;}
+  @keyframes ringSpinA{to{transform:rotate(360deg);}}
+
+  /* ── PUBLIC PACKAGES (login page) ── */
+  .public-pkgs{width:100%;max-width:400px;margin-top:20px;}
+  .public-pkgs-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.9px;color:var(--fg-muted);margin-bottom:12px;text-align:center;}
+  .public-pkgs-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .public-pkgs-scroll::-webkit-scrollbar{display:none;}
+  .pub-pkg{flex:0 0 auto;width:130px;background:var(--bg-card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 12px;text-align:center;transition:border-color .2s;}
+  .pub-pkg:hover{border-color:rgba(0,212,255,0.3);}
+  .pub-pkg-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;margin-bottom:2px;color:var(--fg);}
+  .pub-pkg-speed{font-size:10px;color:var(--cyan);font-weight:600;margin-bottom:8px;}
+  .pub-pkg-price{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;
+    background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+  .pub-pkg-mo{font-size:10px;color:var(--fg-muted);margin-top:2px;font-weight:500;}
+
+  /* ── 3D FLIP PAYMENT CARDS ── */
+  .pay3d-grid{display:flex;gap:12px;margin-bottom:18px;justify-content:center;}
+  .pay3d-wrap{width:calc(33.33% - 8px);perspective:900px;cursor:pointer;}
+  .pay3d-inner{position:relative;width:100%;padding-top:145%;transform-style:preserve-3d;
+    transition:transform .55s cubic-bezier(.4,0,.2,1);}
+  .pay3d-wrap.flipped .pay3d-inner{transform:rotateY(180deg);}
+  .pay3d-front,.pay3d-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);
+    border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;
+    justify-content:center;padding:12px 8px;text-align:center;}
+  .pay3d-back{transform:rotateY(180deg);}
+
+  .pay3d-jazz .pay3d-front{background:linear-gradient(160deg,#1a0d0d,#250a0a);border-color:rgba(255,0,80,0.2);}
+  .pay3d-jazz .pay3d-back{background:linear-gradient(160deg,#200b0b,#1a0808);border-color:rgba(255,0,80,0.3);}
+  .pay3d-ep .pay3d-front{background:linear-gradient(160deg,#071a0f,#081e12);border-color:rgba(0,200,80,0.2);}
+  .pay3d-ep .pay3d-back{background:linear-gradient(160deg,#081e12,#071810);border-color:rgba(0,200,80,0.3);}
+  .pay3d-ubl .pay3d-front{background:linear-gradient(160deg,#080d1a,#0a1020);border-color:rgba(0,100,220,0.2);}
+  .pay3d-ubl .pay3d-back{background:linear-gradient(160deg,#09101e,#070c18);border-color:rgba(0,100,220,0.3);}
+
+  .pay3d-logo{font-size:26px;margin-bottom:8px;}
+  .pay3d-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px;}
+  .pay3d-jazz .pay3d-name{color:#ff3c5f;}
+  .pay3d-ep .pay3d-name{color:#00c850;}
+  .pay3d-ubl .pay3d-name{color:#4488ff;}
+  .pay3d-hint{font-size:10px;color:var(--fg-muted);line-height:1.3;}
+  .pay3d-tap{font-size:9px;color:var(--fg-dim);margin-top:8px;letter-spacing:.4px;text-transform:uppercase;}
+
+  .pay3d-back-label{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--fg-dim);margin-bottom:3px;}
+  .pay3d-back-val{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--fg);margin-bottom:8px;}
+  .pay3d-back-name{font-size:11px;color:var(--fg-muted);}
+
+  .pay3d-flip-hint{text-align:center;font-size:10px;color:var(--fg-dim);margin-bottom:14px;letter-spacing:.3px;}
+
 </style>
 </head>
 <body>
 
 <div class="login-screen" id="loginScreen">
-  <div class="login-box">
+  <div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:440px;padding:20px 16px 40px;">
+  <div class="login-box" style="width:100%;">
     <div class="sim-icon" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
     <div class="login-logo">MR Cable & Networks</div>
     <div class="login-sub">Enter your phone number and the last 4 digits of that same number to view your account.</div>
@@ -277,6 +337,12 @@
       <i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account
     </button>
     <div class="login-error" id="loginError"></div>
+  </div>
+
+  <div class="public-pkgs">
+    <div class="public-pkgs-title">Our Packages</div>
+    <div class="public-pkgs-scroll" id="publicPkgsScroll"></div>
+  </div>
   </div>
 </div>
 
@@ -310,9 +376,12 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const KNOWN_FIELDS = ['customer_id','customer_name','contact','cnic','package','expiration_date','balance','status'];
 const PACKAGES = [
-  { name:'SUPER-10', speed:'10 Mbps', price:1700, features:['10 Mbps download speed','Unlimited data usage','24/7 support','Free router (if available)'] },
-  { name:'SUPER-15', speed:'15 Mbps', price:2200, features:['15 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] },
-  { name:'SUPER-20', speed:'20 Mbps', price:2500, features:['20 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] }
+  { name:'LH3',      speed:'2 Mbps',  price:1000, features:['2 Mbps download speed','Unlimited data usage','24/7 support'] },
+  { name:'LHR5',     speed:'5 Mbps',  price:1400, features:['5 Mbps download speed','Unlimited data usage','24/7 support'] },
+  { name:'SUPER-10', speed:'10 Mbps', price:1800, features:['10 Mbps download speed','Unlimited data usage','24/7 support','Free router (if available)'] },
+  { name:'SUPER-15', speed:'15 Mbps', price:2500, features:['15 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] },
+  { name:'SUPER-20', speed:'20 Mbps', price:3000, features:['20 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] },
+  { name:'SUPER-30', speed:'25 Mbps', price:3500, features:['25 Mbps download speed','Unlimited data usage','24/7 priority support','Free router (if available)'] },
 ];
 let customerData = null;
 
@@ -349,6 +418,14 @@ const loginScreen=document.getElementById('loginScreen'), dashboard=document.get
   loginBtn=document.getElementById('loginBtn'), loginError=document.getElementById('loginError'),
   togglePass=document.getElementById('togglePass');
 
+document.getElementById('publicPkgsScroll').innerHTML = PACKAGES.map(p=>`
+  <div class="pub-pkg">
+    <div class="pub-pkg-name">${p.name}</div>
+    <div class="pub-pkg-speed">${p.speed}</div>
+    <div class="pub-pkg-price">Rs.${p.price.toLocaleString()}</div>
+    <div class="pub-pkg-mo">/ month</div>
+  </div>`).join('');
+
 function showLogin(){ loginScreen.classList.remove('hidden'); dashboard.classList.remove('active'); }
 function showDash(){ loginScreen.classList.add('hidden'); dashboard.classList.add('active'); }
 
@@ -359,7 +436,7 @@ async function handleLogin(){
   const phone=phoneInput.value.trim(), last4=last4Input.value.trim();
   loginError.textContent='';
   if(!phone||!last4){ loginError.textContent='Enter your phone number and the last 4 digits.'; return; }
-  loginBtn.disabled=true; loginBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Checking...';
+  loginBtn.disabled=true; loginBtn.innerHTML='<span class="ring-loader"><span></span><span></span><span></span></span>&nbsp; Checking...';
   try{
     const {data,error}=await sb.functions.invoke('login',{body:{phone,last4}});
     if(error||!data||data.error||!data.customer){ loginError.textContent='Phone number or last 4 digits is incorrect.'; }
@@ -460,7 +537,7 @@ function renderProfile(){
       <div class="payment-body">
         <div class="payment-row">
           <div class="p-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-          <div><div class="p-label">JazzCash / EasyPaisa</div><div class="p-value">0300 4884733</div></div>
+          <div><div class="p-label">Mobile Wallet Number</div><div class="p-value">0300 4884733</div></div>
         </div>
         <div class="payment-row">
           <div class="p-icon"><i class="fa-solid fa-user"></i></div>
@@ -468,7 +545,66 @@ function renderProfile(){
         </div>
         <div class="payment-row">
           <div class="p-icon"><i class="fa-solid fa-hashtag"></i></div>
-          <div><div class="p-label">TILL-ID</div><div class="p-value">981 985 260</div></div>
+          <div><div class="p-label">EasyPaisa TILL-ID</div><div class="p-value">981 985 260</div></div>
+        </div>
+
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+          <div class="pay3d-flip-hint"><i class="fa-solid fa-hand-pointer"></i>&nbsp; Tap a card to see payment details</div>
+          <div class="pay3d-grid">
+
+            <div class="pay3d-wrap pay3d-jazz" onclick="this.classList.toggle('flipped')">
+              <div class="pay3d-inner">
+                <div class="pay3d-front">
+                  <div class="pay3d-logo">🔴</div>
+                  <div class="pay3d-name">JazzCash</div>
+                  <div class="pay3d-hint">Send via mobile wallet</div>
+                  <div class="pay3d-tap">Tap to flip</div>
+                </div>
+                <div class="pay3d-back">
+                  <div class="pay3d-back-label">Mobile Number</div>
+                  <div class="pay3d-back-val">0300 4884733</div>
+                  <div class="pay3d-back-label">Account Name</div>
+                  <div class="pay3d-back-name">Musharraf Iqbal</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pay3d-wrap pay3d-ep" onclick="this.classList.toggle('flipped')">
+              <div class="pay3d-inner">
+                <div class="pay3d-front">
+                  <div class="pay3d-logo">🟢</div>
+                  <div class="pay3d-name">EasyPaisa</div>
+                  <div class="pay3d-hint">Send via app or TILL</div>
+                  <div class="pay3d-tap">Tap to flip</div>
+                </div>
+                <div class="pay3d-back">
+                  <div class="pay3d-back-label">Mobile Number</div>
+                  <div class="pay3d-back-val">0300 4884733</div>
+                  <div class="pay3d-back-label">TILL-ID</div>
+                  <div class="pay3d-back-val" style="font-size:12px;">981 985 260</div>
+                  <div class="pay3d-back-name">Musharraf Iqbal</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pay3d-wrap pay3d-ubl" onclick="this.classList.toggle('flipped')">
+              <div class="pay3d-inner">
+                <div class="pay3d-front">
+                  <div class="pay3d-logo">🔵</div>
+                  <div class="pay3d-name">UBL</div>
+                  <div class="pay3d-hint">Bank transfer / Omni</div>
+                  <div class="pay3d-tap">Tap to flip</div>
+                </div>
+                <div class="pay3d-back">
+                  <div class="pay3d-back-label">Account Title</div>
+                  <div class="pay3d-back-name">Musharraf Iqbal</div>
+                  <div class="pay3d-back-label" style="margin-top:6px;">Contact for details</div>
+                  <div class="pay3d-back-val" style="font-size:12px;">0300 4884733</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
 
         <div class="qr-section">
@@ -488,7 +624,7 @@ function renderProfile(){
 
         <div class="payment-note">
           <i class="fa-solid fa-circle-info"></i>
-          Scan the QR code to send payment directly. After transfer, send a screenshot to <strong>0300 4884733</strong> with your Customer ID. Your account will be renewed once payment is confirmed.
+          Tap a payment card above to see account details, or scan the QR code. After sending payment, share a screenshot to <strong>0300 4884733</strong> with your Customer ID — your account will be renewed once payment is confirmed.
         </div>
       </div>
     </div>
