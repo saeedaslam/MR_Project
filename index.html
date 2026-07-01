@@ -1,80 +1,744 @@
-<!-- ═══════ LOGIN PAGE PACKAGE SLIDER ═══════ -->
-<div class="slider-section">
-  <div class="slider-title"><i class="fa-solid fa-bolt"></i> Our Packages</div>
-  <div class="slider-wrap" id="loginPkgWrap"
-       onmouseenter="pauseSlider('loginPkg')"
-       onmouseleave="resumeSlider('loginPkg')"
-       ontouchstart="pauseSlider('loginPkg')"
-       ontouchend="resumeSlider('loginPkg')">
-    <button class="slider-arrow left" onclick="scrollSlider('loginPkgTrack',-150)"><i class="fa-solid fa-chevron-left"></i></button>
-    <div class="slider-track" id="loginPkgTrack">
-      <div class="pkg-slide"><div class="pkg-slide-name">LH3</div><div class="pkg-slide-speed">2 Mbps</div><div class="pkg-slide-price">Rs. 1,000<span>/mo</span></div><ul class="pkg-slide-features"><li><i class="fa-solid fa-check"></i>2 Mbps download</li><li><i class="fa-solid fa-check"></i>Unlimited data</li><li><i class="fa-solid fa-check"></i>24/7 support</li></ul></div>
-      <div class="pkg-slide"><div class="pkg-slide-name">LHR5</div><div class="pkg-slide-speed">5 Mbps</div><div class="pkg-slide-price">Rs. 1,400<span>/mo</span></div><ul class="pkg-slide-features"><li><i class="fa-solid fa-check"></i>5 Mbps download</li><li><i class="fa-solid fa-check"></i>Unlimited data</li><li><i class="fa-solid fa-check"></i>24/7 support</li></ul></div>
-      <div class="pkg-slide"><div class="pkg-slide-name">SUPER-10</div><div class="pkg-slide-speed">10 Mbps</div><div class="pkg-slide-price">Rs. 1,800<span>/mo</span></div><ul class="pkg-slide-features"><li><i class="fa-solid fa-check"></i>10 Mbps download</li><li><i class="fa-solid fa-check"></i>Unlimited data</li><li><i class="fa-solid fa-check"></i>Priority support</li><li><i class="fa-solid fa-check"></i>Free router</li></ul></div>
-      <div class="pkg-slide"><div class="pkg-slide-name">SUPER-15</div><div class="pkg-slide-speed">15 Mbps</div><div class="pkg-slide-price">Rs. 2,500<span>/mo</span></div><ul class="pkg-slide-features"><li><i class="fa-solid fa-check"></i>15 Mbps download</li><li><i class="fa-solid fa-check"></i>Unlimited data</li><li><i class="fa-solid fa-check"></i>Priority support</li><li><i class="fa-solid fa-check"></i>Free router</li></ul></div>
-      <div class="pkg-slide"><div class="pkg-slide-name">SUPER-20</div><div class="pkg-slide-speed">20 Mbps</div><div class="pkg-slide-price">Rs. 3,000<span>/mo</span></div><ul class="pkg-slide-features"><li><i class="fa-solid fa-check"></i>20 Mbps download</li><li><i class="fa-solid fa-check"></i>Unlimited data</li><li><i class="fa-solid fa-check"></i>Priority support</li><li><i class="fa-solid fa-check"></i>Free router</li></ul></div>
-      <div class="pkg-slide"><div class="pkg-slide-name">SUPER-30</div><div class="pkg-slide-speed">25 Mbps</div><div class="pkg-slide-price">Rs. 3,500<span>/mo</span></div><ul class="pkg-slide-features"><li><i class="fa-solid fa-check"></i>25 Mbps download</li><li><i class="fa-solid fa-check"></i>Unlimited data</li><li><i class="fa-solid fa-check"></i>Priority support</li><li><i class="fa-solid fa-check"></i>Free router</li></ul></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>MR Cable & Networks — My Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#0c0e14;--bg-card:#161922;--bg-card-alt:#1c2030;--bg-input:#1a1e2a;
+  --fg:#e4e7f0;--fg-muted:#6b7194;--fg-dim:#464b6a;
+  --border:#252a3a;--border-light:#2f3549;
+  --green:#00e68a;--cyan:#00d4ff;--orange:#ff8c42;--rose:#ff4f7b;
+  --green-dim:rgba(0,230,138,0.08);--cyan-dim:rgba(0,212,255,0.08);
+  --radius:12px;--radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 500px 350px at 20% 10%,rgba(0,212,255,0.04),transparent 70%),
+  radial-gradient(ellipse 400px 400px at 80% 90%,rgba(0,230,138,0.03),transparent 70%);}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{position:fixed;inset:0;z-index:10000;overflow-y:auto;
+  background:var(--bg);transition:opacity .45s,visibility .45s;}
+.login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.login-inner{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 60px;}
+.login-box{width:100%;max-width:400px;padding:32px 24px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;text-align:center;position:relative;overflow:hidden;flex-shrink:0;}
+.login-box::before{content:'';position:absolute;top:-50%;left:-20%;width:140%;height:100%;
+  background:radial-gradient(ellipse,rgba(0,212,255,0.06),transparent 70%);pointer-events:none;}
+.sim-icon{display:inline-flex;align-items:flex-end;gap:4px;margin-bottom:18px;padding:10px 16px;
+  background:var(--bg-input);border:1px solid var(--border);border-radius:10px;position:relative;z-index:1;}
+.sim-icon span{display:block;width:5px;background:var(--cyan);border-radius:2px;animation:barPulse 1.2s ease-in-out infinite;}
+.sim-icon span:nth-child(1){height:10px;animation-delay:0s;}
+.sim-icon span:nth-child(2){height:16px;animation-delay:.15s;}
+.sim-icon span:nth-child(3){height:22px;animation-delay:.3s;}
+.sim-icon span:nth-child(4){height:28px;animation-delay:.45s;}
+@keyframes barPulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+.login-logo{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px;
+  background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1;}
+.login-sub{color:var(--fg-muted);font-size:12px;margin-bottom:22px;position:relative;z-index:1;line-height:1.5;}
+.login-field{margin-bottom:12px;text-align:left;position:relative;z-index:1;}
+.login-field label{display:block;font-size:10px;font-weight:600;color:var(--fg-muted);
+  text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;}
+.login-field input{width:100%;padding:11px 13px;background:var(--bg-input);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--fg);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;}
+.login-field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.12);}
+.login-field input::placeholder{color:var(--fg-dim);}
+.login-field .pass-wrap{position:relative;}
+.login-field .pass-wrap input{padding-right:52px;}
+.toggle-pass{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;
+  color:var(--cyan);font-size:11px;font-weight:600;cursor:pointer;padding:4px 6px;font-family:inherit;}
+.login-btn{width:100%;padding:12px;border:none;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px;position:relative;z-index:1;}
+.login-btn:hover{box-shadow:0 4px 24px rgba(0,212,255,0.3);transform:translateY(-1px);}
+.login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.login-error{color:var(--rose);font-size:12px;margin-top:10px;min-height:18px;position:relative;z-index:1;}
+
+/* ── SLIDER (shared) ── */
+.slider-section{width:100%;max-width:400px;margin-top:28px;flex-shrink:0;}
+.slider-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
+  text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.slider-title i{color:var(--cyan);font-size:13px;}
+.slider-wrap{position:relative;overflow:hidden;border-radius:var(--radius);}
+.slider-track{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;padding:4px 2px;scrollbar-width:none;}
+.slider-track::-webkit-scrollbar{display:none;}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;
+  background:var(--bg-card);border:1px solid var(--border);color:var(--fg-muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2;transition:all .2s;}
+.slider-arrow:hover{background:var(--bg-card-alt);color:var(--fg);border-color:var(--border-light);}
+.slider-arrow.left{left:4px;}
+.slider-arrow.right{right:4px;}
+.slider-arrow:disabled{opacity:0;pointer-events:none;}
+
+/* Package card in slider */
+.pkg-slide{scroll-snap-align:start;flex-shrink:0;width:130px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 12px;text-align:center;transition:all .25s;cursor:default;}
+.pkg-slide:hover{border-color:var(--border-light);transform:translateY(-2px);}
+.pkg-slide-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;margin-bottom:2px;}
+.pkg-slide-speed{font-size:10px;color:var(--fg-muted);margin-bottom:10px;}
+.pkg-slide-price{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;line-height:1;}
+.pkg-slide-price span{font-size:11px;font-weight:500;color:var(--fg-muted);}
+.pkg-slide-features{list-style:none;margin-top:10px;text-align:left;}
+.pkg-slide-features li{font-size:10px;color:var(--fg-dim);padding:3px 0;display:flex;align-items:center;gap:5px;}
+.pkg-slide-features li i{font-size:8px;color:var(--green);width:12px;text-align:center;flex-shrink:0;}
+
+/* Payment logo slide */
+.pay-logo-slide{scroll-snap-align:start;flex-shrink:0;width:160px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 14px;text-align:center;cursor:pointer;transition:all .25s;}
+.pay-logo-slide:hover,.pay-logo-slide.active{border-color:var(--orange);background:rgba(255,140,66,0.05);}
+.pay-logo-slide img{height:40px;width:auto;object-fit:contain;margin-bottom:8px;}
+.pay-logo-slide .pay-name{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;}
+
+/* Office info */
+.office-card{width:100%;max-width:400px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;margin-top:24px;flex-shrink:0;}
+.office-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
+  text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.office-title i{color:var(--cyan);font-size:13px;}
+.office-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:12.5px;}
+.office-row:last-child{border:none;}
+.office-row i{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;}
+.office-row .oi-clock{background:var(--cyan-dim);color:var(--cyan);}
+.office-row .oi-yt{background:rgba(255,0,0,0.1);color:#FF4444;}
+.office-row .oi-fb{background:rgba(24,119,242,0.1);color:#1877F2;}
+.office-row .oi-web{background:var(--green-dim);color:var(--green);}
+.office-row-text{line-height:1.5;}
+.office-row-text strong{color:var(--fg);font-weight:600;}
+.office-row-text span{color:var(--fg-muted);font-size:12px;}
+.office-row-text a{color:var(--cyan);text-decoration:none;font-weight:600;}
+.office-row-text a:hover{text-decoration:underline;}
+
+/* ── DASHBOARD ── */
+.dashboard{display:none;min-height:100vh;position:relative;z-index:1;}
+.dashboard.active{display:block;}
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;background:rgba(12,14,20,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;
+  background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.topbar-divider{width:1px;height:20px;background:var(--border);}
+.topbar-page{font-size:13px;color:var(--fg-muted);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.user-badge{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:100px;
+  background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.15);font-size:11px;color:var(--cyan);font-weight:600;}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--green));
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#051520;}
+.btn-logout{display:flex;align-items:center;gap:5px;padding:6px 14px;border:1px solid rgba(255,79,123,0.25);
+  border-radius:var(--radius-sm);background:rgba(255,79,123,0.06);color:var(--rose);
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;}
+.btn-logout:hover{background:rgba(255,79,123,0.14);border-color:rgba(255,79,123,0.4);
+  box-shadow:0 2px 14px rgba(255,79,123,0.15);transform:translateY(-1px);}
+.main-content{max-width:600px;margin:0 auto;padding:24px 16px 60px;}
+
+/* ── ID CARD ── */
+.id-card{background:linear-gradient(160deg,var(--bg-card-alt),#171c28);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px;margin-bottom:20px;position:relative;overflow:hidden;}
+.id-card::before{content:'';position:absolute;top:-40%;right:-20%;width:200px;height:200px;
+  background:radial-gradient(circle,rgba(0,212,255,0.06),transparent 70%);pointer-events:none;}
+.id-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative;z-index:1;}
+.id-chip{width:34px;height:24px;border-radius:4px;
+  background:linear-gradient(135deg,#D9B872,#B6904E);
+  background-image:linear-gradient(135deg,#D9B872,#B6904E),
+  repeating-linear-gradient(0deg,rgba(0,0,0,0.18) 0,rgba(0,0,0,0.18) 1px,transparent 1px,transparent 5px);}
+.signal-mini{display:flex;gap:3px;align-items:flex-end;}
+.signal-mini span{width:4px;background:var(--cyan);border-radius:1px;}
+.signal-mini span:nth-child(1){height:6px;} .signal-mini span:nth-child(2){height:9px;}
+.signal-mini span:nth-child(3){height:12px;} .signal-mini span:nth-child(4){height:15px;}
+.id-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:14px;position:relative;z-index:1;}
+.id-meta{display:flex;gap:20px;flex-wrap:wrap;position:relative;z-index:1;}
+.id-meta>div{display:flex;flex-direction:column;gap:3px;}
+.meta-label{font-size:10px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+.meta-val{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;}
+
+/* ── INFO GRID ── */
+.info-grid{display:grid;gap:10px;margin-bottom:20px;}
+.info-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;transition:border-color .2s;}
+.info-row:hover{border-color:var(--border-light);}
+.info-left{display:flex;align-items:center;gap:10px;}
+.info-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.info-icon.cyan{background:var(--cyan-dim);color:var(--cyan);}
+.info-icon.green{background:var(--green-dim);color:var(--green);}
+.info-icon.orange{background:rgba(255,140,66,0.08);color:var(--orange);}
+.info-icon.rose{background:rgba(255,79,123,0.08);color:var(--rose);}
+.info-label{font-size:11px;color:var(--fg-muted);font-weight:500;}
+.info-value{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;margin-top:1px;}
+.status-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;
+  font-size:12px;font-weight:700;font-family:'Space Grotesk',sans-serif;}
+.status-pill.active{background:rgba(0,230,138,0.1);color:var(--green);border:1px solid rgba(0,230,138,0.2);}
+.status-pill.pending{background:rgba(255,179,71,0.1);color:#ffb347;border:1px solid rgba(255,179,71,0.2);}
+.status-pill.expired{background:rgba(255,79,123,0.1);color:var(--rose);border:1px solid rgba(255,79,123,0.2);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* ── SECTION HEADERS ── */
+.section-header{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;}
+.section-header i{font-size:14px;}
+
+/* ── DASHBOARD PACKAGE SLIDER ── */
+.dash-pkg-slider{margin-bottom:24px;}
+.dash-pkg-track{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;padding:4px 2px;scrollbar-width:none;}
+.dash-pkg-track::-webkit-scrollbar{display:none;}
+.dash-pkg-card{scroll-snap-align:start;flex-shrink:0;width:155px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 14px;text-align:center;position:relative;overflow:hidden;transition:all .3s;cursor:default;}
+.dash-pkg-card:hover{border-color:var(--border-light);transform:translateY(-2px);}
+.dash-pkg-card.current{border-color:rgba(0,212,255,0.4);background:linear-gradient(160deg,rgba(0,212,255,0.08),rgba(0,212,255,0.02));}
+.dash-pkg-tag{position:absolute;top:0;right:0;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  padding:3px 8px;border-radius:0 0 0 var(--radius-sm);background:var(--cyan);color:#051520;}
+.dash-pkg-card:not(.current) .dash-pkg-tag{display:none;}
+.dash-pkg-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-bottom:2px;margin-top:4px;}
+.dash-pkg-speed{font-size:11px;color:var(--fg-muted);margin-bottom:12px;}
+.dash-pkg-price{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;line-height:1;margin-bottom:12px;}
+.dash-pkg-price span{font-size:12px;font-weight:500;color:var(--fg-muted);}
+.dash-pkg-features{list-style:none;text-align:left;margin-bottom:14px;}
+.dash-pkg-features li{font-size:11px;color:var(--fg-muted);padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:6px;}
+.dash-pkg-features li:last-child{border:none;}
+.dash-pkg-features li i{font-size:9px;color:var(--green);width:12px;text-align:center;flex-shrink:0;}
+.dash-pkg-btn{width:100%;padding:8px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--bg-input);color:var(--fg);font-family:'Space Grotesk',sans-serif;font-size:11px;
+  font-weight:600;cursor:pointer;transition:all .2s;}
+.dash-pkg-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.dash-pkg-card.current .dash-pkg-btn{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;border:none;}
+.dash-pkg-card.current .dash-pkg-btn:hover{box-shadow:0 4px 16px rgba(0,212,255,0.3);}
+
+/* ── PAYMENT SECTION ── */
+.payment-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+.payment-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--orange);
+  text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px;}
+.payment-header i{font-size:13px;}
+.payment-body{padding:18px;}
+
+/* Payment tabs */
+.pay-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px;}
+.pay-tab{padding:10px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);
+  color:var(--fg-muted);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;
+  text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.pay-tab:hover:not(.active){border-color:var(--fg-dim);color:var(--fg);}
+.pay-tab.active{border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06);color:var(--orange);}
+.pay-tab img{height:28px;width:auto;object-fit:contain;}
+
+/* Payment detail rows */
+.pay-detail{display:none;}
+.pay-detail.show{display:block;animation:fadeUp .25s ease-out;}
+.pay-detail-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
+.pay-detail-row:last-child{border:none;}
+.pay-detail-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;flex-shrink:0;background:rgba(255,140,66,0.1);color:var(--orange);margin-top:1px;}
+.pay-detail-label{color:var(--fg-muted);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.4px;}
+.pay-detail-value{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-top:1px;word-break:break-all;}
+
+/* QR section */
+.qr-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.qr-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.qr-tab-btn{flex:1;padding:9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);
+  color:var(--fg-muted);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;
+  text-align:center;transition:all .2s;}
+.qr-tab-btn.active{background:rgba(255,140,66,0.1);border-color:rgba(255,140,66,0.3);color:var(--orange);}
+.qr-tab-btn:hover:not(.active){border-color:var(--fg-dim);color:var(--fg);}
+.qr-display{text-align:center;}
+.qr-frame{display:inline-block;background:#fff;border-radius:var(--radius);padding:12px;margin-bottom:10px;}
+.qr-frame img{display:block;width:170px;height:170px;border-radius:4px;}
+.qr-label{font-size:13px;color:var(--fg);font-weight:600;margin-bottom:2px;}
+.qr-sublabel{font-size:11px;color:var(--fg-muted);}
+.qr-ep-badge{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:5px 12px;border-radius:100px;
+  background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.25);font-size:11px;color:#66BB6A;font-weight:600;}
+.qr-jc-badge{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:5px 12px;border-radius:100px;
+  background:rgba(255,72,0,0.1);border:1px solid rgba(255,72,0,0.25);font-size:11px;color:#FF5030;font-weight:600;}
+.payment-note{margin-top:14px;padding:10px 14px;border-radius:var(--radius-sm);
+  background:rgba(255,140,66,0.06);border:1px solid rgba(255,140,66,0.15);font-size:12px;color:var(--orange);line-height:1.5;}
+.payment-note i{margin-right:4px;}
+
+/* ── RENEW CTA ── */
+.quick-action{width:100%;padding:14px;border:none;border-radius:var(--radius);cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.quick-action:hover{transform:translateY(-2px);}
+.quick-action:active{transform:scale(0.98);}
+.action-renew{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;
+  box-shadow:0 4px 20px rgba(0,212,255,0.15);margin-bottom:20px;}
+.action-renew:hover{box-shadow:0 6px 28px rgba(0,212,255,0.25);}
+
+/* ── DETAILS / OFFICE CARDS ── */
+.details-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+.details-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--fg-muted);
+  text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px;}
+.details-header i{color:var(--cyan);font-size:13px;}
+.detail-row{display:flex;align-items:baseline;gap:8px;padding:11px 18px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-row.wrap{align-items:flex-start;}
+.detail-label{color:var(--fg-muted);white-space:nowrap;font-weight:500;min-width:90px;}
+.detail-leader{flex:1;border-bottom:1px dotted #3A4150;transform:translateY(-3px);}
+.detail-row.wrap .detail-leader{display:none;}
+.detail-value{font-family:'Space Grotesk',sans-serif;white-space:nowrap;font-weight:600;}
+.detail-row.wrap .detail-value{white-space:normal;text-align:right;flex:1;max-width:60%;line-height:1.4;}
+.empty-state{padding:18px;text-align:center;color:var(--fg-dim);font-size:13px;}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;top:16px;right:16px;left:16px;z-index:99999;
+  display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none;}
+.toast{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:var(--radius);
+  font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);pointer-events:auto;
+  animation:toastIn .4s cubic-bezier(.16,1,.3,1);max-width:360px;backdrop-filter:blur(12px);width:100%;}
+.toast.success{background:rgba(0,230,138,0.12);border:1px solid rgba(0,230,138,0.3);color:var(--green);}
+.toast.error{background:rgba(255,79,123,0.12);border:1px solid rgba(255,79,123,0.3);color:var(--rose);}
+.toast.info{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);}
+.toast.warning{background:rgba(255,179,71,0.12);border:1px solid rgba(255,179,71,0.3);color:#ffb347;}
+.toast-exit{animation:toastOut .3s ease-in forwards;}
+
+@keyframes toastIn{from{opacity:0;transform:translateY(-10px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px) scale(.96);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp .4s ease-out both;}
+.fade-up-d1{animation-delay:.06s;} .fade-up-d2{animation-delay:.12s;}
+.fade-up-d3{animation-delay:.18s;} .fade-up-d4{animation-delay:.24s;}
+.fade-up-d5{animation-delay:.30s;} .fade-up-d6{animation-delay:.36s;}
+.fade-up-d7{animation-delay:.42s;} .fade-up-d8{animation-delay:.48s;}
+.fade-up-d9{animation-delay:.54s;}
+
+@media(max-width:400px){
+  .id-meta{gap:14px;}
+  .info-row{padding:12px 14px;}
+  .payment-body{padding:14px;}
+  .main-content{padding:18px 12px 40px;}
+  .topbar{padding:10px 14px;}
+  .dash-pkg-card{width:140px;padding:14px 10px;}
+  .dash-pkg-price{font-size:22px;}
+  .qr-frame img{width:150px;height:150px;}
+  .pay-tabs{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .pkg-slide{width:115px;padding:12px 10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- LOGIN SCREEN                                  -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-inner">
+
+    <div class="login-box">
+      <div class="sim-icon" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="login-logo">MR Cable & Networks</div>
+      <div class="login-sub">Enter your phone number and the last 4 digits to view your account.</div>
+      <div class="login-field">
+        <label>Phone Number</label>
+        <input type="text" id="phoneInput" inputmode="numeric" autocomplete="off" placeholder="e.g. 03144003910">
+      </div>
+      <div class="login-field">
+        <label>Last 4 Digits</label>
+        <div class="pass-wrap">
+          <input type="password" id="last4Input" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="e.g. 3910">
+          <button type="button" id="togglePass" class="toggle-pass">Show</button>
+        </div>
+      </div>
+      <button class="login-btn" id="loginBtn"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account</button>
+      <div class="login-error" id="loginError"></div>
     </div>
-    <button class="slider-arrow right" onclick="scrollSlider('loginPkgTrack',150)"><i class="fa-solid fa-chevron-right"></i></button>
+
+    <!-- Packages slider on login -->
+    <div class="slider-section">
+      <div class="slider-title"><i class="fa-solid fa-bolt"></i> Our Packages</div>
+      <div class="slider-wrap">
+        <button class="slider-arrow left" onclick="scrollSlider('loginPkgTrack',-140)"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="slider-track" id="loginPkgTrack"></div>
+        <button class="slider-arrow right" onclick="scrollSlider('loginPkgTrack',140)"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Payment logos slider on login -->
+    <div class="slider-section">
+      <div class="slider-title"><i class="fa-solid fa-wallet"></i> Payment Methods</div>
+      <div class="slider-wrap">
+        <button class="slider-arrow left" onclick="scrollSlider('loginPayTrack',-175)"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="slider-track" id="loginPayTrack"></div>
+        <button class="slider-arrow right" onclick="scrollSlider('loginPayTrack',175)"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Office info on login -->
+    <div class="office-card" id="loginOffice"></div>
+
   </div>
 </div>
 
-
-<!-- ═══════ DASHBOARD PACKAGE SLIDER ═══════ -->
-<div class="fade-up" style="margin-bottom:24px;">
-  <div class="section-header" style="color:var(--cyan);"><i class="fa-solid fa-bolt"></i> Our Packages</div>
-  <div class="slider-wrap" id="dashPkgWrap"
-       onmouseenter="pauseSlider('dashPkg')"
-       onmouseleave="resumeSlider('dashPkg')"
-       ontouchstart="pauseSlider('dashPkg')"
-       ontouchend="resumeSlider('dashPkg')">
-    <button class="slider-arrow left" onclick="scrollSlider('dashPkgTrack',-170)"><i class="fa-solid fa-chevron-left"></i></button>
-    <div class="dash-pkg-track" id="dashPkgTrack"></div>
-    <button class="slider-arrow right" onclick="scrollSlider('dashPkgTrack',170)"><i class="fa-solid fa-chevron-right"></i></button>
-  </div>
+<!-- ══════════════════════════════════════════════════ -->
+<!-- DASHBOARD                                     -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="dashboard" id="dashboard">
+  <nav class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">MR Cable</div>
+      <div class="topbar-divider"></div>
+      <span class="topbar-page">My Account</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span id="userPhoneDisplay">—</span>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+    </div>
+  </nav>
+  <main class="main-content" id="profileContent"></main>
 </div>
 
+<div class="toast-container" id="toastContainer"></div>
 
-<!-- ═══════ ADD THIS SCRIPT AT BOTTOM OF YOUR <script> TAG ═══════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ── Auto-scroll sliders ──
-const autoSliders = {};
+// ══════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════
+const PACKAGES = [
+  {name:'LH3',     speed:'2 Mbps',  price:1000, features:['2 Mbps download','Unlimited data','24/7 support']},
+  {name:'LHR5',    speed:'5 Mbps',  price:1400, features:['5 Mbps download','Unlimited data','24/7 support']},
+  {name:'SUPER-10',speed:'10 Mbps', price:1800, features:['10 Mbps download','Unlimited data','Priority support','Free router']},
+  {name:'SUPER-15',speed:'15 Mbps', price:2500, features:['15 Mbps download','Unlimited data','Priority support','Free router']},
+  {name:'SUPER-20',speed:'20 Mbps', price:3000, features:['20 Mbps download','Unlimited data','Priority support','Free router']},
+  {name:'SUPER-30',speed:'25 Mbps', price:3500, features:['25 Mbps download','Unlimited data','Priority support','Free router']}
+];
 
-function initAutoSlider(id, speed) {
-  autoSliders[id] = {
-    interval: null,
-    speed: speed || 2500,
-    running: true
-  };
-  autoSliders[id].interval = setInterval(() => {
-    if (autoSliders[id].running) {
-      const track = document.getElementById(id);
-      if (track) {
-        const maxScroll = track.scrollWidth - track.clientWidth;
-        if (track.scrollLeft >= maxScroll - 2) {
-          track.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          track.scrollBy({ left: 150, behavior: 'smooth' });
-        }
-      }
-    }
-  }, autoSliders[id].speed);
+const PAYMENT_METHODS = [
+  {id:'ubl',    name:'UBL',           logo:'images/ubl.png',
+   details:[
+     {icon:'fa-building-columns',label:'Bank Name',     value:'UBL'},
+     {icon:'fa-hashtag',         label:'Account Number',value:'2197371721801'},
+     {icon:'fa-barcode',         label:'IBAN',          value:'PK68UNIL0109000371721801'},
+     {icon:'fa-user',            label:'Account Title',  value:'M.R. Cable Network'}
+   ]},
+  {id:'jazzbiz',name:'Jazz Business', logo:'images/jazz-business.png',
+   details:[
+     {icon:'fa-hashtag',  label:'Till ID',       value:'981 985 260'},
+     {icon:'fa-user',     label:'Account Title', value:'M.R. Cable Network'}
+   ]},
+  {id:'wallet',  name:'JazzCash & EasyPaisa', logo:'images/jazzcash.png',
+   details:[
+     {icon:'fa-mobile-screen-button',label:'Number',value:'0300-4884 733'},
+     {icon:'fa-user',                label:'Name',  value:'Musharraf Iqbal'}
+   ]}
+];
+
+const OFFICE_INFO = [
+  {icon:'oi-clock',fa:'fa-clock',       text:'<strong>Sat–Thu:</strong> 09:00 AM – 05:00 PM<br><span>Friday: 09:00 AM – 11:59 AM</span>'},
+  {icon:'oi-yt',   fa:'fa-brands fa-youtube', text:'<a href="https://www.youtube.com/@mrcablenetworkkrk" target="_blank">@mrcablenetworkkrk</a>'},
+  {icon:'oi-fb',   fa:'fa-brands fa-facebook-f',text:'<a href="https://www.facebook.com/M.R.CableNetwork" target="_blank">M.R. Cable Network</a>'},
+  {icon:'oi-web',  fa:'fa-globe',       text:'<a href="https://www.mrcablenetwork.com" target="_blank">www.mrcablenetwork.com</a>'}
+];
+
+const KNOWN_FIELDS = ['customer_id','customer_name','contact','cnic','package','expiration_date','balance','status'];
+const SUPABASE_URL = 'https://iuzwdjgagcxqwtpihpmb.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let customerData = null;
+
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+function esc(s){const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+function prettyLabel(k){return k.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2').trim().split(/\s+/).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');}
+function formatValue(key,val){
+  if(val===''||val===null||val===undefined) return '—';
+  const k=key.toLowerCase(),str=String(val).trim();
+  const isNum=str!==''&&!isNaN(parseFloat(str.replace(/,/g,'')))&&/^[\d.,\s]+$/.test(str);
+  if(isNum&&/(amount|bill|balance|due|charge|cost|fee)/.test(k)) return 'Rs. '+parseFloat(str.replace(/,/g,'')).toLocaleString('en-PK');
+  if(/(date|expiry|renew)/.test(k)){const d=new Date(val);if(!isNaN(d.getTime())) return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+  return str;
+}
+function calcStatus(exp,db){
+  if(db==='Deactive') return 'expired';
+  if(db==='Active'){if(exp){const e=new Date(exp+'T00:00:00'),n=new Date();n.setHours(0,0,0,0);const d=(e-n)/864e5;if(d<0)return 'expired';if(d<=7)return 'pending';}return 'active';}
+  if(!exp) return 'expired';
+  const e=new Date(exp+'T00:00:00'),n=new Date();n.setHours(0,0,0,0);const d=(e-n)/864e5;
+  if(d<0) return 'expired';if(d<=7) return 'pending';return 'active';
+}
+function statusLabel(s){return {active:'Active',pending:'Expiring Soon',expired:'Expired'}[s]||s;}
+
+function showToast(msg,type){
+  const c=document.getElementById('toastContainer'),t=document.createElement('div');
+  t.className='toast '+type;
+  const icons={success:'fa-circle-check',error:'fa-circle-xmark',info:'fa-circle-info',warning:'fa-triangle-exclamation'};
+  t.innerHTML=`<i class="fa-solid ${icons[type]||icons.info}"></i><span>${msg}</span>`;
+  c.appendChild(t);setTimeout(()=>{t.classList.add('toast-exit');setTimeout(()=>t.remove(),300);},4000);
 }
 
-function pauseSlider(id) {
-  if (autoSliders[id]) autoSliders[id].running = false;
-}
-
-function resumeSlider(id) {
-  if (autoSliders[id]) autoSliders[id].running = true;
-}
-
+// ══════════════════════════════════════════════════
+// SLIDER SCROLL HELPER
+// ══════════════════════════════════════════════════
 function scrollSlider(id, amount) {
-  const track = document.getElementById(id);
-  if (track) track.scrollBy({ left: amount, behavior: 'smooth' });
+  document.getElementById(id).scrollBy({left: amount, behavior:'smooth'});
 }
 
-// Start both sliders — call this after the page renders
-initAutoSlider('loginPkgTrack', 2500);
-initAutoSlider('dashPkgTrack', 3000);
+// ══════════════════════════════════════════════════
+// BUILD LOGIN-PAGE SLIDERS
+// ══════════════════════════════════════════════════
+function buildLoginSliders() {
+  // Packages
+  document.getElementById('loginPkgTrack').innerHTML = PACKAGES.map(p =>
+    `<div class="pkg-slide">
+      <div class="pkg-slide-name">${p.name}</div>
+      <div class="pkg-slide-speed">${p.speed}</div>
+      <div class="pkg-slide-price">Rs. ${p.price.toLocaleString()}<span>/mo</span></div>
+      <ul class="pkg-slide-features">${p.features.map(f=>`<li><i class="fa-solid fa-check"></i>${f}</li>`).join('')}</ul>
+    </div>`
+  ).join('');
+
+  // Payment logos
+  document.getElementById('loginPayTrack').innerHTML = PAYMENT_METHODS.map(m =>
+    `<div class="pay-logo-slide">
+      <img src="${m.logo}" alt="${m.name}" onerror="this.style.display='none'">
+      <div class="pay-name">${m.name}</div>
+    </div>`
+  ).join('');
+
+  // Office
+  document.getElementById('loginOffice').innerHTML =
+    `<div class="office-title"><i class="fa-solid fa-building"></i> Office Information</div>` +
+    OFFICE_INFO.map(o =>
+      `<div class="office-row"><i class="${o.icon} ${o.fa}"></i><div class="office-row-text">${o.text}</div></div>`
+    ).join('');
+}
+
+// ══════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════
+const loginScreen=document.getElementById('loginScreen'),dashboard=document.getElementById('dashboard'),
+  phoneInput=document.getElementById('phoneInput'),last4Input=document.getElementById('last4Input'),
+  loginBtn=document.getElementById('loginBtn'),loginError=document.getElementById('loginError'),
+  togglePass=document.getElementById('togglePass');
+
+function showLogin(){loginScreen.classList.remove('hidden');dashboard.classList.remove('active');}
+function showDash(){loginScreen.classList.add('hidden');dashboard.classList.add('active');}
+
+loginBtn.addEventListener('click',handleLogin);
+last4Input.addEventListener('keydown',e=>{if(e.key==='Enter') handleLogin();});
+
+async function handleLogin(){
+  const phone=phoneInput.value.trim(),last4=last4Input.value.trim();
+  loginError.textContent='';
+  if(!phone||!last4){loginError.textContent='Enter your phone number and the last 4 digits.';return;}
+  loginBtn.disabled=true;loginBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Checking...';
+  try{
+    const {data,error}=await sb.functions.invoke('login',{body:{phone,last4}});
+    if(error||!data||data.error||!data.customer){loginError.textContent='Phone number or last 4 digits is incorrect.';}
+    else{customerData=data.customer;renderProfile();showDash();showToast('Welcome, '+(customerData.customer_name||'Customer'),'success');}
+  }catch(err){loginError.textContent='Could not reach the server. Please try again.';}
+  loginBtn.disabled=false;loginBtn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account';
+}
+
+function handleLogout(){
+  customerData=null;phoneInput.value='';last4Input.value='';loginError.textContent='';
+  document.getElementById('profileContent').innerHTML='';showLogin();showToast('Logged out successfully.','info');
+}
+
+togglePass.addEventListener('click',function(){
+  const s=last4Input.type==='password';last4Input.type=s?'text':'password';togglePass.textContent=s?'Hide':'Show';
+});
+
+// ══════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ══════════════════════════════════════════════════
+function renderProfile(){
+  const c=customerData;if(!c) return;
+  const status=calcStatus(c.expiration_date,c.status),sLabel=statusLabel(status),
+    isExpired=status==='expired',isPending=status==='pending',needsRenew=isExpired||isPending,
+    phone=c.contact||'—',currentPkg=(c.package||'').toUpperCase().trim();
+
+  document.getElementById('userPhoneDisplay').textContent=phone;
+  document.getElementById('userAvatar').textContent=(c.customer_name||'?').charAt(0).toUpperCase();
+
+  const extraKeys=Object.keys(c).filter(k=>!KNOWN_FIELDS.includes(k));
+  const expiryF=formatValue('expiration_date',c.expiration_date),balF=formatValue('balance',c.balance);
+
+  let extraHTML='';
+  if(!extraKeys.length) extraHTML='<div class="empty-state">No other details on file.</div>';
+  else extraHTML=extraKeys.map(k=>{
+    const isAddr=k.toLowerCase()==='address';
+    return `<div class="detail-row${isAddr?' wrap':''}"><span class="detail-label">${esc(prettyLabel(k))}</span>${isAddr?'':'<span class="detail-leader"></span>'}<span class="detail-value">${esc(formatValue(k,c[k]))}</span></div>`;
+  }).join('');
+
+  // Dashboard packages
+  const dashPkgCards=PACKAGES.map(p=>{
+    const isCurrent=currentPkg.includes(p.name);
+    return `<div class="dash-pkg-card${isCurrent?' current':''}">
+      <div class="dash-pkg-tag">CURRENT</div>
+      <div class="dash-pkg-name">${p.name}</div>
+      <div class="dash-pkg-speed">${p.speed}</div>
+      <div class="dash-pkg-price">Rs. ${p.price.toLocaleString()}<span>/mo</span></div>
+      <ul class="dash-pkg-features">${p.features.map(f=>`<li><i class="fa-solid fa-check"></i>${f}</li>`).join('')}</ul>
+      <button class="dash-pkg-btn" onclick="showToast('${isCurrent?'You are on this plan.':'Contact MR Cable to switch to '+p.name+'.'}','info')">${isCurrent?'Current Plan':'Upgrade'}</button>
+    </div>`;
+  }).join('');
+
+  // Payment tabs
+  const payTabBtns=PAYMENT_METHODS.map((m,i)=>
+    `<button class="pay-tab${i===0?' active':''}" id="payTab${i}" onclick="switchPayTab(${i})">
+      <img src="${m.logo}" alt="${m.name}" onerror="this.style.display='none'">
+      ${m.name}
+    </button>`
+  ).join('');
+
+  const payDetails=PAYMENT_METHODS.map((m,i)=>
+    `<div class="pay-detail${i===0?' show':''}" id="payDetail${i}">
+      ${m.details.map(d=>
+        `<div class="pay-detail-row">
+          <div class="pay-detail-icon"><i class="fa-solid ${d.icon}"></i></div>
+          <div><div class="pay-detail-label">${d.label}</div><div class="pay-detail-value">${d.value}</div></div>
+        </div>`
+      ).join('')}
+    </div>`
+  ).join('');
+
+  // Office info
+  const officeHTML=
+    `<div class="office-title"><i class="fa-solid fa-building"></i> Office Information</div>` +
+    OFFICE_INFO.map(o=>
+      `<div class="office-row"><i class="${o.icon} ${o.fa}"></i><div class="office-row-text">${o.text}</div></div>`
+    ).join('');
+
+  document.getElementById('profileContent').innerHTML=`
+    <!-- ID Card -->
+    <div class="id-card fade-up">
+      <div class="id-card-top"><div class="id-chip" aria-hidden="true"></div>
+        <div class="signal-mini" aria-hidden="true"><span></span><span></span><span></span><span></span></div></div>
+      <div class="id-name">${esc(c.customer_name||'—')}</div>
+      <div class="id-meta">
+        <div><span class="meta-label">Customer ID</span><span class="meta-val">${esc(c.customer_id||'—')}</span></div>
+        <div><span class="meta-label">Phone</span><span class="meta-val">${esc(phone)}</span></div>
+        <div><span class="meta-label">Package</span><span class="meta-val">${esc(c.package||'—')}</span></div>
+      </div>
+    </div>
+
+    <!-- Status / Expiry / Balance -->
+    <div class="info-grid">
+      <div class="info-row fade-up fade-up-d1">
+        <div class="info-left">
+          <div class="info-icon ${isExpired?'rose':status==='active'?'green':'orange'}">
+            <i class="fa-solid ${isExpired?'fa-circle-xmark':status==='active'?'fa-circle-check':'fa-clock'}"></i></div>
+          <div><div class="info-label">Status</div>
+            <div class="info-value"><span class="status-pill ${status}"><span class="status-dot"></span>${sLabel}</span></div></div>
+        </div>
+      </div>
+      <div class="info-row fade-up fade-up-d2">
+        <div class="info-left"><div class="info-icon cyan"><i class="fa-solid fa-calendar-days"></i></div>
+          <div><div class="info-label">Expiry Date</div>
+            <div class="info-value" style="${isExpired?'color:var(--rose)':isPending?'color:var(--orange)':''}">${expiryF}</div></div>
+        </div>
+      </div>
+      <div class="info-row fade-up fade-up-d3">
+        <div class="info-left"><div class="info-icon green"><i class="fa-solid fa-wallet"></i></div>
+          <div><div class="info-label">Balance</div><div class="info-value">${balF}</div></div>
+        </div>
+      </div>
+    </div>
+
+    ${needsRenew?`
+    <button class="quick-action action-renew fade-up fade-up-d4" onclick="showToast('Please contact MR Cable & Networks to renew your package.','info')">
+      <i class="fa-solid fa-rotate"></i> Request Renewal
+    </button>`:''}
+
+    <!-- Packages slider -->
+    <div class="fade-up fade-up-d5" style="margin-bottom:24px;">
+      <div class="section-header" style="color:var(--cyan);"><i class="fa-solid fa-bolt"></i> Our Packages</div>
+      <div class="slider-wrap">
+        <button class="slider-arrow left" onclick="scrollSlider('dashPkgTrack',-170)"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="dash-pkg-track" id="dashPkgTrack">${dashPkgCards}</div>
+        <button class="slider-arrow right" onclick="scrollSlider('dashPkgTrack',170)"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Payment section -->
+    <div class="payment-card fade-up fade-up-d6">
+      <div class="payment-header"><i class="fa-solid fa-money-bill-wave"></i> Payment Methods</div>
+      <div class="payment-body">
+        <div class="pay-tabs">${payTabBtns}</div>
+        <div id="payDetailsContainer">${payDetails}</div>
+
+        <!-- QR codes -->
+        <div class="qr-section">
+          <div class="qr-tabs">
+            <button class="qr-tab-btn active" id="qrTabEp" onclick="switchQR('ep')"><i class="fa-solid fa-qrcode"></i>&nbsp; EasyPaisa</button>
+            <button class="qr-tab-btn" id="qrTabJc" onclick="switchQR('jc')"><i class="fa-solid fa-qrcode"></i>&nbsp; JazzCash</button>
+          </div>
+          <div class="qr-display">
+            <div class="qr-frame"><img src="https://z-cdn-media.chatglm.cn/files/56ed0d24-3caa-4dc3-87f6-a03cc89e4a76.png?auth_key=1882827082-ca4a2c980ee74d178f87e9a1fc96fb19-0-71b61f3ba666d2266c940970702833ac" alt="QR Code" id="qrImg"></div>
+            <div class="qr-label" id="qrTitle">Scan to pay via EasyPaisa</div>
+            <div class="qr-sublabel" id="qrSub">MUSHARRAF IQBAL &middot; 0300******4733</div>
+            <div id="qrBadge"><div class="qr-ep-badge"><i class="fa-solid fa-shield-check"></i> EasyPaisa Verified</div></div>
+          </div>
+        </div>
+
+        <div class="payment-note">
+          <i class="fa-solid fa-circle-info"></i>
+          Scan QR or transfer manually. After payment, send screenshot to <strong>0300 4884 733</strong> with your Customer ID.
+        </div>
+      </div>
+    </div>
+
+    <!-- Office info -->
+    <div class="details-card fade-up fade-up-d7">
+      <div class="details-header"><i class="fa-solid fa-building"></i> Office Information</div>
+      <div style="padding:16px 18px;">${OFFICE_INFO.map(o=>
+        `<div class="office-row"><i class="${o.icon} ${o.fa}"></i><div class="office-row-text">${o.text}</div></div>`
+      ).join('')}</div>
+    </div>
+
+    <!-- Other details -->
+    <div class="details-card fade-up fade-up-d8">
+      <div class="details-header"><i class="fa-solid fa-list"></i> Other Details</div>
+      ${extraHTML}
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════
+// PAYMENT TAB SWITCH
+// ══════════════════════════════════════════════════
+function switchPayTab(idx){
+  PAYMENT_METHODS.forEach((_,i)=>{
+    document.getElementById('payTab'+i).classList.toggle('active',i===idx);
+    document.getElementById('payDetail'+i).classList.toggle('show',i===idx);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// QR SWITCH
+// ══════════════════════════════════════════════════
+function switchQR(type){
+  const img=document.getElementById('qrImg'),title=document.getElementById('qrTitle'),
+    sub=document.getElementById('qrSub'),badge=document.getElementById('qrBadge'),
+    tabEp=document.getElementById('qrTabEp'),tabJc=document.getElementById('qrTabJc');
+  if(type==='ep'){
+    img.src='https://z-cdn-media.chatglm.cn/files/56ed0d24-3caa-4dc3-87f6-a03cc89e4a76.png?auth_key=1882827082-ca4a2c980ee74d178f87e9a1fc96fb19-0-71b61f3ba666d2266c940970702833ac';
+    img.alt='EasyPaisa QR';title.textContent='Scan to pay via EasyPaisa';
+    sub.innerHTML='MUSHARRAF IQBAL &middot; 0300******4733';
+    badge.innerHTML='<div class="qr-ep-badge"><i class="fa-solid fa-shield-check"></i> EasyPaisa Verified</div>';
+    tabEp.classList.add('active');tabJc.classList.remove('active');
+  } else {
+    // REPLACE THIS URL with your actual JazzCash QR image URL
+    img.src='https://z-cdn-media.chatglm.cn/files/56ed0d24-3caa-4dc3-87f6-a03cc89e4a76.png?auth_key=1882827082-ca4a2c980ee74d178f87e9a1fc96fb19-0-71b61f3ba666d2266c940970702833ac';
+    img.alt='JazzCash QR';title.textContent='Send payment via JazzCash';
+    sub.innerHTML='MUSHARRAF IQBAL &middot; 0300 4884 733';
+    badge.innerHTML='<div class="qr-jc-badge"><i class="fa-solid fa-shield-check"></i> JazzCash Account</div>';
+    tabJc.classList.add('active');tabEp.classList.remove('active');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+buildLoginSliders();
 </script>
+</body>
+</html>
