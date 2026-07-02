@@ -1527,39 +1527,25 @@ async function handleLogin() {
   button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Verifying...';
   
   try {
-    const { data, error } = await sb
-      .from('customers')
-      .select('*')
-      .eq('contact', phone);
+    // Use Supabase Edge Function for secure login (bypasses RLS, server-side validation)
+    const { data, error } = await sb.functions.invoke('login', { body: { phone, last4 } });
     
-    if (error) throw error;
-    
-    if (!data || data.length === 0) {
-      errorElement.textContent = 'No account found with this phone number.';
-      resetLoginButton();
-      return;
-    }
-    
-    const customer = data.find(c => 
-      String(c.cnic || '').replace(/\D/g, '').endsWith(last4)
-    );
-    
-    if (!customer) {
-      errorElement.textContent = 'Incorrect last 4 digits. Please check your CNIC.';
+    if (error || !data || data.error || !data.customer) {
+      errorElement.textContent = 'Phone number or last 4 digits is incorrect.';
       resetLoginButton();
       return;
     }
     
     // Success
-    customerData = customer;
+    customerData = data.customer;
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('dashboard').classList.add('active');
-    renderDashboard(customer);
+    renderDashboard(customerData);
     showToast('Welcome back! Account loaded successfully.', 'success');
     
   } catch (error) {
     console.error('Login error:', error);
-    errorElement.textContent = 'An error occurred. Please try again.';
+    errorElement.textContent = 'Could not reach the server. Please try again.';
     resetLoginButton();
   }
 }
