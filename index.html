@@ -503,6 +503,14 @@ body::before {
   padding: 10px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   font-size: 13px;
+  cursor: pointer;
+}
+
+.pay-detail-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+  margin: 0 -10px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
 }
 
 .pay-detail-row:last-child {
@@ -925,6 +933,10 @@ body::before {
   font-size: 15px;
   font-weight: 600;
   margin-top: 2px;
+}
+
+.text-danger {
+  color: var(--accent-danger);
 }
 
 /* Enhanced Status Pills */
@@ -1408,7 +1420,7 @@ function renderPaymentMethods() {
       ${PAYMENT_METHODS.map((method, index) => `
         <div class="pay-detail ${index === 0 ? 'show' : ''}" id="pay-${method.id}">
           ${method.details.map(detail => `
-            <div class="pay-detail-row">
+            <div class="pay-detail-row" onclick="copyToClipboard('${escapeHtml(detail.value).replace(/'/g, "\\'")}')" title="Click to copy">
               <div class="pay-detail-icon">
                 <i class="fa-solid ${detail.icon}"></i>
               </div>
@@ -1612,7 +1624,7 @@ function renderDashboard(customer) {
           </div>
           <div>
             <div class="info-label">Expiry Date</div>
-            <div class="info-value">${formatValue('expiration_date', customer.expiration_date)}</div>
+            <div class="info-value ${calculateStatus(customer.expiration_date) === 'expired' ? 'text-danger' : ''}">${formatValue('expiration_date', customer.expiration_date)}</div>
           </div>
         </div>
       </div>
@@ -1662,7 +1674,7 @@ function renderDashboard(customer) {
         ${PAYMENT_METHODS.map((method, index) => `
           <div class="pay-detail ${index === 0 ? 'show' : ''}" id="pay-${method.id}">
             ${method.details.map(detail => `
-              <div class="pay-detail-row">
+              <div class="pay-detail-row" onclick="copyToClipboard('${escapeHtml(detail.value).replace(/'/g, "\\'")}')" title="Click to copy">
                 <div class="pay-detail-icon">
                   <i class="fa-solid ${detail.icon}"></i>
                 </div>
@@ -1681,6 +1693,42 @@ function renderDashboard(customer) {
       </div>
     </div>
   `;
+}
+
+// Copy to clipboard function
+function copyToClipboard(text) {
+  if (!text) return;
+  
+  navigator.clipboard.writeText(text).then(() => {
+    // Show toast notification
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-secondary);
+      color: #051520;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      z-index: 99999;
+      box-shadow: var(--shadow-lg);
+      animation: fadeSlideUp 0.3s ease-out;
+    `;
+    toast.textContent = 'Copied to clipboard!';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+  });
 }
 
 // Event Listeners
