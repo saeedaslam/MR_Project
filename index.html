@@ -1646,13 +1646,38 @@ function renderDashboard(customer) {
       <div class="details-header">
         <i class="fa-solid fa-credit-card"></i> Payment Methods
       </div>
-      <div class="detail-row">
-        <div class="detail-label">CNIC</div>
-        <div class="detail-value">${escapeHtml(customer.cnic || '—')}</div>
-      </div>
-      <div class="detail-row">
-        <div class="detail-label">Phone</div>
-        <div class="detail-value">${escapeHtml(customer.contact || '—')}</div>
+      <div class="payment-body" style="padding: 0; background: transparent;">
+        <div class="pay-tabs">
+          ${PAYMENT_METHODS.map((method, index) => `
+            <div class="pay-tab ${index === 0 ? 'active' : ''}" 
+                 onclick="switchPaymentTab('${method.id}', this)"
+                 role="button"
+                 tabindex="0"
+                 aria-pressed="${index === 0}">
+              <i class="fa-solid ${method.details[0].icon}" style="font-size: 20px;"></i>
+              ${escapeHtml(method.name)}
+            </div>
+          `).join('')}
+        </div>
+        ${PAYMENT_METHODS.map((method, index) => `
+          <div class="pay-detail ${index === 0 ? 'show' : ''}" id="pay-${method.id}">
+            ${method.details.map(detail => `
+              <div class="pay-detail-row">
+                <div class="pay-detail-icon">
+                  <i class="fa-solid ${detail.icon}"></i>
+                </div>
+                <div>
+                  <div class="pay-detail-label">${escapeHtml(detail.label)}</div>
+                  <div class="pay-detail-value">${escapeHtml(detail.value)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('')}
+        <div class="payment-note">
+          <i class="fa-solid fa-circle-info"></i>
+          پیمنٹ کے بعد اس نمبر پر سکرین شاٹ سینڈ کریں یہ بھی ایڈ کر دیجیے گا 03004844733
+        </div>
       </div>
     </div>
   `;
