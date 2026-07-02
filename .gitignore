@@ -1,16 +1,1 @@
-# Environment variables
-.env
-.env.local
-.env.production
-
-# Config files with secrets
-config.js
-firebase-config.js
-supabase-config.js
-
-# Logs
-*.log
-
-# OS files
-.DS_Store
-Thumbs.db
+(index.html is a source file, so no need to add it to .gitignore)
