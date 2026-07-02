@@ -31,7 +31,7 @@
     border-radius:16px;text-align:center;position:relative;overflow:hidden;}
   .login-box::before{content:'';position:absolute;top:-60%;left:-20%;width:140%;height:100%;
     background:radial-gradient(ellipse,rgba(0,230,138,0.06),transparent 70%);pointer-events:none;}
-  .login-logo{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-bottom:4px;
+  .login-logo{font-family:'Inter',sans-serif;font-size:26px;font-weight:700;margin-bottom:4px;
     background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;
     -webkit-text-fill-color:transparent;background-clip:text;}
   .login-sub{color:var(--fg-muted);font-size:12px;letter-spacing:.5px;margin-bottom:28px;}
@@ -56,7 +56,7 @@
   .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
     padding:12px 24px;background:rgba(12,14,20,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
   .topbar-left{display:flex;align-items:center;gap:12px;}
-  .topbar-logo{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;
+  .topbar-logo{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;
     background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;
     -webkit-text-fill-color:transparent;background-clip:text;}
   .topbar-divider{width:1px;height:22px;background:var(--border);}
@@ -299,7 +299,7 @@
 <!-- ══════════ LOGIN ══════════ -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">MR Cable & Networks</div>
+    <div class="login-logo">M.R. Cable & Internet Network (R)</div>
     <div class="login-sub">Admin Access — Customer Management</div>
     <div class="login-field">
       <label>Email</label>
@@ -321,7 +321,7 @@
 
   <nav class="topbar">
     <div class="topbar-left">
-      <div class="topbar-logo">MR Cable</div>
+      <div class="topbar-logo">M.R. Cable & Internet Network (R)</div>
       <div class="topbar-divider"></div>
       <span class="topbar-page">Customer Management</span>
     </div>
@@ -385,95 +385,6 @@
         <div class="card-title">Export CSV</div>
         <div class="card-desc">Download all customer data as CSV</div>
       </button>
-    </section>
-
-    <!-- Payment Methods Info Section -->
-    <section class="glass-card" style="padding: 1.5rem; margin-bottom: 2rem;">
-      <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fa-solid fa-credit-card" style="color: var(--primary);"></i>
-        Payment Methods
-      </h3>
-      <div class="pay-tabs" style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
-        <button class="pay-tab active" onclick="switchAdminPaymentTab('ubl', this)" style="background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); color: white; padding: 0.625rem 1.25rem; border-radius: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: all 0.3s ease;" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(0, 212, 255, 0.2)';this.style.transform='translateY(-2px)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='rgba(0, 212, 255, 0.1)';this.style.transform='translateY(0)'}">
-          <i class="fa-solid fa-building-columns"></i> UBL
-        </button>
-        <button class="pay-tab" onclick="switchAdminPaymentTab('jazzbiz', this)" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: white; padding: 0.625rem 1.25rem; border-radius: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: all 0.3s ease;" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(255, 255, 255, 0.1)';this.style.borderColor='var(--primary)';this.style.transform='translateY(-2px)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='rgba(255, 255, 255, 0.05)';this.style.borderColor='var(--border-color)';this.style.transform='translateY(0)'}">
-          <i class="fa-solid fa-mobile-screen"></i> Jazz Business
-        </button>
-        <button class="pay-tab" onclick="switchAdminPaymentTab('wallet', this)" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: white; padding: 0.625rem 1.25rem; border-radius: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: all 0.3s ease;" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(255, 255, 255, 0.1)';this.style.borderColor='var(--primary)';this.style.transform='translateY(-2px)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='rgba(255, 255, 255, 0.05)';this.style.borderColor='var(--border-color)';this.style.transform='translateY(0)'}">
-          <i class="fa-solid fa-wallet"></i> JazzCash/EasyPaisa
-        </button>
-      </div>
-      
-      <div id="pay-ubl" class="pay-detail show">
-        <div class="pay-detail-row" onclick="copyToClipboard('UBL')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-building-columns" style="color: var(--primary);"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Bank Name</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">UBL</div>
-          </div>
-        </div>
-        <div class="pay-detail-row" onclick="copyToClipboard('2197371721801')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-hashtag" style="color: var(--primary);"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Account Number</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">2197371721801</div>
-          </div>
-        </div>
-        <div class="pay-detail-row" onclick="copyToClipboard('PK68UNIL0109000371721801')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-barcode" style="color: var(--primary);"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">IBAN</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">PK68UNIL0109000371721801</div>
-          </div>
-        </div>
-        <div class="pay-detail-row" onclick="copyToClipboard('M.R. Cable Network')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(0, 212, 255, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-user" style="color: var(--primary);"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Account Title</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">M.R. Cable Network</div>
-          </div>
-        </div>
-      </div>
-      
-      <div id="pay-jazzbiz" class="pay-detail" style="display: none;">
-        <div class="pay-detail-row" onclick="copyToClipboard('981 985 260')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(0, 230, 138, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-hashtag" style="color: var(--secondary);"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Till ID</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">981 985 260</div>
-          </div>
-        </div>
-        <div class="pay-detail-row" onclick="copyToClipboard('M.R. Cable Network')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(0, 230, 138, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-user" style="color: var(--secondary);"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Account Title</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">M.R. Cable Network</div>
-          </div>
-        </div>
-      </div>
-      
-      <div id="pay-wallet" class="pay-detail" style="display: none;">
-        <div class="pay-detail-row" onclick="copyToClipboard('0300-4884733')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(251, 191, 36, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-mobile-screen-button" style="color: #fbbf24;"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Number</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">0300-4884733</div>
-          </div>
-        </div>
-        <div class="pay-detail-row" onclick="copyToClipboard('Musharraf Iqbal')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-          <div style="width: 32px; height: 32px; border-radius: 0.5rem; background: rgba(251, 191, 36, 0.1); display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-user" style="color: #fbbf24;"></i></div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Name</div>
-            <div style="font-size: 0.9375rem; font-weight: 600;">Musharraf Iqbal</div>
-          </div>
-        </div>
-      </div>
-      
-      <div style="margin-top: 1.25rem; padding: 1rem; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
-        <i class="fa-solid fa-circle-info" style="color: var(--primary); font-size: 1.125rem;"></i>
-        <span style="font-size: 0.875rem; line-height: 1.5;">پیمنٹ کے بعد اس نمبر پر سکرین شاٹ سینڈ کریں یہ بھی ایڈ کر دیجیے گا 03004844733</span>
-      </div>
     </section>
 
     <!-- Data Table -->
@@ -1305,35 +1216,6 @@ function parseCSV(text) {
     currentRow.push(currentField); rows.push(currentRow);
   }
   return rows;
-}
-
-// ═══════════════════════════════════════════════════
-// PAYMENT TABS (Admin)
-// ═══════════════════════════════════════════════════
-function switchAdminPaymentTab(methodId, element) {
-  // Remove active class from all tabs
-  document.querySelectorAll('.pay-tab').forEach(tab => {
-    tab.classList.remove('active');
-    tab.style.background = 'rgba(255, 255, 255, 0.05)';
-    tab.style.borderColor = 'var(--border-color)';
-    tab.style.transform = 'translateY(0)';
-  });
-  
-  // Add active class to clicked tab
-  element.classList.add('active');
-  element.style.background = 'rgba(0, 212, 255, 0.1)';
-  element.style.borderColor = 'var(--primary)';
-  
-  // Hide all payment details
-  document.querySelectorAll('.pay-detail').forEach(detail => {
-    detail.style.display = 'none';
-  });
-  
-  // Show selected payment detail
-  const targetDetail = document.getElementById(`pay-${methodId}`);
-  if (targetDetail) {
-    targetDetail.style.display = 'block';
-  }
 }
 
 // ═══════════════════════════════════════════════════
