@@ -1441,15 +1441,24 @@ function renderPaymentMethods() {
 }
 
 function switchPaymentTab(methodId, element) {
-  document.querySelectorAll('.pay-tab').forEach(tab => {
+  // Find the parent container to scope the search
+  const parentContainer = element.closest('.payment-body');
+  
+  if (!parentContainer) return;
+  
+  // Only affect tabs and details within this specific container
+  parentContainer.querySelectorAll('.pay-tab').forEach(tab => {
     tab.classList.remove('active');
     tab.setAttribute('aria-pressed', 'false');
   });
   element.classList.add('active');
   element.setAttribute('aria-pressed', 'true');
   
-  document.querySelectorAll('.pay-detail').forEach(detail => detail.classList.remove('show'));
-  document.getElementById(`pay-${methodId}`).classList.add('show');
+  parentContainer.querySelectorAll('.pay-detail').forEach(detail => detail.classList.remove('show'));
+  const targetDetail = parentContainer.querySelector(`#pay-${methodId}`);
+  if (targetDetail) {
+    targetDetail.classList.add('show');
+  }
 }
 
 function renderOfficeInfo() {
