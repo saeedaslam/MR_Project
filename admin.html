@@ -1107,9 +1107,10 @@ function processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn) {
   }
 
   statusEl.textContent = parsedUploadRows.length + ' customers ready to upload.';
-  previewEl.innerHTML = parsedUploadRows.slice(0, 3).map(r =>
-    `<div class="upload-preview-row"><span>${esc(r.customer_id)} — ${esc(r.customer_name)}</span><span>${esc(r.contact)}</span></div>`
-  ).join('') + (parsedUploadRows.length > 3 ?
+  previewEl.innerHTML = parsedUploadRows.slice(0, 3).map(r => {
+    const pkgDisplay = r.package && r.package.trim() !== '' ? ` ${r.package}` : '';
+    return `<div class="upload-preview-row"><span>${esc(r.customer_id)}${pkgDisplay} ${esc(r.customer_name)}</span><span>${esc(r.contact)}</span></div>`;
+  }).join('') + (parsedUploadRows.length > 3 ?
     `<div class="upload-preview-row"><span>...and ${parsedUploadRows.length - 3} more</span></div>` : '');
   previewEl.classList.add('show');
   confirmBox.style.display = 'flex';
