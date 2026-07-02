@@ -1165,15 +1165,15 @@ body::before {
         <span></span>
       </div>
       <div class="login-logo">M.R. Cable & Internet Network (R)</div>
-      <div class="login-sub">Enter your phone number and the last 4 digits of your CNIC to access your account portal.</div>
+      <div class="login-sub">Enter your phone number and the last 4 digits of your phone number to access your account portal.</div>
       <div class="login-field">
         <label for="phoneInput">Phone Number</label>
         <input type="text" id="phoneInput" inputmode="numeric" autocomplete="off" placeholder="e.g. 03144003910" aria-label="Phone Number">
       </div>
       <div class="login-field">
-        <label for="last4Input">Last 4 Digits of CNIC</label>
+        <label for="last4Input">Last 4 Digits of Phone Number</label>
         <div class="pass-wrap">
-          <input type="password" id="last4Input" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="e.g. 3910" aria-label="Last 4 Digits of CNIC">
+          <input type="password" id="last4Input" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="e.g. 3910" aria-label="Last 4 Digits of Phone Number">
           <button type="button" id="togglePass" class="toggle-pass" aria-label="Toggle password visibility">Show</button>
         </div>
       </div>
@@ -1525,7 +1525,7 @@ async function handleLogin() {
   
   // Validation
   if (!phone || !last4) {
-    errorElement.textContent = 'Please enter your phone number and last 4 digits of CNIC.';
+    errorElement.textContent = 'Please enter your phone number and last 4 digits of phone number.';
     return;
   }
   
