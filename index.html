@@ -1,506 +1,1793 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<title>MR Cable & Networks - My Account</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>M.R. Cable & Internet Network (R) — Customer Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  :root{
-    --bg:#12161D;
-    --surface:#1B212B;
-    --surface-raised:#232A36;
-    --accent:#2FE6CB;
-    --accent-deep:#18B79F;
-    --gold:#D9B872;
-    --text:#ECF0F4;
-    --text-muted:#828B9B;
-    --error:#FF6B5E;
-    --success:#5FE07E;
-    --line:#2A313D;
-    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
-    --sans:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+:root {
+  /* Enhanced Color System */
+  --bg-primary: #0a0d14;
+  --bg-secondary: #131720;
+  --bg-tertiary: #1a1f2e;
+  --bg-input: #1c2233;
+  
+  --fg-primary: #f0f2f8;
+  --fg-secondary: #8b92a8;
+  --fg-tertiary: #5c6378;
+  
+  --border-primary: #2a3040;
+  --border-secondary: #353c50;
+  
+  --accent-primary: #00d4ff;
+  --accent-secondary: #00e68a;
+  --accent-warning: #ff9f43;
+  --accent-danger: #ff4f7b;
+  
+  --accent-primary-dim: rgba(0, 212, 255, 0.08);
+  --accent-secondary-dim: rgba(0, 230, 138, 0.08);
+  --accent-warning-dim: rgba(255, 159, 67, 0.08);
+  --accent-danger-dim: rgba(255, 79, 123, 0.08);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 600px 400px at 10% 5%, var(--accent-primary-dim), transparent 70%),
+    radial-gradient(ellipse 500px 500px at 90% 95%, var(--accent-secondary-dim), transparent 70%);
+}
+
+/* Enhanced Login Screen */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  background: var(--bg-primary);
+  transition: opacity var(--transition-slow), visibility var(--transition-slow);
+}
+
+.login-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.login-inner {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 80px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 28px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.login-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 140%;
+  height: 100%;
+  background: radial-gradient(ellipse, var(--accent-primary-dim), transparent 70%);
+  pointer-events: none;
+}
+
+.sim-icon {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 12px 18px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  position: relative;
+  z-index: 1;
+}
+
+.sim-icon span {
+  display: block;
+  width: 4px;
+  background: var(--accent-primary);
+  border-radius: 2px;
+  animation: signalPulse 1.4s ease-in-out infinite;
+}
+
+.sim-icon span:nth-child(1) { height: 12px; animation-delay: 0s; }
+.sim-icon span:nth-child(2) { height: 18px; animation-delay: 0.15s; }
+.sim-icon span:nth-child(3) { height: 24px; animation-delay: 0.3s; }
+.sim-icon span:nth-child(4) { height: 30px; animation-delay: 0.45s; }
+
+@keyframes signalPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+.login-logo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+}
+
+.login-sub {
+  color: var(--fg-secondary);
+  font-size: 13px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+  line-height: 1.6;
+}
+
+.login-field {
+  margin-bottom: 16px;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+.login-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  color: var(--fg-primary);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.login-field input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-dim);
+}
+
+.login-field input::placeholder {
+  color: var(--fg-tertiary);
+}
+
+.pass-wrap {
+  position: relative;
+}
+
+.pass-wrap input {
+  padding-right: 56px;
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--accent-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: inherit;
+  transition: opacity var(--transition-fast);
+}
+
+.toggle-pass:hover {
+  opacity: 0.8;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-primary), #0099cc);
+  color: #051520;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  margin-top: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-btn:hover {
+  box-shadow: 0 6px 28px rgba(0, 212, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.login-error {
+  color: var(--accent-danger);
+  font-size: 12px;
+  margin-top: 12px;
+  min-height: 20px;
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+}
+
+/* Enhanced Sliders & Cards */
+.slider-section {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 32px;
+  flex-shrink: 0;
+}
+
+.slider-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-wrap {
+  position: relative;
+}
+
+.slider-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 44px;
+  scrollbar-width: none;
+}
+
+.slider-track::-webkit-scrollbar {
+  display: none;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--fg-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  z-index: 2;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
+}
+
+.slider-arrow:hover {
+  background: var(--bg-tertiary);
+  color: var(--fg-primary);
+  border-color: var(--border-secondary);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.slider-arrow.left {
+  left: 4px;
+}
+
+.slider-arrow.right {
+  right: 4px;
+}
+
+.pkg-slide {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  width: 145px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 16px 14px;
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.pkg-slide:hover {
+  border-color: var(--border-secondary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.pkg-slide-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.pkg-slide-speed {
+  font-size: 11px;
+  color: var(--fg-secondary);
+  margin-bottom: 12px;
+}
+
+.pkg-slide-price {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pkg-slide-price span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-secondary);
+}
+
+.pkg-slide-features {
+  list-style: none;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.pkg-slide-features li {
+  font-size: 11px;
+  color: var(--fg-tertiary);
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pkg-slide-features li i {
+  font-size: 9px;
+  color: var(--accent-secondary);
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Enhanced Payment Card */
+.payment-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.payment-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--bg-tertiary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-warning);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-body {
+  padding: 20px;
+}
+
+.pay-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.pay-tab {
+  padding: 12px 10px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  color: var(--fg-secondary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pay-tab:hover {
+  border-color: var(--border-secondary);
+  background: var(--bg-tertiary);
+}
+
+.pay-tab.active {
+  border-color: rgba(255, 159, 67, 0.4);
+  background: var(--accent-warning-dim);
+  color: var(--accent-warning);
+}
+
+.pay-detail {
+  display: none;
+}
+
+.pay-detail.show {
+  display: block;
+  animation: fadeSlideUp 0.3s ease-out;
+}
+
+.pay-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pay-detail-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+  margin: 0 -10px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.pay-detail-row:last-child {
+  border-bottom: none;
+}
+
+.pay-detail-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  background: var(--accent-warning-dim);
+  color: var(--accent-warning);
+  margin-top: 2px;
+}
+
+.pay-detail-label {
+  color: var(--fg-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pay-detail-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.payment-note {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-warning-dim);
+  border: 1px solid rgba(255, 159, 67, 0.2);
+  font-size: 12px;
+  color: var(--accent-warning);
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Enhanced Office Card */
+.office-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  margin-top: 28px;
+  flex-shrink: 0;
+}
+
+.office-inner {
+  padding: 20px;
+}
+
+.office-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.office-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13px;
+}
+
+.office-row:last-child {
+  border-bottom: none;
+}
+
+.office-row i {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.oi-clock {
+  background: var(--accent-primary-dim);
+  color: var(--accent-primary);
+}
+
+.oi-yt {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+}
+
+.oi-fb {
+  background: rgba(24, 119, 242, 0.1);
+  color: #1877f2;
+}
+
+.oi-web {
+  background: var(--accent-secondary-dim);
+  color: var(--accent-secondary);
+}
+
+.office-row-text {
+  line-height: 1.6;
+}
+
+.office-row-text strong {
+  color: var(--fg-primary);
+  font-weight: 600;
+}
+
+.office-row-text span {
+  color: var(--fg-secondary);
+  font-size: 12px;
+}
+
+.office-row-text a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity var(--transition-fast);
+}
+
+.office-row-text a:hover {
+  opacity: 0.8;
+}
+
+/* Enhanced Dashboard */
+.dashboard {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard.active {
+  display: flex;
+}
+
+.topbar {
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: rgba(10, 13, 20, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-logo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-primary);
+}
+
+.topbar-page {
+  font-size: 14px;
+  color: var(--fg-secondary);
+  font-weight: 500;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 100px;
+  background: var(--accent-primary-dim);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  font-size: 12px;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #051520;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 79, 123, 0.3);
+  border-radius: var(--radius-sm);
+  background: var(--accent-danger-dim);
+  color: var(--accent-danger);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-logout:hover {
+  background: rgba(255, 79, 123, 0.15);
+  border-color: rgba(255, 79, 123, 0.5);
+  transform: translateY(-2px);
+}
+
+.main-content {
+  width: 100%;
+  max-width: 640px;
+  flex: 1;
+  padding: 24px;
+}
+
+/* Enhanced ID Card */
+.id-card {
+  background: linear-gradient(160deg, var(--bg-tertiary), #181d2a);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: 26px 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.id-card::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, var(--accent-primary-dim), transparent 70%);
+  pointer-events: none;
+}
+
+.id-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.id-chip {
+  width: 38px;
+  height: 26px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #d9b872, #b6904e);
+  box-shadow: var(--shadow-sm);
+}
+
+.signal-mini {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+}
+
+.signal-mini span {
+  width: 4px;
+  background: var(--accent-primary);
+  border-radius: 1px;
+}
+
+.signal-mini span:nth-child(1) { height: 8px; }
+.signal-mini span:nth-child(2) { height: 11px; }
+.signal-mini span:nth-child(3) { height: 14px; }
+.signal-mini span:nth-child(4) { height: 17px; }
+
+.id-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.id-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.id-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-size: 11px;
+  color: var(--fg-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.meta-val {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Enhanced Info Grid */
+.info-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  transition: all var(--transition-normal);
+}
+
+.info-row:hover {
+  border-color: var(--border-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.info-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.info-icon.cyan {
+  background: var(--accent-primary-dim);
+  color: var(--accent-primary);
+}
+
+.info-icon.green {
+  background: var(--accent-secondary-dim);
+  color: var(--accent-secondary);
+}
+
+.info-icon.orange {
+  background: var(--accent-warning-dim);
+  color: var(--accent-warning);
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--fg-secondary);
+  font-weight: 500;
+}
+
+.info-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.text-danger {
+  color: var(--accent-danger);
+}
+
+/* Enhanced Status Pills */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.active {
+  background: var(--accent-secondary-dim);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(0, 230, 138, 0.25);
+}
+
+.pending {
+  background: var(--accent-warning-dim);
+  color: var(--accent-warning);
+  border: 1px solid rgba(255, 159, 67, 0.25);
+}
+
+.expired {
+  background: var(--accent-danger-dim);
+  color: var(--accent-danger);
+  border: 1px solid rgba(255, 79, 123, 0.25);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Enhanced Details Card */
+.details-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.details-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--bg-tertiary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 14px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--fg-secondary);
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.detail-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* Enhanced Toast Notifications */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 380px;
+  backdrop-filter: blur(16px);
+  width: 100%;
+}
+
+.toast.success {
+  background: rgba(0, 230, 138, 0.14);
+  border: 1px solid rgba(0, 230, 138, 0.35);
+  color: var(--accent-secondary);
+}
+
+.toast.error {
+  background: rgba(255, 79, 123, 0.14);
+  border: 1px solid rgba(255, 79, 123, 0.35);
+  color: var(--accent-danger);
+}
+
+.toast.info {
+  background: rgba(0, 212, 255, 0.14);
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  color: var(--accent-primary);
+}
+
+.toast-exit {
+  animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    min-height:100vh;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    padding:32px 16px 60px;
-    background:radial-gradient(circle at 50% -10%,#1A2C32 0%,var(--bg) 55%);
-    color:var(--text);
-    font-family:var(--sans);
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
-  .wrap{width:100%;max-width:420px}
-  .eyebrow{
-    margin-bottom:18px;
-    color:var(--text-muted);
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.16em;
-    text-transform:uppercase;
+}
+
+@keyframes toastSlideOut {
+  to {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
   }
-  .card{
-    padding:28px 24px;
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:18px;
-    animation:rise .5s ease both;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
-  @keyframes rise{
-    from{opacity:0;transform:translateY(10px)}
-    to{opacity:1;transform:translateY(0)}
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  @media (prefers-reduced-motion:reduce){
-    .card,.sim-bars span{animation:none}
+}
+
+.fade-up {
+  animation: fadeSlideUp 0.5s ease-out both;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 640px) {
+  .login-inner {
+    padding: 24px 16px 60px;
   }
-  .sim{
-    position:relative;
-    width:92px;
-    height:60px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:4px;
-    margin-bottom:22px;
-    background:linear-gradient(145deg,var(--surface-raised),#1E2531);
-    border:1px solid var(--line);
-    clip-path:polygon(0 0,76% 0,100% 26%,100% 100%,0 100%);
+  
+  .login-box {
+    padding: 28px 20px;
   }
-  .sim-bars span{
-    display:block;
-    width:5px;
-    background:var(--accent);
-    border-radius:1px;
-    animation:pulse 1.2s ease-in-out infinite;
+  
+  .main-content {
+    padding: 20px 14px 40px;
   }
-  .sim-bars span:nth-child(1){height:10px;animation-delay:0s}
-  .sim-bars span:nth-child(2){height:16px;animation-delay:.15s}
-  .sim-bars span:nth-child(3){height:22px;animation-delay:.3s}
-  .sim-bars span:nth-child(4){height:28px;animation-delay:.45s}
-  @keyframes pulse{
-    0%,100%{opacity:.35}
-    50%{opacity:1}
+  
+  .topbar {
+    padding: 12px 16px;
   }
-  h1{
-    margin:0 0 6px;
-    font-size:22px;
-    font-weight:700;
-    letter-spacing:0;
+  
+  .id-meta {
+    gap: 16px;
   }
-  .hint{
-    margin:0 0 22px;
-    color:var(--text-muted);
-    font-size:13.5px;
+  
+  .info-row {
+    padding: 14px 16px;
   }
-  .field{position:relative;margin-top:12px}
-  .field:first-child{margin-top:0}
-  input[type="text"],input[type="password"]{
-    width:100%;
-    padding:14px;
-    background:var(--surface-raised);
-    border:1px solid var(--line);
-    border-radius:10px;
-    color:var(--text);
-    font-family:var(--mono);
-    font-size:17px;
-    letter-spacing:.04em;
-    outline:none;
+  
+  .pay-tabs {
+    grid-template-columns: repeat(2, 1fr);
   }
-  input::placeholder{color:#535C6B}
-  input:focus{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(47,230,203,.16);
+  
+  .slider-track {
+    padding: 6px 36px;
   }
-  .password-field input{padding-right:60px}
-  .toggle-pass{
-    position:absolute;
-    right:8px;
-    top:50%;
-    padding:4px 6px;
-    transform:translateY(-50%);
-    background:none;
-    border:0;
-    color:var(--accent);
-    font-family:var(--mono);
-    font-size:12px;
-    cursor:pointer;
+  
+  .slider-arrow {
+    width: 32px;
+    height: 32px;
   }
-  .error{
-    margin-top:10px;
-    color:var(--error);
-    font-size:13px;
-  }
-  .btn-primary{
-    width:100%;
-    margin-top:16px;
-    padding:14px 16px;
-    background:var(--accent);
-    border:0;
-    border-radius:10px;
-    color:#0B2622;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-  }
-  .btn-primary:hover{background:var(--accent-deep)}
-  .btn-primary:disabled{opacity:.55;cursor:not-allowed}
-  .btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .profile-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:16px;
-    color:var(--text-muted);
-    font-size:13px;
-  }
-  .profile-top strong{color:var(--text);font-family:var(--mono)}
-  .btn-ghost{
-    padding:7px 12px;
-    background:transparent;
-    border:1px solid var(--line);
-    border-radius:8px;
-    color:var(--text-muted);
-    font-size:12.5px;
-    cursor:pointer;
-  }
-  .btn-ghost:hover{color:var(--text);border-color:var(--text-muted)}
-  .id-card{
-    padding:20px;
-    margin-bottom:18px;
-    background:linear-gradient(160deg,var(--surface-raised),#1A212B);
-    border:1px solid var(--line);
-    border-radius:16px;
-  }
-  .id-card-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:14px;
-  }
-  .id-chip{
-    width:34px;
-    height:24px;
-    background:linear-gradient(135deg,var(--gold),#B6904E);
-    border-radius:4px;
-  }
-  .signal-mini{display:flex;align-items:flex-end;gap:3px}
-  .signal-mini span{width:4px;background:var(--accent);border-radius:1px}
-  .signal-mini span:nth-child(1){height:6px}
-  .signal-mini span:nth-child(2){height:9px}
-  .signal-mini span:nth-child(3){height:12px}
-  .signal-mini span:nth-child(4){height:15px}
-  .id-name{
-    margin-bottom:14px;
-    font-size:21px;
-    font-weight:700;
-    letter-spacing:0;
-  }
-  .id-meta{display:flex;gap:24px;flex-wrap:wrap}
-  .id-meta>div{display:flex;flex-direction:column;gap:4px}
-  .meta-label{
-    color:var(--text-muted);
-    font-size:11px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-  }
-  .meta-val.mono{font-family:var(--mono);font-size:14.5px}
-  .package-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-    margin-bottom:18px;
-  }
-  .package-label{color:var(--text-muted);font-size:12.5px}
-  .package-pill{
-    padding:5px 12px;
-    background:rgba(47,230,203,.1);
-    border:1px solid rgba(47,230,203,.35);
-    border-radius:999px;
-    color:var(--accent);
-    font-family:var(--mono);
-    font-size:13px;
-    text-align:right;
-  }
-  .package-pill.expired{
-    background:rgba(255,107,94,.1);
-    border-color:rgba(255,107,94,.35);
-    color:var(--error);
-  }
-  .package-pill.active{
-    background:rgba(95,224,126,.1);
-    border-color:rgba(95,224,126,.35);
-    color:var(--success);
-  }
-  .details-card{
-    padding:16px 18px;
-    background:var(--surface-raised);
-    border:1px solid var(--line);
-    border-radius:14px;
-  }
-  .details-title{
-    margin-bottom:10px;
-    color:var(--text-muted);
-    font-size:12px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-  }
-  .bill-row{
-    display:flex;
-    align-items:baseline;
-    gap:6px;
-    padding:8px 0;
-    border-bottom:1px dashed var(--line);
-    font-size:14px;
-  }
-  .bill-row.wrap{align-items:flex-start;flex-wrap:wrap}
-  .bill-row:last-child{border-bottom:0}
-  .bill-label{color:var(--text-muted);white-space:nowrap}
-  .bill-leader{
-    flex:1;
-    border-bottom:1px dotted #3A4150;
-    transform:translateY(-3px);
-  }
-  .bill-row.wrap .bill-leader{display:none}
-  .bill-value{font-family:var(--mono);white-space:nowrap}
-  .bill-row.wrap .bill-value{
-    flex:1;
-    max-width:60%;
-    text-align:right;
-    white-space:normal;
-  }
-  .empty-state{
-    color:var(--text-muted);
-    font-size:13px;
-    line-height:1.5;
-  }
+}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <section id="loginView" class="card login-card">
-      <div class="eyebrow">MR Cable &amp; Networks</div>
-      <div class="sim" aria-hidden="true">
-        <div class="sim-bars"><span></span><span></span><span></span><span></span></div>
-      </div>
-      <h1>Check your account</h1>
-      <p class="hint">Enter your phone number and the last 4 digits of that same number.</p>
-      <form id="loginForm">
-        <div class="field">
-          <input type="text" id="accountInput" inputmode="numeric" autocomplete="off" placeholder="Phone number, e.g. 03144003910" />
-        </div>
-        <div class="field password-field">
-          <input type="password" id="passwordInput" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Last 4 digits" />
-          <button type="button" id="togglePass" class="toggle-pass" aria-label="Show password">Show</button>
-        </div>
-        <div class="error" id="loginError" hidden></div>
-        <button type="submit" class="btn-primary">View my account</button>
-      </form>
-    </section>
 
-    <section id="profileView" class="card profile-card" hidden>
-      <div class="profile-top">
-        <span>Account <strong id="signedInAcct"></strong></span>
-        <button id="logoutBtn" class="btn-ghost">Log out</button>
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-inner">
+    <div class="login-box">
+      <div class="sim-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-
-      <div class="id-card">
-        <div class="id-card-row">
-          <div class="id-chip" aria-hidden="true"></div>
-          <div class="signal-mini" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-        </div>
-        <div class="id-name" id="custName"></div>
-        <div class="id-meta">
-          <div><span class="meta-label">Customer ID</span><span class="meta-val mono" id="custId"></span></div>
-          <div><span class="meta-label">Phone</span><span class="meta-val mono" id="custAcct"></span></div>
-          <div><span class="meta-label">Package</span><span class="meta-val mono" id="custPackage"></span></div>
+      <div class="login-logo">M.R. Cable & Internet Network (R)</div>
+      <div class="login-sub">Enter your phone number and the last 4 digits of your phone number to access your account portal.</div>
+      <div class="login-field">
+        <label for="phoneInput">Phone Number</label>
+        <input type="text" id="phoneInput" inputmode="numeric" autocomplete="off" placeholder="e.g. 03144003910" aria-label="Phone Number">
+      </div>
+      <div class="login-field">
+        <label for="last4Input">Last 4 Digits of Phone Number</label>
+        <div class="pass-wrap">
+          <input type="password" id="last4Input" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="e.g. 3910" aria-label="Last 4 Digits of Phone Number">
+          <button type="button" id="togglePass" class="toggle-pass" aria-label="Toggle password visibility">Show</button>
         </div>
       </div>
+      <button class="login-btn" id="loginBtn" aria-label="View My Account">
+        <i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account
+      </button>
+      <div class="login-error" id="loginError" role="alert"></div>
+    </div>
 
-      <div class="package-row">
-        <span class="package-label">Status</span>
-        <span class="package-pill" id="custStatus"></span>
+    <div class="slider-section">
+      <div class="slider-title">
+        <i class="fa-solid fa-bolt"></i> Our Packages
       </div>
-      <div class="package-row">
-        <span class="package-label">Expires</span>
-        <span class="package-pill" id="custExpiry"></span>
+      <div class="slider-wrap" id="loginPkgWrap">
+        <button class="slider-arrow left" onclick="scrollSlider('loginPkgTrack', -160)" aria-label="Scroll left">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="slider-track" id="loginPkgTrack"></div>
+        <button class="slider-arrow right" onclick="scrollSlider('loginPkgTrack', 160)" aria-label="Scroll right">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
       </div>
-      <div class="package-row">
-        <span class="package-label">Balance</span>
-        <span class="package-pill" id="custBalance"></span>
-      </div>
-
-      <div class="details-card">
-        <div class="details-title">Other Details</div>
-        <div id="detailsList"></div>
-      </div>
-    </section>
+    </div>
+    
+    <div class="slider-section">
+      <div id="loginPayment"></div>
+    </div>
+    
+    <div class="office-card" id="loginOffice"></div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = 'https://iuzwdjgagcxqwtpihpmb.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <nav class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">M.R. Cable & Internet Network (R)</div>
+      <div class="topbar-divider"></div>
+      <span class="topbar-page">My Account</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span id="userPhoneDisplay">—</span>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()" aria-label="Logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </nav>
+  <main class="main-content" id="profileContent"></main>
+</div>
 
-    const KNOWN_FIELDS = ['customer_id', 'customer_name', 'contact', 'cnic', 'package', 'expiration_date', 'balance', 'status'];
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-    const loginView = document.getElementById('loginView');
-    const profileView = document.getElementById('profileView');
-    const loginForm = document.getElementById('loginForm');
-    const accountInput = document.getElementById('accountInput');
-    const passwordInput = document.getElementById('passwordInput');
-    const togglePass = document.getElementById('togglePass');
-    const loginError = document.getElementById('loginError');
-    const logoutBtn = document.getElementById('logoutBtn');
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Configuration
+const CONFIG = {
+  SUPABASE_URL: 'https://iuzwdjgagcxqwtpihpmb.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow',
+  SLIDER_INTERVAL: 3500,
+  SCROLL_AMOUNT: 160
+};
 
-    function prettyLabel(key){
-      return key
-        .replace(/_/g, ' ')
-        .replace(/([a-z])([A-Z])/g, '$1 $2')
-        .trim()
-        .split(/\s+/)
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-    }
+// Data
+const PACKAGES = [
+  { name: 'LH3', speed: '2 Mbps', price: 1000, features: ['2 Mbps download', 'Unlimited data', '24/7 support'] },
+  { name: 'LHR5', speed: '5 Mbps', price: 1400, features: ['5 Mbps download', 'Unlimited data', '24/7 support'] },
+  { name: 'SUPER-10', speed: '10 Mbps', price: 1800, features: ['10 Mbps download', 'Unlimited data', 'Priority support', 'Free router'] },
+  { name: 'SUPER-15', speed: '15 Mbps', price: 2500, features: ['15 Mbps download', 'Unlimited data', 'Priority support', 'Free router'] },
+  { name: 'SUPER-20', speed: '20 Mbps', price: 3000, features: ['20 Mbps download', 'Unlimited data', 'Priority support', 'Free router'] },
+  { name: 'SUPER-30', speed: '25 Mbps', price: 3500, features: ['25 Mbps download', 'Unlimited data', 'Priority support', 'Free router'] }
+];
 
-    function formatValue(key, val){
-      if (val === '' || val === null || val === undefined) return '-';
-      const lowerKey = key.toLowerCase();
-      const str = String(val).trim();
-      const isNumeric = str !== '' && !Number.isNaN(parseFloat(str.replace(/,/g, ''))) && /^[\d.,\s]+$/.test(str);
+const PAYMENT_METHODS = [
+  {
+    id: 'ubl',
+    name: 'UBL',
+    details: [
+      { icon: 'fa-building-columns', label: 'Bank Name', value: 'UBL' },
+      { icon: 'fa-hashtag', label: 'Account Number', value: '2197371721801' },
+      { icon: 'fa-barcode', label: 'IBAN', value: 'PK68UNIL0109000371721801' },
+      { icon: 'fa-user', label: 'Account Title', value: 'M.R. Cable Network' }
+    ]
+  },
+  {
+    id: 'jazzbiz',
+    name: 'Jazz Business',
+    details: [
+      { icon: 'fa-hashtag', label: 'Till ID', value: '981 985 260' },
+      { icon: 'fa-user', label: 'Account Title', value: 'M.R. Cable Network' }
+    ]
+  },
+  {
+    id: 'wallet',
+    name: 'JazzCash/EasyPaisa',
+    details: [
+      { icon: 'fa-mobile-screen-button', label: 'Number', value: '0300-4884733' },
+      { icon: 'fa-user', label: 'Name', value: 'Musharraf Iqbal' }
+    ]
+  }
+];
 
-      if (isNumeric && /(amount|bill|balance|due|charge|cost|fee)/.test(lowerKey)){
-        const num = parseFloat(str.replace(/,/g, ''));
-        return 'Rs. ' + num.toLocaleString('en-PK');
-      }
-      if (/(date|expiry|renew)/.test(lowerKey)){
-        const date = new Date(val);
-        if (!Number.isNaN(date.getTime())){
-          return date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-        }
-      }
-      return str;
-    }
+const OFFICE_INFO = [
+  { icon: 'oi-clock', fa: 'fa-clock', text: '<strong>Sat–Thu:</strong> 09:00 AM – 05:00 PM<br><span>Friday: 09:00 AM – 11:59 AM</span>' },
+  { icon: 'oi-yt', fa: 'fa-brands fa-youtube', text: '<a href="https://www.youtube.com/@mrcablenetworkkrk" target="_blank" rel="noopener noreferrer">@mrcablenetworkkrk</a>' },
+  { icon: 'oi-fb', fa: 'fa-brands fa-facebook-f', text: '<a href="https://www.facebook.com/M.R.CableNetwork" target="_blank" rel="noopener noreferrer">M.R. Cable Network</a>' },
+  { icon: 'oi-web', fa: 'fa-globe', text: '<a href="https://www.mrcablenetwork.com" target="_blank" rel="noopener noreferrer">www.mrcablenetwork.com</a>' }
+];
 
-    function setText(id, value){
-      document.getElementById(id).textContent = value || '-';
-    }
+// Initialize Supabase
+const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
-    function showError(message){
-      loginError.textContent = message;
-      loginError.hidden = false;
-    }
+// State
+let customerData = null;
+let sliderInterval = null;
 
-    function clearError(){
-      loginError.textContent = '';
-      loginError.hidden = true;
-    }
+// Utility Functions
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
 
-    function addDetailRow(list, key, value){
-      const row = document.createElement('div');
-      row.className = 'bill-row' + (key.toLowerCase() === 'address' ? ' wrap' : '');
+function formatCurrency(amount) {
+  const num = parseFloat(String(amount).replace(/,/g, ''));
+  return !isNaN(num) ? `RS ${num.toLocaleString('en-PK')}` : '—';
+}
 
-      const label = document.createElement('span');
-      label.className = 'bill-label';
-      label.textContent = prettyLabel(key);
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return '—';
+  return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
 
-      const leader = document.createElement('span');
-      leader.className = 'bill-leader';
+function formatValue(key, value) {
+  if (value === '' || value == null) return '—';
+  
+  const keyLower = key.toLowerCase();
+  const strValue = String(value).trim();
+  
+  if (/(amount|bill|balance|due|charge|cost|fee)/.test(keyLower)) {
+    return formatCurrency(strValue);
+  }
+  
+  if (/(date|expiry|renew)/.test(keyLower)) {
+    return formatDate(strValue);
+  }
+  
+  return strValue;
+}
 
-      const val = document.createElement('span');
-      val.className = 'bill-value';
-      val.textContent = formatValue(key, value);
+function calculateStatus(expirationDate) {
+  if (!expirationDate) return 'expired';
+  
+  const expiry = new Date(expirationDate + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const daysRemaining = (expiry - today) / (1000 * 60 * 60 * 24);
+  
+  if (daysRemaining < 0) return 'expired';
+  if (daysRemaining <= 7) return 'pending';
+  return 'active';
+}
 
-      row.append(label, leader, val);
-      list.appendChild(row);
-    }
+function getStatusConfig(status) {
+  const configs = {
+    active: { class: 'active', label: 'Active' },
+    pending: { class: 'pending', label: 'Expiring Soon' },
+    expired: { class: 'expired', label: 'Expired' }
+  };
+  return configs[status] || configs.expired;
+}
 
-    loginForm.addEventListener('submit', async function(event){
-      event.preventDefault();
-      clearError();
+// Toast Notification System
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = {
+    success: 'fa-circle-check',
+    error: 'fa-circle-xmark',
+    info: 'fa-circle-info',
+    warning: 'fa-triangle-exclamation'
+  };
+  
+  toast.innerHTML = `
+    <i class="fa-solid ${icons[type] || icons.info}"></i>
+    <span>${escapeHtml(message)}</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.add('toast-exit');
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
 
-      const phoneVal = accountInput.value.trim();
-      const last4Val = passwordInput.value.trim();
-      if (!phoneVal || !last4Val){
-        showError('Enter your phone number and the last 4 digits.');
-        return;
-      }
+// Render Functions
+function renderPackages(containerId) {
+  const track = document.getElementById(containerId);
+  if (!track) return;
+  
+  track.innerHTML = PACKAGES.map(pkg => `
+    <div class="pkg-slide">
+      <div class="pkg-slide-name">${escapeHtml(pkg.name)}</div>
+      <div class="pkg-slide-speed">${escapeHtml(pkg.speed)}</div>
+      <div class="pkg-slide-price">RS ${pkg.price.toLocaleString()}<span>/mo</span></div>
+      <ul class="pkg-slide-features">
+        ${pkg.features.map(feature => `
+          <li><i class="fa-solid fa-check"></i> ${escapeHtml(feature)}</li>
+        `).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
 
-      const submitBtn = loginForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Checking...';
+function renderPaymentMethods() {
+  const container = document.getElementById('loginPayment');
+  if (!container) return;
+  
+  container.className = 'payment-card';
+  container.innerHTML = `
+    <div class="payment-header">
+      <i class="fa-solid fa-credit-card"></i> Payment Methods
+    </div>
+    <div class="payment-body">
+      <div class="pay-tabs">
+        ${PAYMENT_METHODS.map((method, index) => `
+          <div class="pay-tab ${index === 0 ? 'active' : ''}" 
+               onclick="switchPaymentTab('${method.id}', this)"
+               role="button"
+               tabindex="0"
+               aria-pressed="${index === 0}">
+            <i class="fa-solid ${method.details[0].icon}" style="font-size: 20px;"></i>
+            ${escapeHtml(method.name)}
+          </div>
+        `).join('')}
+      </div>
+      ${PAYMENT_METHODS.map((method, index) => `
+        <div class="pay-detail ${index === 0 ? 'show' : ''}" id="pay-${method.id}">
+          ${method.details.map(detail => `
+            <div class="pay-detail-row" onclick="copyToClipboard('${escapeHtml(detail.value).replace(/'/g, "\\'")}')" title="Click to copy">
+              <div class="pay-detail-icon">
+                <i class="fa-solid ${detail.icon}"></i>
+              </div>
+              <div>
+                <div class="pay-detail-label">${escapeHtml(detail.label)}</div>
+                <div class="pay-detail-value">${escapeHtml(detail.value)}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+      <div class="payment-note">
+        <i class="fa-solid fa-circle-info"></i>
+        پیمنٹ کے بعد اس نمبر پر سکرین شاٹ سینڈ کریں یہ بھی ایڈ کر دیجیے گا 03004844733
+      </div>
+    </div>
+  `;
+}
 
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('login', {
-          body: { phone: phoneVal, last4: last4Val }
-        });
+function switchPaymentTab(methodId, element) {
+  // Find the parent container to scope the search
+  const parentContainer = element.closest('.payment-body');
+  
+  if (!parentContainer) return;
+  
+  // Only affect tabs and details within this specific container
+  parentContainer.querySelectorAll('.pay-tab').forEach(tab => {
+    tab.classList.remove('active');
+    tab.setAttribute('aria-pressed', 'false');
+  });
+  element.classList.add('active');
+  element.setAttribute('aria-pressed', 'true');
+  
+  parentContainer.querySelectorAll('.pay-detail').forEach(detail => detail.classList.remove('show'));
+  const targetDetail = parentContainer.querySelector(`#pay-${methodId}`);
+  if (targetDetail) {
+    targetDetail.classList.add('show');
+  }
+}
 
-        if (error || !data || data.error || !data.customer){
-          showError('Phone number or last 4 digits is incorrect.');
-          return;
-        }
-        renderProfile(data.customer);
-      } catch (err){
-        showError('Could not reach the server. Please try again.');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'View my account';
-      }
-    });
+function renderOfficeInfo() {
+  const container = document.getElementById('loginOffice');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="office-inner">
+      <div class="office-title">
+        <i class="fa-solid fa-location-dot"></i> Contact & Office
+      </div>
+      ${OFFICE_INFO.map(info => `
+        <div class="office-row">
+          <i class="fa-solid ${info.fa} ${info.icon}"></i>
+          <div class="office-row-text">${info.text}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
-    function renderProfile(customer){
-      setText('signedInAcct', customer.contact);
-      setText('custName', customer.customer_name);
-      setText('custId', customer.customer_id);
-      setText('custAcct', customer.contact);
-      setText('custPackage', customer.package);
+// Slider Functions
+function scrollSlider(trackId, amount) {
+  const track = document.getElementById(trackId);
+  if (track) {
+    track.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+}
 
-      const isExpired = customer.status === 'Deactive';
-      const statusEl = document.getElementById('custStatus');
-      statusEl.textContent = customer.status || '-';
-      statusEl.classList.toggle('expired', isExpired);
-      statusEl.classList.toggle('active', !isExpired);
-
-      const expiryEl = document.getElementById('custExpiry');
-      expiryEl.textContent = formatValue('expiration_date', customer.expiration_date);
-      expiryEl.classList.toggle('expired', isExpired);
-
-      setText('custBalance', formatValue('balance', customer.balance));
-
-      const list = document.getElementById('detailsList');
-      list.replaceChildren();
-      const extraKeys = Object.keys(customer).filter((key) => !KNOWN_FIELDS.includes(key));
-
-      if (extraKeys.length === 0){
-        const empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.textContent = 'No other details on file.';
-        list.appendChild(empty);
+function startAutoSlider(trackId) {
+  if (sliderInterval) clearInterval(sliderInterval);
+  
+  sliderInterval = setInterval(() => {
+    const track = document.getElementById(trackId);
+    if (track) {
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        extraKeys.forEach((key) => addDetailRow(list, key, customer[key]));
+        track.scrollBy({ left: CONFIG.SCROLL_AMOUNT, behavior: 'smooth' });
       }
-
-      loginView.hidden = true;
-      profileView.hidden = false;
     }
+  }, CONFIG.SLIDER_INTERVAL);
+}
 
-    logoutBtn.addEventListener('click', function(){
-      profileView.hidden = true;
-      loginView.hidden = false;
-      accountInput.value = '';
-      passwordInput.value = '';
-      clearError();
-    });
+function pauseAutoSlider() {
+  if (sliderInterval) {
+    clearInterval(sliderInterval);
+    sliderInterval = null;
+  }
+}
 
-    togglePass.addEventListener('click', function(){
-      const isHidden = passwordInput.type === 'password';
-      passwordInput.type = isHidden ? 'text' : 'password';
-      togglePass.textContent = isHidden ? 'Hide' : 'Show';
-      togglePass.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-    });
-  </script>
+function resumeAutoSlider(trackId) {
+  startAutoSlider(trackId);
+}
+
+// Login Functions
+function resetLoginButton() {
+  const button = document.getElementById('loginBtn');
+  button.disabled = false;
+  button.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>&nbsp; View My Account';
+}
+
+async function handleLogin() {
+  const phoneInput = document.getElementById('phoneInput');
+  const last4Input = document.getElementById('last4Input');
+  const errorElement = document.getElementById('loginError');
+  const button = document.getElementById('loginBtn');
+  
+  const phone = phoneInput.value.trim();
+  const last4 = last4Input.value.trim();
+  
+  errorElement.textContent = '';
+  
+  // Validation
+  if (!phone || !last4) {
+    errorElement.textContent = 'Please enter your phone number and last 4 digits of phone number.';
+    return;
+  }
+  
+  if (last4.length !== 4 || isNaN(last4)) {
+    errorElement.textContent = 'Last 4 digits must be a 4-digit number.';
+    return;
+  }
+  
+  // Loading state
+  button.disabled = true;
+  button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Verifying...';
+  
+  try {
+    // Use Supabase Edge Function for secure login (bypasses RLS, server-side validation)
+    const { data, error } = await sb.functions.invoke('login', { body: { phone, last4 } });
+    
+    if (error || !data || data.error || !data.customer) {
+      errorElement.textContent = 'Phone number or last 4 digits is incorrect.';
+      resetLoginButton();
+      return;
+    }
+    
+    // Success
+    customerData = data.customer;
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('dashboard').classList.add('active');
+    renderDashboard(customerData);
+    showToast('Welcome back! Account loaded successfully.', 'success');
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    errorElement.textContent = 'Could not reach the server. Please try again.';
+    resetLoginButton();
+  }
+}
+
+function handleLogout() {
+  customerData = null;
+  document.getElementById('phoneInput').value = '';
+  document.getElementById('last4Input').value = '';
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  resetLoginButton();
+  showToast('You have been logged out successfully.', 'info');
+}
+
+// Dashboard Functions
+function renderDashboard(customer) {
+  const status = calculateStatus(customer.expiration_date);
+  const statusConfig = getStatusConfig(status);
+  
+  // Update user info
+  document.getElementById('userPhoneDisplay').textContent = customer.contact || '—';
+  document.getElementById('userAvatar').textContent = (customer.customer_name || 'U').charAt(0).toUpperCase();
+  
+  // Render content
+  document.getElementById('profileContent').innerHTML = `
+    <div class="id-card fade-up">
+      <div class="id-card-top">
+        <div class="id-chip"></div>
+        <div class="signal-mini">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <div class="id-name">${escapeHtml(customer.customer_name || 'Customer')}</div>
+      <div class="id-meta">
+        <div>
+          <div class="meta-label">Customer ID</div>
+          <div class="meta-val">${escapeHtml(customer.customer_id || '—')}</div>
+        </div>
+        <div>
+          <div class="meta-label">Package</div>
+          <div class="meta-val">${escapeHtml(customer.package || '—')}</div>
+        </div>
+        <div>
+          <div class="meta-label">Status</div>
+          <div class="meta-val">
+            <span class="status-pill ${statusConfig.class}">
+              <span class="status-dot"></span>
+              ${statusConfig.label}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="info-grid fade-up">
+      <div class="info-row">
+        <div class="info-left">
+          <div class="info-icon cyan">
+            <i class="fa-solid fa-calendar-days"></i>
+          </div>
+          <div>
+            <div class="info-label">Expiry Date</div>
+            <div class="info-value ${calculateStatus(customer.expiration_date) === 'expired' ? 'text-danger' : ''}">${formatValue('expiration_date', customer.expiration_date)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-left">
+          <div class="info-icon green">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <div>
+            <div class="info-label">Current Balance</div>
+            <div class="info-value">${formatValue('balance', customer.balance)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-left">
+          <div class="info-icon orange">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div>
+            <div class="info-label">Address</div>
+            <div class="info-value" style="white-space: normal; max-width: 280px;">
+              ${escapeHtml(customer.address || '—')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="details-card fade-up">
+      <div class="details-header">
+        <i class="fa-solid fa-credit-card"></i> Payment Methods
+      </div>
+      <div class="payment-body" style="padding: 0; background: transparent;">
+        <div class="pay-tabs">
+          ${PAYMENT_METHODS.map((method, index) => `
+            <div class="pay-tab ${index === 0 ? 'active' : ''}" 
+                 onclick="switchPaymentTab('${method.id}', this)"
+                 role="button"
+                 tabindex="0"
+                 aria-pressed="${index === 0}">
+              <i class="fa-solid ${method.details[0].icon}" style="font-size: 20px;"></i>
+              ${escapeHtml(method.name)}
+            </div>
+          `).join('')}
+        </div>
+        ${PAYMENT_METHODS.map((method, index) => `
+          <div class="pay-detail ${index === 0 ? 'show' : ''}" id="pay-${method.id}">
+            ${method.details.map(detail => `
+              <div class="pay-detail-row" onclick="copyToClipboard('${escapeHtml(detail.value).replace(/'/g, "\\'")}')" title="Click to copy">
+                <div class="pay-detail-icon">
+                  <i class="fa-solid ${detail.icon}"></i>
+                </div>
+                <div>
+                  <div class="pay-detail-label">${escapeHtml(detail.label)}</div>
+                  <div class="pay-detail-value">${escapeHtml(detail.value)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('')}
+        <div class="payment-note">
+          <i class="fa-solid fa-circle-info"></i>
+          پیمنٹ کے بعد اس نمبر پر سکرین شاٹ سینڈ کریں یہ بھی ایڈ کر دیجیے گا 03004844733
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Copy to clipboard function
+function copyToClipboard(text) {
+  if (!text) return;
+  
+  navigator.clipboard.writeText(text).then(() => {
+    // Show toast notification
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-secondary);
+      color: #051520;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      z-index: 99999;
+      box-shadow: var(--shadow-lg);
+      animation: fadeSlideUp 0.3s ease-out;
+    `;
+    toast.textContent = 'Copied to clipboard!';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+}
+
+// Event Listeners
+function initializeEventListeners() {
+  // Toggle password visibility
+  document.getElementById('togglePass').addEventListener('click', function() {
+    const input = document.getElementById('last4Input');
+    if (input.type === 'password') {
+      input.type = 'text';
+      this.textContent = 'Hide';
+    } else {
+      input.type = 'password';
+      this.textContent = 'Show';
+    }
+  });
+  
+  // Login button
+  document.getElementById('loginBtn').addEventListener('click', handleLogin);
+  
+  // Enter key navigation
+  document.getElementById('phoneInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('last4Input').focus();
+    }
+  });
+  
+  document.getElementById('last4Input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleLogin();
+    }
+  });
+  
+  // Slider pause on hover
+  const sliderWrap = document.getElementById('loginPkgWrap');
+  if (sliderWrap) {
+    sliderWrap.addEventListener('mouseenter', pauseAutoSlider);
+    sliderWrap.addEventListener('mouseleave', () => resumeAutoSlider('loginPkgTrack'));
+  }
+}
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', () => {
+  renderPackages('loginPkgTrack');
+  renderPaymentMethods();
+  renderOfficeInfo();
+  startAutoSlider('loginPkgTrack');
+  initializeEventListeners();
+});
+</script>
 </body>
 </html>

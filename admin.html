@@ -1,645 +1,1242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MR Cable & Networks - Admin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M.R. Cable & Internet Network (R) — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  :root{
-    --bg:#12161D;
-    --surface:#1B212B;
-    --surface-raised:#232A36;
-    --accent:#2FE6CB;
-    --accent-deep:#18B79F;
-    --text:#ECF0F4;
-    --text-muted:#828B9B;
-    --error:#FF6B5E;
-    --warn:#E0A93A;
-    --line:#2A313D;
-    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
-    --sans:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  :root {
+    --bg:#0c0e14;--bg-card:#161922;--bg-card-alt:#1c2030;--bg-input:#1a1e2a;
+    --fg:#e4e7f0;--fg-muted:#6b7194;--fg-dim:#464b6a;
+    --border:#252a3a;--border-light:#2f3549;
+    --green:#00e68a;--cyan:#00d4ff;--orange:#ff8c42;--rose:#ff4f7b;
+    --green-dim:rgba(0,230,138,0.08);--cyan-dim:rgba(0,212,255,0.08);
+    --radius:12px;--radius-sm:8px;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    min-height:100vh;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    padding:40px 16px 60px;
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--sans);
-  }
-  .wrap{width:100%;max-width:480px}
-  .eyebrow{
-    margin-bottom:14px;
-    color:var(--text-muted);
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-  }
-  .card{
-    padding:28px 24px;
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:16px;
-  }
-  h1{margin:0 0 6px;font-size:20px;letter-spacing:0}
-  .hint{margin:0 0 20px;color:var(--text-muted);font-size:13.5px;line-height:1.45}
-  input[type="email"],input[type="password"],input[type="file"],input[type="text"],input[type="date"]{
-    width:100%;
-    margin-top:10px;
-    padding:12px 14px;
-    background:var(--surface-raised);
-    border:1px solid var(--line);
-    border-radius:10px;
-    color:var(--text);
-    font-size:15px;
-    outline:none;
-  }
-  input:focus{border-color:var(--accent)}
-  input::placeholder{color:#535C6B}
-  .btn-primary,.btn-danger{
-    width:100%;
-    margin-top:16px;
-    padding:13px 16px;
-    border:0;
-    border-radius:10px;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-  }
-  .btn-primary{background:var(--accent);color:#0B2622}
-  .btn-primary:hover{background:var(--accent-deep)}
-  .btn-danger{background:var(--error);color:#2A0E0B}
-  .btn-primary:disabled,.btn-danger:disabled{opacity:.5;cursor:not-allowed}
-  .error{margin-top:10px;color:var(--error);font-size:13px}
-  .status{margin-top:10px;color:var(--text-muted);font-size:13px;line-height:1.4}
-  .status.ok{color:var(--accent)}
-  .preview{
-    margin-top:16px;
-    padding:14px;
-    background:var(--surface-raised);
-    border:1px solid var(--line);
-    border-radius:10px;
-    font-size:13px;
-  }
-  .preview-row{
-    display:flex;
-    justify-content:space-between;
-    gap:14px;
-    padding:4px 0;
-    color:var(--text-muted);
-    font-family:var(--mono);
-    font-size:12.5px;
-  }
-  .preview-row span:last-child{text-align:right}
-  .confirm-box{
-    display:flex;
-    align-items:flex-start;
-    gap:8px;
-    margin-top:16px;
-    color:var(--warn);
-    font-size:13px;
-    line-height:1.4;
-  }
-  .confirm-box input{width:auto;margin-top:2px}
-  .nav-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:18px;
-  }
-  .nav-btn{
-    padding:16px 10px;
-    background:var(--surface-raised);
-    border:1px solid var(--line);
-    border-radius:12px;
-    color:var(--text);
-    font-size:13px;
-    font-weight:600;
-    line-height:1.3;
-    text-align:center;
-    cursor:pointer;
-  }
-  .nav-btn:hover{border-color:var(--accent-deep)}
-  .nav-btn.active{background:var(--accent);border-color:var(--accent);color:#0B2622}
-  .back-link{
-    display:inline-block;
-    margin-bottom:16px;
-    color:var(--text-muted);
-    font-size:13px;
-    text-decoration:underline;
-    cursor:pointer;
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden;}
+
+  /* Background atmosphere */
+  body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 600px 400px at 10% 15%,rgba(0,230,138,0.04),transparent 70%),
+    radial-gradient(ellipse 500px 500px at 90% 80%,rgba(255,79,123,0.03),transparent 70%);}
+
+  /* ── LOGIN ── */
+  .login-screen{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;
+    background:var(--bg);transition:opacity .45s,visibility .45s;}
+  .login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .login-box{width:100%;max-width:400px;padding:40px;background:var(--bg-card);border:1px solid var(--border);
+    border-radius:16px;text-align:center;position:relative;overflow:hidden;}
+  .login-box::before{content:'';position:absolute;top:-60%;left:-20%;width:140%;height:100%;
+    background:radial-gradient(ellipse,rgba(0,230,138,0.06),transparent 70%);pointer-events:none;}
+  .login-logo{font-family:'Inter',sans-serif;font-size:26px;font-weight:700;margin-bottom:4px;
+    background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;background-clip:text;}
+  .login-sub{color:var(--fg-muted);font-size:12px;letter-spacing:.5px;margin-bottom:28px;}
+  .login-field{margin-bottom:16px;text-align:left;}
+  .login-field label{display:block;font-size:11px;font-weight:600;color:var(--fg-muted);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+  .login-field input{width:100%;padding:12px 14px;background:var(--bg-input);border:1px solid var(--border);
+    border-radius:var(--radius-sm);color:var(--fg);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .login-field input:focus{border-color:var(--green);}
+  .login-btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,var(--green),#00c974);color:#0a1a12;
+    font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:6px;}
+  .login-btn:hover{box-shadow:0 4px 24px rgba(0,230,138,0.3);transform:translateY(-1px);}
+  .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+  .login-error{color:var(--rose);font-size:13px;margin-top:12px;min-height:20px;}
+
+  /* ── DASHBOARD ── */
+  .dashboard{display:none;min-height:100vh;position:relative;z-index:1;}
+  .dashboard.active{display:block;}
+
+  /* Topbar */
+  .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+    padding:12px 24px;background:rgba(12,14,20,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+  .topbar-left{display:flex;align-items:center;gap:12px;}
+  .topbar-logo{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;
+    background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-divider{width:1px;height:22px;background:var(--border);}
+  .topbar-page{font-size:13px;color:var(--fg-muted);font-weight:500;}
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .admin-badge{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:100px;
+    background:var(--green-dim);border:1px solid rgba(0,230,138,0.15);font-size:12px;color:var(--green);font-weight:600;}
+  .admin-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--cyan));
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0a1a12;}
+  .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 16px;border:1px solid rgba(255,79,123,0.25);
+    border-radius:var(--radius-sm);background:rgba(255,79,123,0.06);color:var(--rose);
+    font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .btn-logout:hover{background:rgba(255,79,123,0.14);border-color:rgba(255,79,123,0.4);
+    box-shadow:0 2px 16px rgba(255,79,123,0.15);transform:translateY(-1px);}
+  .btn-logout:active{transform:scale(0.97);}
+
+  /* Main */
+  .main-content{max-width:1200px;margin:0 auto;padding:28px 24px 60px;}
+
+  /* Stats */
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px;}
+  .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;
+    transition:border-color .3s,transform .3s;}
+  .stat-card:hover{border-color:var(--border-light);transform:translateY(-2px);}
+  .stat-icon{width:34px;height:34px;border-radius:var(--radius-sm);display:flex;align-items:center;
+    justify-content:center;font-size:15px;margin-bottom:10px;}
+  .stat-icon.green{background:var(--green-dim);color:var(--green);}
+  .stat-icon.cyan{background:var(--cyan-dim);color:var(--cyan);}
+  .stat-icon.orange{background:rgba(255,140,66,0.08);color:var(--orange);}
+  .stat-icon.rose{background:rgba(255,79,123,0.08);color:var(--rose);}
+  .stat-value{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;line-height:1;}
+  .stat-label{font-size:11px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px;}
+
+  /* 4 Action Cards */
+  .action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:32px;}
+  .action-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;padding:28px 18px;border-radius:var(--radius);cursor:pointer;border:none;
+    font-family:'Space Grotesk',sans-serif;overflow:hidden;transition:all .3s cubic-bezier(.4,0,.2,1);}
+  .action-card:active{transform:scale(0.97)!important;}
+  .action-card .card-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;
+    justify-content:center;font-size:20px;position:relative;z-index:1;transition:transform .3s;}
+  .action-card:hover .card-icon{transform:scale(1.1) rotate(-3deg);}
+  .action-card .card-title{font-size:15px;font-weight:700;position:relative;z-index:1;}
+  .action-card .card-desc{font-size:11px;opacity:.65;position:relative;z-index:1;text-align:center;line-height:1.4;}
+  .action-card::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
+    transform:skewX(-20deg);animation:shimmer 5s ease-in-out infinite;}
+  .action-card:nth-child(2)::after{animation-delay:1.2s;}
+  .action-card:nth-child(3)::after{animation-delay:2.4s;}
+  .action-card:nth-child(4)::after{animation-delay:3.6s;}
+  @keyframes shimmer{0%,80%{left:-100%;}100%{left:200%;}}
+
+  .card-green{background:linear-gradient(160deg,rgba(0,230,138,0.12),rgba(0,230,138,0.03));
+    border:1px solid rgba(0,230,138,0.2);color:var(--green);}
+  .card-green:hover{background:linear-gradient(160deg,rgba(0,230,138,0.18),rgba(0,230,138,0.05));
+    border-color:rgba(0,230,138,0.35);box-shadow:0 8px 32px rgba(0,230,138,0.12);transform:translateY(-3px);}
+  .card-green .card-icon{background:rgba(0,230,138,0.15);}
+
+  .card-cyan{background:linear-gradient(160deg,rgba(0,212,255,0.12),rgba(0,212,255,0.03));
+    border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
+  .card-cyan:hover{background:linear-gradient(160deg,rgba(0,212,255,0.18),rgba(0,212,255,0.05));
+    border-color:rgba(0,212,255,0.35);box-shadow:0 8px 32px rgba(0,212,255,0.12);transform:translateY(-3px);}
+  .card-cyan .card-icon{background:rgba(0,212,255,0.15);}
+
+  .card-orange{background:linear-gradient(160deg,rgba(255,140,66,0.12),rgba(255,140,66,0.03));
+    border:1px solid rgba(255,140,66,0.2);color:var(--orange);}
+  .card-orange:hover{background:linear-gradient(160deg,rgba(255,140,66,0.18),rgba(255,140,66,0.05));
+    border-color:rgba(255,140,66,0.35);box-shadow:0 8px 32px rgba(255,140,66,0.12);transform:translateY(-3px);}
+  .card-orange .card-icon{background:rgba(255,140,66,0.15);}
+
+  .card-rose{background:linear-gradient(160deg,rgba(255,79,123,0.12),rgba(255,79,123,0.03));
+    border:1px solid rgba(255,79,123,0.2);color:var(--rose);}
+  .card-rose:hover{background:linear-gradient(160deg,rgba(255,79,123,0.18),rgba(255,79,123,0.05));
+    border-color:rgba(255,79,123,0.35);box-shadow:0 8px 32px rgba(255,79,123,0.12);transform:translateY(-3px);}
+  .card-rose .card-icon{background:rgba(255,79,123,0.15);}
+
+  /* Table Section */
+  .table-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .table-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+  .table-bar-left{display:flex;align-items:center;gap:10px;}
+  .table-bar-left h2{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;
+    display:flex;align-items:center;gap:8px;}
+  .table-bar-left h2 i{color:var(--cyan);font-size:13px;}
+  .row-badge{font-size:11px;padding:3px 10px;border-radius:100px;font-weight:700;
+    background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.15);}
+  .refresh-btn{width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--border);
+    background:var(--bg-input);color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;
+    justify-content:center;font-size:13px;transition:all .2s;}
+  .refresh-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+  .refresh-btn.spinning i{animation:spin .6s linear;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .search-mini{display:flex;align-items:center;gap:7px;padding:6px 12px;background:var(--bg-input);
+    border:1px solid var(--border);border-radius:var(--radius-sm);transition:border-color .2s;}
+  .search-mini:focus-within{border-color:var(--cyan);}
+  .search-mini i{color:var(--fg-dim);font-size:12px;}
+  .search-mini input{background:none;border:none;outline:none;color:var(--fg);font-size:13px;font-family:inherit;width:160px;}
+  .search-mini input::placeholder{color:var(--fg-dim);}
+
+  .table-wrap{overflow-x:auto;max-height:520px;overflow-y:auto;}
+  .table-wrap::-webkit-scrollbar{width:5px;height:5px;}
+  .table-wrap::-webkit-scrollbar-track{background:transparent;}
+  .table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  thead{position:sticky;top:0;z-index:2;}
+  thead th{background:var(--bg-card-alt);padding:10px 14px;text-align:left;font-weight:600;
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--fg-muted);
+    border-bottom:2px solid var(--border);white-space:nowrap;}
+  tbody tr{transition:background .15s;}
+  tbody tr:hover{background:rgba(255,255,255,0.02);}
+  tbody td{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.03);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis;}
+  tbody tr:last-child td{border-bottom:none;}
+  .row-idx{color:var(--fg-dim);font-size:11px;font-weight:600;min-width:32px;}
+
+  .status-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;font-size:10.5px;font-weight:600;}
+  .status-pill.active{background:rgba(0,230,138,0.1);color:var(--green);border:1px solid rgba(0,230,138,0.2);}
+  .status-pill.pending{background:rgba(255,179,71,0.1);color:#ffb347;border:1px solid rgba(255,179,71,0.2);}
+  .status-pill.expired{background:rgba(255,79,123,0.1);color:var(--rose);border:1px solid rgba(255,79,123,0.2);}
+  .status-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+  .action-link{color:var(--cyan);cursor:pointer;font-weight:600;font-size:11.5px;text-decoration:none;transition:color .2s;}
+  .action-link:hover{color:#33e0ff;text-decoration:underline;}
+
+  .empty-state,.loading-state{text-align:center;padding:56px 24px;color:var(--fg-dim);}
+  .empty-state i,.loading-state i{font-size:40px;margin-bottom:12px;display:block;}
+  .empty-state i{opacity:.35;}
+  .loading-state i{color:var(--cyan);animation:spin 1s linear infinite;}
+  .empty-state p,.loading-state p{font-size:13px;}
+
+  /* ── MODALS ── */
+  .modal-overlay{position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .3s;}
+  .modal-overlay.open{opacity:1;visibility:visible;}
+  .modal-box{width:100%;max-width:540px;max-height:90vh;overflow-y:auto;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:16px;transform:translateY(20px) scale(0.97);
+    transition:transform .3s cubic-bezier(.16,1,.3,1);scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+  .modal-overlay.open .modal-box{transform:translateY(0) scale(1);}
+  .modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);}
+  .modal-header h3{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px;}
+  .modal-close{width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--border);
+    background:var(--bg-input);color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;
+    justify-content:center;font-size:13px;transition:all .2s;}
+  .modal-close:hover{border-color:var(--rose);color:var(--rose);background:rgba(255,79,123,0.06);}
+  .modal-body{padding:22px;}
+  .modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--border);}
+
+  .form-group{margin-bottom:16px;}
+  .form-group label{display:block;font-size:11px;font-weight:600;color:var(--fg-muted);
+    text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;}
+  .form-group input,.form-group select{width:100%;padding:10px 13px;background:var(--bg-input);
+    border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);
+    font-size:13.5px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .form-group input:focus,.form-group select:focus{border-color:var(--green);}
+  .form-group input[readonly]{opacity:.6;cursor:not-allowed;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  .btn-primary{padding:10px 22px;border:none;border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,var(--green),#00c974);color:#0a1a12;
+    font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .btn-primary:hover{box-shadow:0 4px 20px rgba(0,230,138,0.25);transform:translateY(-1px);}
+  .btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+  .btn-secondary{padding:10px 22px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    background:var(--bg-input);color:var(--fg-muted);font-family:'Space Grotesk',sans-serif;
+    font-size:13.5px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .btn-secondary:hover{border-color:var(--fg-dim);color:var(--fg);}
+  .btn-danger{padding:10px 22px;border:none;border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,var(--rose),#e0335e);color:#1a050a;
+    font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .btn-danger:hover{box-shadow:0 4px 20px rgba(255,79,123,0.25);transform:translateY(-1px);}
+  .btn-danger:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+
+  /* Find result */
+  .find-result{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;margin-top:14px;display:none;}
+  .find-result.show{display:block;animation:fadeUp .3s ease-out;}
+  .find-result-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;}
+  .find-result-row:last-child{border:none;}
+  .find-result-label{color:var(--fg-muted);font-weight:500;}
+  .find-result-value{color:var(--fg);font-weight:600;}
+  .renew-btn{margin-top:12px;width:100%;padding:10px;border:none;border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,var(--cyan),#0099cc);color:#051520;
+    font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .renew-btn:hover{box-shadow:0 4px 20px rgba(0,212,255,0.25);transform:translateY(-1px);}
+  .renew-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  /* Upload zone */
+  .upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px 20px;
+    text-align:center;cursor:pointer;transition:all .25s;color:var(--fg-dim);}
+  .upload-zone:hover{border-color:var(--orange);color:var(--orange);background:rgba(255,140,66,0.03);}
+  .upload-zone i{font-size:28px;margin-bottom:10px;display:block;}
+  .upload-zone .uz-main{font-size:14px;font-weight:600;color:var(--fg-muted);}
+  .upload-zone .uz-hint{font-size:11px;margin-top:4px;}
+  .upload-zone:hover .uz-main{color:var(--orange);}
+  .upload-preview{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px;margin-top:14px;display:none;font-size:12px;}
+  .upload-preview.show{display:block;animation:fadeUp .3s ease-out;}
+  .upload-preview-row{display:flex;justify-content:space-between;padding:4px 0;
+    border-bottom:1px solid rgba(255,255,255,0.03);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;color:var(--fg-muted);}
+  .upload-preview-row:last-child{border:none;}
+  .confirm-box{display:flex;align-items:flex-start;gap:8px;margin-top:14px;font-size:12px;color:var(--orange);}
+  .confirm-box input{width:auto;margin-top:2px;accent-color:var(--orange);}
+  .upload-status{font-size:13px;margin-top:10px;min-height:20px;color:var(--fg-muted);}
+  .upload-status.ok{color:var(--green);}
+
+  /* Toast */
+  .toast-container{position:fixed;top:18px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:9px;}
+  .toast{display:flex;align-items:center;gap:9px;padding:12px 18px;border-radius:var(--radius);
+    font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    animation:toastIn .4s cubic-bezier(.16,1,.3,1);min-width:250px;max-width:400px;backdrop-filter:blur(12px);}
+  .toast.success{background:rgba(0,230,138,0.12);border:1px solid rgba(0,230,138,0.3);color:var(--green);}
+  .toast.error{background:rgba(255,79,123,0.12);border:1px solid rgba(255,79,123,0.3);color:var(--rose);}
+  .toast.info{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);}
+  .toast.warning{background:rgba(255,179,71,0.12);border:1px solid rgba(255,179,71,0.3);color:#ffb347;}
+  .toast-exit{animation:toastOut .3s ease-in forwards;}
+
+  @keyframes toastIn{from{opacity:0;transform:translateX(40px) scale(.95);}to{opacity:1;transform:translateX(0) scale(1);}}
+  @keyframes toastOut{to{opacity:0;transform:translateX(40px) scale(.95);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes rowIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+  .row-anim{animation:rowIn .2s ease-out both;}
+
+  @media(max-width:640px){
+    .topbar{padding:10px 14px;}
+    .main-content{padding:18px 14px 40px;}
+    .action-grid{grid-template-columns:1fr 1fr;gap:10px;}
+    .action-card{padding:20px 12px;}
+    .action-card .card-icon{width:40px;height:40px;font-size:17px;}
+    .action-card .card-title{font-size:13px;}
+    .action-card .card-desc{display:none;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+    .form-row{grid-template-columns:1fr;}
+    .search-mini input{width:110px;}
+    .admin-badge span{display:none;}
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <section id="loginView" class="card">
-      <div class="eyebrow">Admin Access</div>
-      <h1>Sign in</h1>
-      <p class="hint">This page is for uploading and managing the customer list. Not for customers.</p>
-      <form id="adminLoginForm">
-        <input type="email" id="adminEmail" placeholder="Admin email" autocomplete="username" />
-        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password" />
-        <div class="error" id="loginError" hidden></div>
-        <button type="submit" class="btn-primary">Sign in</button>
-      </form>
-    </section>
 
-    <section id="dashboardView" class="card" hidden>
-      <div class="eyebrow">MR Cable &amp; Networks - Admin</div>
-      <h1>What would you like to do?</h1>
-      <div class="nav-grid">
-        <button class="nav-btn" data-target="panelAddEdit">Add / Edit Customer</button>
-        <button class="nav-btn" data-target="panelRenew">Find &amp; Renew Customer</button>
-        <button class="nav-btn" data-target="panelUpload">Upload Customer List</button>
-        <button class="nav-btn" data-target="panelExport">Export Customer List</button>
-      </div>
-    </section>
-
-    <section id="panelAddEdit" class="card" hidden>
-      <span class="back-link" data-back>&larr; Back</span>
-      <h1>Add or edit a customer</h1>
-      <p class="hint">If the Customer ID already exists, this updates that record instead of creating a duplicate.</p>
-      <form id="addCustomerForm">
-        <input type="text" id="addCustomerId" placeholder="Customer ID (e.g. Mikrotik5)" />
-        <input type="text" id="addCustomerName" placeholder="Customer Name" />
-        <input type="text" id="addCustomerContact" placeholder="Contact (phone number)" />
-        <input type="text" id="addCustomerCnic" placeholder="CNIC" />
-        <input type="text" id="addCustomerAddress" placeholder="Address" />
-        <input type="text" id="addCustomerPackage" placeholder="Package" />
-        <input type="date" id="addCustomerExpiry" />
-        <input type="text" id="addCustomerBalance" placeholder="Balance" inputmode="decimal" />
-        <div class="error" id="addCustomerError" hidden></div>
-        <button type="submit" class="btn-primary">Save customer</button>
-      </form>
-      <div class="status" id="addCustomerStatus"></div>
-    </section>
-
-    <section id="panelRenew" class="card" hidden>
-      <span class="back-link" data-back>&larr; Back</span>
-      <h1>Find &amp; renew a customer</h1>
-      <p class="hint">Search by phone number or Customer ID.</p>
-      <input type="text" id="searchQuery" placeholder="Phone number or Customer ID" />
-      <button id="searchBtn" class="btn-primary" style="margin-top:10px;">Search</button>
-      <div class="error" id="searchError" hidden></div>
-      <div class="preview" id="searchResult" hidden></div>
-      <div id="renewSection" hidden style="margin-top:14px;">
-        <input type="date" id="renewExpiry" />
-        <button id="renewBtn" class="btn-primary" style="margin-top:10px;">Set new expiry &amp; activate</button>
-        <div class="status" id="renewStatus"></div>
-      </div>
-    </section>
-
-    <section id="panelUpload" class="card" hidden>
-      <span class="back-link" data-back>&larr; Back</span>
-      <h1>Upload customer list</h1>
-      <p class="hint">Choose an Excel (.xlsx) or CSV file with columns: Customer ID, Customer Name, Contact, CNIC, Address, Package, Expiration Date, Balance.</p>
-      <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" />
-      <div class="status" id="parseStatus"></div>
-      <div class="preview" id="previewBox" hidden></div>
-      <div class="confirm-box" id="confirmBox" hidden>
-        <input type="checkbox" id="confirmCheck" />
-        <label for="confirmCheck">I understand this will permanently replace all existing customer records. A backup of the current data is kept automatically.</label>
-      </div>
-      <button id="uploadBtn" class="btn-danger" disabled>Replace all customer data</button>
-      <div class="status" id="uploadStatus"></div>
-    </section>
-
-    <section id="panelExport" class="card" hidden>
-      <span class="back-link" data-back>&larr; Back</span>
-      <h1>Export customer list</h1>
-      <p class="hint">Download every customer record as a CSV file you can open in Excel.</p>
-      <button id="exportBtn" class="btn-primary">Download CSV</button>
-      <div class="status" id="exportStatus"></div>
-    </section>
+<!-- ══════════ LOGIN ══════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">M.R. Cable & Internet Network (R)</div>
+    <div class="login-sub">Admin Access — Customer Management</div>
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="Admin email" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i>&nbsp; Sign In
+    </button>
+    <div class="login-error" id="loginError"></div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script>
-    const SUPABASE_URL = 'https://iuzwdjgagcxqwtpihpmb.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="dashboard" id="dashboard">
 
-    let parsedRows = null;
-    let foundCustomer = null;
+  <nav class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">M.R. Cable & Internet Network (R)</div>
+      <div class="topbar-divider"></div>
+      <span class="topbar-page">Customer Management</span>
+    </div>
+    <div class="topbar-right">
+      <div class="admin-badge">
+        <div class="admin-avatar" id="adminAvatar">A</div>
+        <span id="adminEmailDisplay">Admin</span>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        Logout
+      </button>
+    </div>
+  </nav>
 
-    const loginView = document.getElementById('loginView');
-    const dashboardView = document.getElementById('dashboardView');
-    const adminLoginForm = document.getElementById('adminLoginForm');
-    const adminEmail = document.getElementById('adminEmail');
-    const adminPassword = document.getElementById('adminPassword');
-    const loginError = document.getElementById('loginError');
-    const allPanels = ['panelAddEdit', 'panelRenew', 'panelUpload', 'panelExport'];
+  <main class="main-content">
 
-    const searchBtn = document.getElementById('searchBtn');
-    const searchQuery = document.getElementById('searchQuery');
-    const searchError = document.getElementById('searchError');
-    const searchResult = document.getElementById('searchResult');
-    const renewSection = document.getElementById('renewSection');
-    const renewBtn = document.getElementById('renewBtn');
-    const renewExpiry = document.getElementById('renewExpiry');
-    const renewStatus = document.getElementById('renewStatus');
+    <!-- Stats -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-value" id="statTotal">—</div>
+        <div class="stat-label">Total Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon cyan"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-value" id="statActive">—</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="fa-solid fa-clock"></i></div>
+        <div class="stat-value" id="statPending">—</div>
+        <div class="stat-label">Expiring Soon</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon rose"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div class="stat-value" id="statExpired">—</div>
+        <div class="stat-label">Expired</div>
+      </div>
+    </section>
 
-    const addCustomerForm = document.getElementById('addCustomerForm');
-    const addCustomerError = document.getElementById('addCustomerError');
-    const addCustomerStatus = document.getElementById('addCustomerStatus');
+    <!-- 4 Action Cards -->
+    <section class="action-grid">
+      <button class="action-card card-green" onclick="openAddModal()">
+        <div class="card-icon"><i class="fa-solid fa-user-plus"></i></div>
+        <div class="card-title">Add / Edit Customer</div>
+        <div class="card-desc">Register new or update existing customer</div>
+      </button>
+      <button class="action-card card-cyan" onclick="openFindModal()">
+        <div class="card-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="card-title">Find & Renew Customer</div>
+        <div class="card-desc">Search by ID or phone, renew subscription</div>
+      </button>
+      <button class="action-card card-orange" onclick="openUploadModal()">
+        <div class="card-icon"><i class="fa-solid fa-file-import"></i></div>
+        <div class="card-title">Import CSV / Excel</div>
+        <div class="card-desc">Bulk upload customer list from file</div>
+      </button>
+      <button class="action-card card-rose" onclick="handleExport()">
+        <div class="card-icon"><i class="fa-solid fa-file-export"></i></div>
+        <div class="card-title">Export CSV</div>
+        <div class="card-desc">Download all customer data as CSV</div>
+      </button>
+    </section>
 
-    const fileInput = document.getElementById('fileInput');
-    const parseStatus = document.getElementById('parseStatus');
-    const previewBox = document.getElementById('previewBox');
-    const confirmBox = document.getElementById('confirmBox');
-    const confirmCheck = document.getElementById('confirmCheck');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const uploadStatus = document.getElementById('uploadStatus');
-    const exportBtn = document.getElementById('exportBtn');
-    const exportStatus = document.getElementById('exportStatus');
+    <!-- Data Table -->
+    <section class="table-section">
+      <div class="table-bar">
+        <div class="table-bar-left">
+          <h2><i class="fa-solid fa-database"></i> Customer Database</h2>
+          <span class="row-badge" id="rowBadge">—</span>
+          <button class="refresh-btn" id="refreshBtn" onclick="fetchAndRender()" title="Refresh">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+        <div class="search-mini">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="tableSearch" placeholder="Search table..." oninput="renderTable()">
+        </div>
+      </div>
+      <div class="table-wrap" id="tableWrap">
+        <div class="loading-state" id="loadingState">
+          <i class="fa-solid fa-spinner"></i>
+          <p>Loading customer data...</p>
+        </div>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <i class="fa-solid fa-inbox"></i>
+          <p>No customer records found.</p>
+        </div>
+        <table id="dataTable" style="display:none;">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
 
-    async function extractErrorMessage(error, fallback){
-      let message = error && error.message ? error.message : fallback;
-      if (error && error.context && typeof error.context.json === 'function'){
-        try{
-          const body = await error.context.json();
-          if (body && body.error) message = body.error;
-        } catch(parseErr){}
+  </main>
+</div>
+
+<!-- ══════════ MODAL: ADD / EDIT ══════════ -->
+<div class="modal-overlay" id="modalAdd">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="addModalTitle"><i class="fa-solid fa-user-plus" style="color:var(--green)"></i> Add Customer</h3>
+      <button class="modal-close" onclick="closeModal('modalAdd')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="fEditMode" value="false">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Customer ID</label>
+          <input type="text" id="fCustomerId" placeholder="e.g. Mikrotik5">
+        </div>
+        <div class="form-group">
+          <label>Customer Name</label>
+          <input type="text" id="fCustomerName" placeholder="Full name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact</label>
+          <input type="text" id="fContact" placeholder="Phone number">
+        </div>
+        <div class="form-group">
+          <label>CNIC</label>
+          <input type="text" id="fCnic" placeholder="00000-0000000-0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Package</label>
+          <input type="text" id="fPackage" placeholder="e.g. 10Mbps">
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="fExpiry">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="fAddress" placeholder="Full address">
+        </div>
+        <div class="form-group">
+          <label>Balance</label>
+          <input type="text" id="fBalance" placeholder="0" inputmode="decimal">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalAdd')">Cancel</button>
+      <button class="btn-primary" id="saveBtn" onclick="saveCustomer()">
+        <i class="fa-solid fa-check"></i>&nbsp; Save Customer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL: FIND & RENEW ══════════ -->
+<div class="modal-overlay" id="modalFind">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-magnifying-glass" style="color:var(--cyan)"></i> Find & Renew</h3>
+      <button class="modal-close" onclick="closeModal('modalFind')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Search by Customer ID or Phone</label>
+        <div style="display:flex;gap:9px;">
+          <input type="text" id="findInput" placeholder="ID or phone number..." style="flex:1;">
+          <button class="btn-primary" id="findBtn" onclick="findCustomer()" style="white-space:nowrap;">
+            <i class="fa-solid fa-search"></i>&nbsp; Find
+          </button>
+        </div>
+      </div>
+      <div class="find-result" id="findResult">
+        <div class="find-result-row"><span class="find-result-label">Customer ID</span><span class="find-result-value" id="frId">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">Name</span><span class="find-result-value" id="frName">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">Contact</span><span class="find-result-value" id="frContact">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">CNIC</span><span class="find-result-value" id="frCnic">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">Package</span><span class="find-result-value" id="frPackage">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">Expiry</span><span class="find-result-value" id="frExpiry">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">Balance</span><span class="find-result-value" id="frBalance">—</span></div>
+        <div class="find-result-row"><span class="find-result-label">Status</span><span class="find-result-value" id="frStatus">—</span></div>
+        <div style="margin-top:12px;">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">New Expiry Date</label>
+          <input type="date" id="renewExpiry" style="width:100%;padding:10px 13px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-size:13.5px;font-family:inherit;outline:none;">
+        </div>
+        <button class="renew-btn" id="renewBtn" onclick="renewCustomer()">
+          <i class="fa-solid fa-rotate"></i>&nbsp; Set New Expiry & Activate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL: UPLOAD ══════════ -->
+<div class="modal-overlay" id="modalUpload">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-file-import" style="color:var(--orange)"></i> Import Customer List</h3>
+      <button class="modal-close" onclick="closeModal('modalUpload')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:14px;">
+        Upload a CSV or Excel file with columns: Customer ID, Customer Name, Contact, CNIC, Address, Package, Expiration Date, Balance.
+      </p>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('uploadFileInput').click()">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <div class="uz-main">Click to select file</div>
+        <div class="uz-hint">.csv, .xlsx, .xls accepted</div>
+      </div>
+      <input type="file" id="uploadFileInput" accept=".csv,.xlsx,.xls" style="display:none;">
+      <div class="upload-status" id="uploadParseStatus"></div>
+      <div class="upload-preview" id="uploadPreview"></div>
+      <div class="confirm-box" id="uploadConfirmBox" style="display:none;">
+        <input type="checkbox" id="uploadConfirmCheck">
+        <label for="uploadConfirmCheck">I understand this will permanently replace all existing customer records.</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalUpload')">Cancel</button>
+      <button class="btn-danger" id="uploadBtn" disabled onclick="executeUpload()">
+        <i class="fa-solid fa-upload"></i>&nbsp; Replace All Data
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════
+// SUPABASE INIT
+// ═══════════════════════════════════════════════════
+const SUPABASE_URL = 'https://iuzwdjgagcxqwtpihpmb.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+const TABLE_HEADERS = ['Customer ID','Name','Contact','CNIC','Address','Package','Expiry','Balance','Status'];
+let customersCache = [];
+let foundCustomer = null;
+let parsedUploadRows = null;
+
+// ═══════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : str;
+  return d.innerHTML;
+}
+
+function calcStatus(expiryStr) {
+  if (!expiryStr) return 'Expired';
+  const exp = new Date(expiryStr + 'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  const diff = (exp - now) / 86400000;
+  if (diff < 0) return 'Expired';
+  if (diff <= 7) return 'Pending';
+  return 'Active';
+}
+
+async function extractErrorMessage(error, fallback) {
+  let message = error.message || fallback;
+  if (error.context && typeof error.context.json === 'function') {
+    try { const b = await error.context.json(); if (b && b.error) message = b.error; } catch(e) {}
+  }
+  return message;
+}
+
+function csvEscape(field) {
+  const s = String(field == null ? '' : field);
+  if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r'))
+    return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+function timestamp() {
+  const d = new Date();
+  return d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') +
+    String(d.getDate()).padStart(2,'0') + '_' +
+    String(d.getHours()).padStart(2,'0') + String(d.getMinutes()).padStart(2,'0');
+}
+
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
+function showToast(msg, type) {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = {success:'fa-circle-check',error:'fa-circle-xmark',info:'fa-circle-info',warning:'fa-triangle-exclamation'};
+  t.innerHTML = `<i class="fa-solid ${icons[type]||icons.info}"></i><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('toast-exit'); setTimeout(() => t.remove(), 300); }, 4000);
+}
+
+// ═══════════════════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+});
+
+// ═══════════════════════════════════════════════════
+// AUTH — Login / Logout / Session
+// ═══════════════════════════════════════════════════
+const loginScreen = document.getElementById('loginScreen');
+const dashboard = document.getElementById('dashboard');
+const loginError = document.getElementById('loginError');
+
+function showLogin() {
+  loginScreen.classList.remove('hidden');
+  dashboard.classList.remove('active');
+}
+function showDash() {
+  loginScreen.classList.add('hidden');
+  dashboard.classList.add('active');
+}
+
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  loginError.textContent = '';
+  if (!email || !pass) { loginError.textContent = 'Enter email and password.'; return; }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = '';
+
+  if (error) {
+    loginError.textContent = 'Sign in failed: ' + error.message;
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>&nbsp; Sign In';
+    return;
+  }
+  showDash();
+  fetchAndRender();
+  showToast('Welcome back, Admin.', 'success');
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  loginError.textContent = '';
+  showLogin();
+  showToast('Logged out successfully.', 'info');
+}
+
+// Enter key on login
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+// Session restore
+sb.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    const email = session.user.email || '';
+    document.getElementById('adminEmailDisplay').textContent = email;
+    document.getElementById('adminAvatar').textContent = email.charAt(0).toUpperCase();
+    showDash();
+    fetchAndRender();
+  } else {
+    showLogin();
+  }
+});
+
+// ═══════════════════════════════════════════════════
+// DATA FETCHING & RENDERING
+// ═══════════════════════════════════════════════════
+async function fetchAndRender() {
+  const loading = document.getElementById('loadingState');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('dataTable');
+  const refreshBtn = document.getElementById('refreshBtn');
+
+  loading.style.display = 'block';
+  empty.style.display = 'none';
+  table.style.display = 'none';
+  refreshBtn.classList.add('spinning');
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-export-customers', {});
+    if (error) {
+      loading.style.display = 'none';
+      empty.style.display = 'block';
+      empty.querySelector('p').textContent = 'Failed to load data: ' + await extractErrorMessage(error, 'Unknown error');
+      refreshBtn.classList.remove('spinning');
+      return;
+    }
+    if (!data || data.error || !data.customers) {
+      loading.style.display = 'none';
+      empty.style.display = 'block';
+      empty.querySelector('p').textContent = (data && data.error) ? data.error : 'Failed to load data.';
+      refreshBtn.classList.remove('spinning');
+      return;
+    }
+    customersCache = data.customers;
+    renderTable();
+  } catch (err) {
+    loading.style.display = 'none';
+    empty.style.display = 'block';
+    empty.querySelector('p').textContent = 'Error: ' + err.message;
+  }
+  refreshBtn.classList.remove('spinning');
+}
+
+function renderTable() {
+  const loading = document.getElementById('loadingState');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('dataTable');
+  const thead = document.getElementById('tableHead');
+  const tbody = document.getElementById('tableBody');
+  loading.style.display = 'none';
+
+  const q = (document.getElementById('tableSearch').value || '').trim().toLowerCase();
+  let filtered = customersCache;
+  if (q) filtered = customersCache.filter(c =>
+    [c.customer_id, c.customer_name, c.contact, c.cnic, c.address, c.package, c.expiration_date, c.balance]
+    .some(v => String(v == null ? '' : v).toLowerCase().includes(q))
+  );
+
+  if (filtered.length === 0) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+    empty.querySelector('p').textContent = q ? 'No results match your search.' : 'No customer records found.';
+  } else {
+    table.style.display = 'table';
+    empty.style.display = 'none';
+  }
+
+  thead.innerHTML = '<tr><th class="row-idx">#</th>' +
+    TABLE_HEADERS.map(h => `<th>${h}</th>`).join('') + '<th>Actions</th></tr>';
+
+  tbody.innerHTML = filtered.map((c, fi) => {
+    const status = calcStatus(c.expiration_date);
+    const sc = status.toLowerCase();
+    return `<tr class="row-anim" style="animation-delay:${Math.min(fi*20,400)}ms">
+      <td class="row-idx">${fi+1}</td>
+      <td>${esc(c.customer_id)}</td>
+      <td>${esc(c.customer_name)}</td>
+      <td>${esc(c.contact)}</td>
+      <td>${esc(c.cnic)}</td>
+      <td title="${esc(c.address)}">${esc(c.address)}</td>
+      <td>${esc(c.package)}</td>
+      <td>${esc(c.expiration_date)}</td>
+      <td>${c.balance != null ? 'RS ' + parseFloat(String(c.balance).replace(/,/g, '')).toLocaleString('en-PK') : '—'}</td>
+      <td><span class="status-pill ${sc}"><span class="status-dot"></span>${status}</span></td>
+      <td><a class="action-link" onclick="editCustomer(${customersCache.indexOf(c)})"><i class="fa-solid fa-pen-to-square"></i> Edit</a></td>
+    </tr>`;
+  }).join('');
+
+  // Stats
+  const all = customersCache;
+  document.getElementById('statTotal').textContent = all.length;
+  document.getElementById('statActive').textContent = all.filter(c => calcStatus(c.expiration_date) === 'Active').length;
+  document.getElementById('statPending').textContent = all.filter(c => calcStatus(c.expiration_date) === 'Pending').length;
+  document.getElementById('statExpired').textContent = all.filter(c => calcStatus(c.expiration_date) === 'Expired').length;
+  document.getElementById('rowBadge').textContent = filtered.length + ' records';
+}
+
+// ═══════════════════════════════════════════════════
+// ADD / EDIT CUSTOMER
+// ═══════════════════════════════════════════════════
+function openAddModal() {
+  document.getElementById('fEditMode').value = 'false';
+  ['fCustomerId','fCustomerName','fContact','fCnic','fPackage','fExpiry','fAddress','fBalance'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('fCustomerId').readOnly = false;
+  document.getElementById('addModalTitle').innerHTML = '<i class="fa-solid fa-user-plus" style="color:var(--green)"></i> Add Customer';
+  openModal('modalAdd');
+  setTimeout(() => document.getElementById('fCustomerId').focus(), 300);
+}
+
+function editCustomer(index) {
+  const c = customersCache[index];
+  if (!c) return;
+  document.getElementById('fEditMode').value = 'true';
+  document.getElementById('fCustomerId').value = c.customer_id || '';
+  document.getElementById('fCustomerName').value = c.customer_name || '';
+  document.getElementById('fContact').value = c.contact || '';
+  document.getElementById('fCnic').value = c.cnic || '';
+  document.getElementById('fPackage').value = c.package || '';
+  document.getElementById('fExpiry').value = c.expiration_date || '';
+  document.getElementById('fAddress').value = c.address || '';
+  document.getElementById('fBalance').value = c.balance != null ? c.balance : '';
+  document.getElementById('fCustomerId').readOnly = true;
+  document.getElementById('addModalTitle').innerHTML = '<i class="fa-solid fa-user-pen" style="color:var(--green)"></i> Edit Customer';
+  openModal('modalAdd');
+}
+
+async function saveCustomer() {
+  const customer_id = document.getElementById('fCustomerId').value.trim();
+  const customer_name = document.getElementById('fCustomerName').value.trim();
+  const contact = document.getElementById('fContact').value.trim();
+  const cnic = document.getElementById('fCnic').value.trim() || null;
+  const address = document.getElementById('fAddress').value.trim() || null;
+  const pkg = document.getElementById('fPackage').value.trim() || null;
+  const expiration_date = document.getElementById('fExpiry').value || null;
+  const balanceRaw = document.getElementById('fBalance').value.trim();
+  const balance = balanceRaw ? parseFloat(balanceRaw.replace(/[^0-9.-]/g, '')) : null;
+
+  if (!customer_id || !customer_name || !contact) {
+    showToast('Customer ID, Name, and Contact are required.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Saving...';
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-add-customer', {
+      body: { customer_id, customer_name, contact, cnic, address, package: pkg, expiration_date, balance }
+    });
+    if (error) {
+      showToast('Failed: ' + await extractErrorMessage(error, 'Unknown error'), 'error');
+    } else if (!data || data.error) {
+      showToast('Failed: ' + ((data && data.error) ? data.error : 'Unknown error'), 'error');
+    } else {
+      showToast(`Saved — ${customer_id} is up to date.`, 'success');
+      closeModal('modalAdd');
+      fetchAndRender();
+    }
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-check"></i>&nbsp; Save Customer';
+}
+
+// ═══════════════════════════════════════════════════
+// FIND & RENEW CUSTOMER
+// ═══════════════════════════════════════════════════
+function openFindModal() {
+  foundCustomer = null;
+  document.getElementById('findInput').value = '';
+  document.getElementById('findResult').classList.remove('show');
+  document.getElementById('renewExpiry').value = '';
+  document.getElementById('renewBtn').disabled = true;
+  openModal('modalFind');
+  setTimeout(() => document.getElementById('findInput').focus(), 300);
+}
+
+document.getElementById('findInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') findCustomer();
+});
+
+async function findCustomer() {
+  const q = document.getElementById('findInput').value.trim();
+  if (!q) { showToast('Enter a Customer ID or phone number.', 'warning'); return; }
+
+  const btn = document.getElementById('findBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; ...';
+  document.getElementById('findResult').classList.remove('show');
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-search-customer', { body: { query: q } });
+    if (error) {
+      showToast('Search failed: ' + await extractErrorMessage(error, 'Unknown error'), 'error');
+    } else if (!data || data.error || !data.customer) {
+      showToast((data && data.error) ? data.error : 'No customer found.', 'error');
+    } else {
+      foundCustomer = data.customer;
+      document.getElementById('frId').textContent = foundCustomer.customer_id;
+      document.getElementById('frName').textContent = foundCustomer.customer_name;
+      document.getElementById('frContact').textContent = foundCustomer.contact;
+      document.getElementById('frCnic').textContent = foundCustomer.cnic || '—';
+      document.getElementById('frPackage').textContent = foundCustomer.package || '—';
+      document.getElementById('frExpiry').textContent = foundCustomer.expiration_date || '—';
+      document.getElementById('frBalance').textContent = foundCustomer.balance != null ? foundCustomer.balance : '—';
+      document.getElementById('frStatus').textContent = calcStatus(foundCustomer.expiration_date);
+
+      // Pre-fill renew date: +1 year from current expiry or today
+      const base = foundCustomer.expiration_date ? new Date(foundCustomer.expiration_date + 'T00:00:00') : new Date();
+      base.setFullYear(base.getFullYear() + 1);
+      document.getElementById('renewExpiry').value = base.toISOString().split('T')[0];
+      document.getElementById('renewBtn').disabled = false;
+
+      document.getElementById('findResult').classList.add('show');
+      showToast(`Found: ${foundCustomer.customer_name}`, 'success');
+    }
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-search"></i>&nbsp; Find';
+}
+
+async function renewCustomer() {
+  if (!foundCustomer || !document.getElementById('renewExpiry').value) return;
+  const btn = document.getElementById('renewBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Saving...';
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-renew-customer', {
+      body: { customer_id: foundCustomer.customer_id, new_expiry: document.getElementById('renewExpiry').value }
+    });
+    if (error) {
+      showToast('Failed: ' + await extractErrorMessage(error, 'Unknown error'), 'error');
+    } else if (!data || data.error) {
+      showToast('Failed: ' + ((data && data.error) ? data.error : 'Unknown error'), 'error');
+    } else {
+      showToast(`${foundCustomer.customer_id} renewed — now expires ${document.getElementById('renewExpiry').value}`, 'success');
+      document.getElementById('frExpiry').textContent = document.getElementById('renewExpiry').value;
+      document.getElementById('frStatus').textContent = 'Active';
+      btn.disabled = true;
+      fetchAndRender();
+    }
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-rotate"></i>&nbsp; Set New Expiry & Activate';
+}
+
+// ═══════════════════════════════════════════════════
+// UPLOAD CUSTOMER LIST
+// ═══════════════════════════════════════════════════
+function openUploadModal() {
+  parsedUploadRows = null;
+  document.getElementById('uploadFileInput').value = '';
+  document.getElementById('uploadParseStatus').textContent = '';
+  document.getElementById('uploadPreview').classList.remove('show');
+  document.getElementById('uploadPreview').innerHTML = '';
+  document.getElementById('uploadConfirmBox').style.display = 'none';
+  document.getElementById('uploadConfirmCheck').checked = false;
+  document.getElementById('uploadBtn').disabled = true;
+  openModal('modalUpload');
+}
+
+document.getElementById('uploadFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById('uploadParseStatus');
+  const previewEl = document.getElementById('uploadPreview');
+  const confirmBox = document.getElementById('uploadConfirmBox');
+  const uploadBtn = document.getElementById('uploadBtn');
+
+  statusEl.textContent = 'Reading file...';
+  statusEl.className = 'upload-status';
+  previewEl.classList.remove('show');
+  confirmBox.style.display = 'none';
+  uploadBtn.disabled = true;
+  parsedUploadRows = null;
+
+  const isCSV = file.name.toLowerCase().endsWith('.csv');
+
+  if (isCSV) {
+    // Use robust CSV parser
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      let text = ev.target.result;
+      if (text.charCodeAt(0) === 0xFEFF) text = text.substring(1);
+      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n+$/, '');
+      const parsed = parseCSV(text);
+      if (!parsed || parsed.length <= 1) {
+        statusEl.textContent = 'No rows found in that file.';
+        return;
       }
-      return message;
-    }
-
-    function showPanel(id){
-      dashboardView.hidden = true;
-      allPanels.forEach((panelId) => {
-        document.getElementById(panelId).hidden = panelId !== id;
-      });
-    }
-
-    function showDashboard(){
-      allPanels.forEach((panelId) => {
-        document.getElementById(panelId).hidden = true;
-      });
-      dashboardView.hidden = false;
-    }
-
-    function appendPreviewRow(parent, left, right){
-      const row = document.createElement('div');
-      row.className = 'preview-row';
-
-      const leftEl = document.createElement('span');
-      leftEl.textContent = left || '-';
-
-      const rightEl = document.createElement('span');
-      rightEl.textContent = right || '-';
-
-      row.append(leftEl, rightEl);
-      parent.appendChild(row);
-    }
-
-    function normalizeDate(value){
-      if (!value) return null;
-      if (value instanceof Date){
-        const year = value.getFullYear();
-        const month = String(value.getMonth() + 1).padStart(2, '0');
-        const day = String(value.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+      processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn);
+    };
+    reader.onerror = () => { statusEl.textContent = 'Could not read file.'; };
+    reader.readAsText(file, 'UTF-8');
+  } else {
+    // Use XLSX library for .xlsx / .xls
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        const data = new Uint8Array(ev.target.result);
+        const wb = XLSX.read(data, { type: 'array', cellDates: true });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+        if (json.length === 0) {
+          statusEl.textContent = 'No rows found in that file.';
+          return;
+        }
+        // Convert array of objects to array of arrays (matching CSV parser output)
+        const headers = Object.keys(json[0]);
+        const parsed = [headers, ...json.map(row => headers.map(h => row[h] ?? ''))];
+        processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn);
+      } catch (err) {
+        statusEl.textContent = 'Could not read that file: ' + err.message;
       }
-      const raw = String(value).trim();
-      const slashParts = raw.split('/');
-      if (slashParts.length === 3){
-        const [month, day, year] = slashParts;
-        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-      }
-      return raw;
-    }
+    };
+    reader.onerror = () => { statusEl.textContent = 'Could not read file.'; };
+    reader.readAsArrayBuffer(file);
+  }
+  e.target.value = '';
+});
 
-    function normalizeBalance(value){
-      if (value === null || value === undefined || value === '') return null;
-      const number = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
-      return Number.isNaN(number) ? null : number;
-    }
+function processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn) {
+  const fileHeaders = parsed[0].map(h => String(h).trim());
+  const rowSets = parsed.slice(1).filter(r => r.some(c => String(c).trim() !== ''));
 
-    function findKey(row, names){
-      const keys = Object.keys(row);
-      for (const name of names){
-        const key = keys.find((candidate) => candidate.trim().toLowerCase() === name);
-        if (key) return key;
-      }
+  // Map to expected field names
+  const fieldMap = {
+    'customer id': 'customer_id',
+    'customer name': 'customer_name',
+    'contact': 'contact',
+    'cnic': 'cnic',
+    'address': 'address',
+    'package': 'package',
+    'expiration date': 'expiration_date',
+    'balance': 'balance'
+  };
+
+  const colIndices = {};
+  fileHeaders.forEach((h, i) => {
+    const norm = h.trim().toLowerCase().replace(/[_\s]+/g, ' ');
+    if (fieldMap[norm]) colIndices[fieldMap[norm]] = i;
+  });
+
+  // Check we have at least customer_id
+  if (colIndices.customer_id === undefined) {
+    statusEl.textContent = 'Missing "Customer ID" column in file.';
+    return;
+  }
+
+  parsedUploadRows = rowSets.map(row => {
+    const get = (field) => {
+      if (colIndices[field] !== undefined) return String(row[colIndices[field]] ?? '').trim() || null;
       return null;
-    }
-
-    function toCsv(rows){
-      if (!rows || rows.length === 0) return '';
-      const headers = Object.keys(rows[0]);
-      const escape = (value) => {
-        if (value === null || value === undefined) return '';
-        const str = String(value);
-        return /[",\n]/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str;
-      };
-      const lines = [headers.join(',')];
-      rows.forEach((row) => {
-        lines.push(headers.map((header) => escape(row[header])).join(','));
-      });
-      return lines.join('\n');
-    }
-
-    document.querySelectorAll('.nav-btn').forEach((button) => {
-      button.addEventListener('click', () => showPanel(button.dataset.target));
-    });
-
-    document.querySelectorAll('[data-back]').forEach((element) => {
-      element.addEventListener('click', showDashboard);
-    });
-
-    adminLoginForm.addEventListener('submit', async function(event){
-      event.preventDefault();
-      loginError.hidden = true;
-
-      const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Signing in...';
-
-      try{
-        const { error } = await supabaseClient.auth.signInWithPassword({
-          email: adminEmail.value.trim(),
-          password: adminPassword.value
-        });
-
-        if (error){
-          loginError.textContent = 'Sign in failed: ' + error.message;
-          loginError.hidden = false;
-          return;
-        }
-
-        loginView.hidden = true;
-        showDashboard();
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign in';
-      }
-    });
-
-    searchBtn.addEventListener('click', async function(){
-      const query = searchQuery.value.trim();
-      searchError.hidden = true;
-      searchResult.hidden = true;
-      searchResult.replaceChildren();
-      renewSection.hidden = true;
-      renewStatus.textContent = '';
-
-      if (!query){
-        searchError.textContent = 'Enter a phone number or Customer ID.';
-        searchError.hidden = false;
-        return;
-      }
-
-      searchBtn.disabled = true;
-      searchBtn.textContent = 'Searching...';
-
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('admin-search-customer', {
-          body: { query }
-        });
-
-        if (error){
-          searchError.textContent = await extractErrorMessage(error, 'Search failed.');
-          searchError.hidden = false;
-          return;
-        }
-        if (!data || data.error || !data.customer){
-          searchError.textContent = data && data.error ? data.error : 'No customer found.';
-          searchError.hidden = false;
-          return;
-        }
-
-        foundCustomer = data.customer;
-        appendPreviewRow(searchResult, foundCustomer.customer_name, foundCustomer.status);
-        appendPreviewRow(searchResult, foundCustomer.customer_id, foundCustomer.contact);
-        appendPreviewRow(searchResult, 'Expires', foundCustomer.expiration_date || '-');
-        searchResult.hidden = false;
-        renewExpiry.value = foundCustomer.expiration_date || '';
-        renewSection.hidden = false;
-      } catch (err){
-        searchError.textContent = err.message;
-        searchError.hidden = false;
-      } finally {
-        searchBtn.disabled = false;
-        searchBtn.textContent = 'Search';
-      }
-    });
-
-    renewBtn.addEventListener('click', async function(){
-      if (!foundCustomer || !renewExpiry.value) return;
-      renewBtn.disabled = true;
-      renewStatus.textContent = 'Saving...';
-
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('admin-renew-customer', {
-          body: { customer_id: foundCustomer.customer_id, new_expiry: renewExpiry.value }
-        });
-
-        if (error){
-          renewStatus.textContent = 'Failed: ' + await extractErrorMessage(error, 'Unknown error');
-        } else if (!data || data.error){
-          renewStatus.textContent = 'Failed: ' + (data && data.error ? data.error : 'Unknown error');
+    };
+    const expRaw = get('expiration_date');
+    let expDate = null;
+    if (expRaw) {
+      if (expRaw instanceof Date) {
+        expDate = expRaw.toISOString().split('T')[0];
+      } else {
+        // Handle M/D/YYYY from Excel
+        const parts = expRaw.split('/');
+        if (parts.length === 3) {
+          expDate = parts[2] + '-' + parts[0].padStart(2,'0') + '-' + parts[1].padStart(2,'0');
         } else {
-          renewStatus.textContent = `Done - ${foundCustomer.customer_id} now expires ${renewExpiry.value} and is Active.`;
+          expDate = expRaw;
         }
-      } catch (err){
-        renewStatus.textContent = 'Failed: ' + err.message;
-      } finally {
-        renewBtn.disabled = false;
       }
+    }
+    const balRaw = get('balance');
+    let balance = null;
+    if (balRaw) {
+      const num = parseFloat(String(balRaw).replace(/[^0-9.-]/g, ''));
+      balance = isNaN(num) ? null : num;
+    }
+    return {
+      customer_id: get('customer_id'),
+      customer_name: get('customer_name'),
+      contact: get('contact'),
+      cnic: get('cnic'),
+      address: get('address'),
+      package: get('package'),
+      expiration_date: expDate,
+      balance
+    };
+  }).filter(r => r.customer_id);
+
+  if (parsedUploadRows.length === 0) {
+    statusEl.textContent = 'No usable rows found.';
+    return;
+  }
+
+  statusEl.textContent = parsedUploadRows.length + ' customers ready to upload.';
+  previewEl.innerHTML = parsedUploadRows.slice(0, 3).map(r => {
+    const pkgDisplay = r.package && r.package.trim() !== '' ? ` ${r.package}` : '';
+    return `<div class="upload-preview-row"><span>${esc(r.customer_id)}${pkgDisplay} ${esc(r.customer_name)}</span><span>${esc(r.contact)}</span></div>`;
+  }).join('') + (parsedUploadRows.length > 3 ?
+    `<div class="upload-preview-row"><span>...and ${parsedUploadRows.length - 3} more</span></div>` : '');
+  previewEl.classList.add('show');
+  confirmBox.style.display = 'flex';
+}
+
+document.getElementById('uploadConfirmCheck').addEventListener('change', function() {
+  document.getElementById('uploadBtn').disabled = !this.checked || !parsedUploadRows;
+});
+
+async function executeUpload() {
+  if (!parsedUploadRows) return;
+  const btn = document.getElementById('uploadBtn');
+  const statusEl = document.getElementById('uploadParseStatus');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Uploading...';
+  statusEl.textContent = 'Uploading...';
+  statusEl.className = 'upload-status';
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-upload-customers', {
+      body: { rows: parsedUploadRows }
     });
+    if (error) {
+      statusEl.textContent = 'Failed: ' + await extractErrorMessage(error, 'Unknown error');
+    } else if (!data || data.error) {
+      statusEl.textContent = 'Failed: ' + ((data && data.error) ? data.error : 'Unknown error');
+    } else {
+      statusEl.textContent = `Done — ${data.count} customers are now live.`;
+      statusEl.className = 'upload-status ok';
+      showToast(`Uploaded ${data.count} customers successfully.`, 'success');
+      closeModal('modalUpload');
+      fetchAndRender();
+    }
+  } catch (err) {
+    statusEl.textContent = 'Failed: ' + err.message;
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-upload"></i>&nbsp; Replace All Data';
+}
 
-    addCustomerForm.addEventListener('submit', async function(event){
-      event.preventDefault();
-      addCustomerError.hidden = true;
-      addCustomerStatus.textContent = '';
-
-      const customer_id = document.getElementById('addCustomerId').value.trim();
-      const customer_name = document.getElementById('addCustomerName').value.trim();
-      const contact = document.getElementById('addCustomerContact').value.trim();
-      const cnic = document.getElementById('addCustomerCnic').value.trim();
-      const address = document.getElementById('addCustomerAddress').value.trim();
-      const pkg = document.getElementById('addCustomerPackage').value.trim();
-      const expiration_date = document.getElementById('addCustomerExpiry').value || null;
-      const balanceRaw = document.getElementById('addCustomerBalance').value.trim();
-      const balance = balanceRaw ? parseFloat(balanceRaw.replace(/[^0-9.-]/g, '')) : null;
-
-      if (!customer_id || !customer_name || !contact){
-        addCustomerError.textContent = 'Customer ID, Name, and Contact are required.';
-        addCustomerError.hidden = false;
-        return;
-      }
-
-      const submitBtn = addCustomerForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Saving...';
-
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('admin-add-customer', {
-          body: { customer_id, customer_name, contact, cnic, address, package: pkg, expiration_date, balance }
-        });
-
-        if (error){
-          addCustomerError.textContent = await extractErrorMessage(error, 'Unknown error');
-          addCustomerError.hidden = false;
-        } else if (!data || data.error){
-          addCustomerError.textContent = data && data.error ? data.error : 'Unknown error';
-          addCustomerError.hidden = false;
-        } else {
-          addCustomerStatus.textContent = `Saved - ${customer_id} is up to date.`;
-          addCustomerForm.reset();
-        }
-      } catch (err){
-        addCustomerError.textContent = err.message;
-        addCustomerError.hidden = false;
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Save customer';
-      }
+// ═══════════════════════════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════════════════════════
+async function handleExport() {
+  if (customersCache.length === 0) {
+    showToast('No data to export. Add customers first.', 'warning');
+    return;
+  }
+  showToast('Preparing export...', 'info');
+  try {
+    const { data, error } = await sb.functions.invoke('admin-export-customers', {});
+    if (error) {
+      showToast('Failed: ' + await extractErrorMessage(error, 'Unknown error'), 'error');
+      return;
+    }
+    if (!data || data.error || !data.customers) {
+      showToast('Failed: ' + ((data && data.error) ? data.error : 'Unknown error'), 'error');
+      return;
+    }
+    const rows = data.customers;
+    const headers = ['Customer ID','Customer Name','Contact','CNIC','Address','Package','Expiration Date','Balance'];
+    const keys = ['customer_id','customer_name','contact','cnic','address','package','expiration_date','balance'];
+    const lines = [headers.map(csvEscape).join(',')];
+    rows.forEach(r => {
+      lines.push(keys.map(k => csvEscape(r[k])).join(','));
     });
+    const csv = '\uFEFF' + lines.join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mr-cable-customers-' + timestamp() + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`Downloaded ${rows.length} customers.`, 'success');
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+}
 
-    fileInput.addEventListener('change', function(event){
-      const file = event.target.files[0];
-      if (!file) return;
+// ═══════════════════════════════════════════════════
+// ROBUST CSV PARSER (RFC 4180)
+// ═══════════════════════════════════════════════════
+function parseCSV(text) {
+  const rows = [];
+  let currentRow = [], currentField = '', inQuotes = false, i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (i + 1 < text.length && text[i + 1] === '"') { currentField += '"'; i += 2; }
+        else { inQuotes = false; i++; }
+      } else { currentField += ch; i++; }
+    } else {
+      if (ch === '"') { inQuotes = true; i++; }
+      else if (ch === ',') { currentRow.push(currentField); currentField = ''; i++; }
+      else if (ch === '\n') { currentRow.push(currentField); currentField = ''; rows.push(currentRow); currentRow = []; i++; }
+      else { currentField += ch; i++; }
+    }
+  }
+  if (currentField !== '' || currentRow.length > 0) {
+    currentRow.push(currentField); rows.push(currentRow);
+  }
+  return rows;
+}
 
-      const reader = new FileReader();
-      reader.onload = function(loadEvent){
-        try{
-          const data = new Uint8Array(loadEvent.target.result);
-          const workbook = XLSX.read(data, { type:'array', cellDates:true });
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet, { defval:'' });
-
-          parsedRows = json.map((row) => {
-            const kId = findKey(row, ['customer id']);
-            const kName = findKey(row, ['customer name']);
-            const kContact = findKey(row, ['contact']);
-            const kCnic = findKey(row, ['cnic']);
-            const kAddress = findKey(row, ['address']);
-            const kPackage = findKey(row, ['package']);
-            const kExpiry = findKey(row, ['expiration date']);
-            const kBalance = findKey(row, ['balance']);
-
-            return {
-              customer_id: kId ? String(row[kId]).trim() : '',
-              customer_name: kName ? String(row[kName]).trim() : '',
-              contact: kContact ? String(row[kContact]).trim() : '',
-              cnic: kCnic ? String(row[kCnic]).trim() : null,
-              address: kAddress ? String(row[kAddress]).trim() : null,
-              package: kPackage ? String(row[kPackage]).trim() : null,
-              expiration_date: kExpiry ? normalizeDate(row[kExpiry]) : null,
-              balance: kBalance ? normalizeBalance(row[kBalance]) : null
-            };
-          }).filter((row) => row.customer_id);
-
-          if (parsedRows.length === 0){
-            parseStatus.textContent = 'No usable rows found in that file.';
-            previewBox.hidden = true;
-            confirmBox.hidden = true;
-            uploadBtn.disabled = true;
-            return;
-          }
-
-          parseStatus.textContent = parsedRows.length + ' customers ready to upload.';
-          previewBox.replaceChildren();
-          parsedRows.slice(0, 3).forEach((row) => {
-            appendPreviewRow(previewBox, `${row.customer_id} - ${row.customer_name}`, row.contact);
-          });
-          if (parsedRows.length > 3){
-            appendPreviewRow(previewBox, `...and ${parsedRows.length - 3} more`, '');
-          }
-
-          previewBox.hidden = false;
-          confirmBox.hidden = false;
-          confirmCheck.checked = false;
-          uploadBtn.disabled = true;
-        } catch (err){
-          parseStatus.textContent = 'Could not read that file: ' + err.message;
-          previewBox.hidden = true;
-          confirmBox.hidden = true;
-          uploadBtn.disabled = true;
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    });
-
-    confirmCheck.addEventListener('change', function(){
-      uploadBtn.disabled = !confirmCheck.checked || !parsedRows;
-    });
-
-    uploadBtn.addEventListener('click', async function(){
-      if (!parsedRows) return;
-      uploadBtn.disabled = true;
-      uploadStatus.textContent = 'Uploading...';
-      uploadStatus.className = 'status';
-
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('admin-upload-customers', {
-          body: { rows: parsedRows }
-        });
-
-        if (error){
-          uploadStatus.textContent = 'Failed: ' + await extractErrorMessage(error, 'Unknown error');
-          uploadBtn.disabled = false;
-          return;
-        }
-        if (!data || data.error){
-          uploadStatus.textContent = 'Failed: ' + (data && data.error ? data.error : 'Unknown error');
-          uploadBtn.disabled = false;
-          return;
-        }
-
-        uploadStatus.textContent = `Done - ${data.count} customers are now live.`;
-        uploadStatus.className = 'status ok';
-        confirmCheck.checked = false;
-        fileInput.value = '';
-        parsedRows = null;
-        previewBox.hidden = true;
-        confirmBox.hidden = true;
-      } catch (err){
-        uploadStatus.textContent = 'Failed: ' + err.message;
-        uploadBtn.disabled = false;
-      }
-    });
-
-    exportBtn.addEventListener('click', async function(){
-      exportBtn.disabled = true;
-      exportStatus.textContent = 'Preparing file...';
-
-      try{
-        const { data, error } = await supabaseClient.functions.invoke('admin-export-customers', {});
-        if (error){
-          exportStatus.textContent = 'Failed: ' + await extractErrorMessage(error, 'Unknown error');
-          return;
-        }
-        if (!data || data.error || !data.customers){
-          exportStatus.textContent = 'Failed: ' + (data && data.error ? data.error : 'Unknown error');
-          return;
-        }
-
-        const csv = toCsv(data.customers);
-        const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `mr-cable-customers-${new Date().toISOString().split('T')[0]}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        exportStatus.textContent = `Downloaded ${data.customers.length} customers.`;
-      } catch (err){
-        exportStatus.textContent = 'Failed: ' + err.message;
-      } finally {
-        exportBtn.disabled = false;
-      }
-    });
-  </script>
+// ═══════════════════════════════════════════════════
+// COPY TO CLIPBOARD
+// ═══════════════════════════════════════════════════
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast(`Copied: ${text}`, 'success');
+  } catch (err) {
+    // Fallback for older browsers
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast(`Copied: ${text}`, 'success');
+  }
+}
+</script>
 </body>
 </html>
