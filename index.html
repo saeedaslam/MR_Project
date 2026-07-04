@@ -6,6 +6,10 @@
 <title>M.R. Cable & Internet Network (R) — Customer Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/styles.css">
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="components.js"></script>
 <style>
 :root {
   /* Enhanced Color System */
@@ -1151,6 +1155,7 @@ body::before {
   }
 }
 </style>
+<script src="js/app.js"></script>
 </head>
 <body>
 
@@ -1230,14 +1235,6 @@ body::before {
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// Configuration
-const CONFIG = {
-  SUPABASE_URL: 'https://iuzwdjgagcxqwtpihpmb.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1endkamdhZ2N4cXd0cGlocG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MzQ0NzMsImV4cCI6MjA5ODExMDQ3M30.h_ofLT6hKZUsiw3lfZh2qAO62C1BT78k4dSjGXrzAow',
-  SLIDER_INTERVAL: 3500,
-  SCROLL_AMOUNT: 160
-};
 
 // Data
 const PACKAGES = [
@@ -1789,5 +1786,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeEventListeners();
 });
 </script>
+<script src="js/app.js"></script>
 </body>
 </html>
