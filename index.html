@@ -1235,6 +1235,16 @@ body::before {
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="components.js"></script>
+
+<script>
+// Initialize Supabase with config
+const sb = window.supabase.createClient(
+  AppConfig.supabase.url, 
+  AppConfig.supabase.anonKey
+);
 
 // Data
 const PACKAGES = [
@@ -1281,9 +1291,6 @@ const OFFICE_INFO = [
   { icon: 'oi-fb', fa: 'fa-brands fa-facebook-f', text: '<a href="https://www.facebook.com/M.R.CableNetwork" target="_blank" rel="noopener noreferrer">M.R. Cable Network</a>' },
   { icon: 'oi-web', fa: 'fa-globe', text: '<a href="https://www.mrcablenetwork.com" target="_blank" rel="noopener noreferrer">www.mrcablenetwork.com</a>' }
 ];
-
-// Initialize Supabase
-const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
 // State
 let customerData = null;
@@ -1494,10 +1501,10 @@ function startAutoSlider(trackId) {
       if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
         track.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        track.scrollBy({ left: CONFIG.SCROLL_AMOUNT, behavior: 'smooth' });
+        track.scrollBy({ left: AppConfig.slider.scrollAmount, behavior: 'smooth' });
       }
     }
-  }, CONFIG.SLIDER_INTERVAL);
+  }, AppConfig.slider.interval);
 }
 
 function pauseAutoSlider() {
