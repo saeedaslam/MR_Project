@@ -6,10 +6,6 @@
 <title>M.R. Cable & Internet Network (R) — Customer Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="css/styles.css">
-<script src="config.js"></script>
-<script src="utils.js"></script>
-<script src="components.js"></script>
 <style>
 :root {
   /* Enhanced Color System */
@@ -1155,7 +1151,6 @@ body::before {
   }
 }
 </style>
-<script src="js/app.js"></script>
 </head>
 <body>
 
@@ -1236,16 +1231,7 @@ body::before {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="utils.js"></script>
-<script src="components.js"></script>
-
 <script>
-// Initialize Supabase with config
-const sb = window.supabase.createClient(
-  AppConfig.supabase.url, 
-  AppConfig.supabase.anonKey
-);
-
 // Data
 const PACKAGES = [
   { name: 'LH3', speed: '2 Mbps', price: 1000, features: ['2 Mbps download', 'Unlimited data', '24/7 support'] },
@@ -1291,6 +1277,9 @@ const OFFICE_INFO = [
   { icon: 'oi-fb', fa: 'fa-brands fa-facebook-f', text: '<a href="https://www.facebook.com/M.R.CableNetwork" target="_blank" rel="noopener noreferrer">M.R. Cable Network</a>' },
   { icon: 'oi-web', fa: 'fa-globe', text: '<a href="https://www.mrcablenetwork.com" target="_blank" rel="noopener noreferrer">www.mrcablenetwork.com</a>' }
 ];
+
+// Initialize Supabase
+const sb = window.supabase.createClient(AppConfig.supabase.url, AppConfig.supabase.anonKey);
 
 // State
 let customerData = null;
@@ -1793,6 +1782,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeEventListeners();
 });
 </script>
-<script src="js/app.js"></script>
 </body>
 </html>
