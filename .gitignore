@@ -1,9 +1,1 @@
-```
-# Build artifacts
-css/styles.css
-js/app-inline-temp.js
-js/app-inline.js
-js/app-legacy.js
-js/app-remaining.js
-js/app.js
-```
+Nothing needs to be added to .gitignore since only a source file (index.html) was modified and there are no build artifacts, dependencies, or temporary files in the changes.
