@@ -1,5 +1,9 @@
 ```
-.env
-.env.local
-.env.*
+# Build artifacts
+css/styles.css
+js/app-inline-temp.js
+js/app-inline.js
+js/app-legacy.js
+js/app-remaining.js
+js/app.js
 ```
