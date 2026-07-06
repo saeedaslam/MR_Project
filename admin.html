@@ -11,7 +11,7 @@
     --bg:#0c0e14;--bg-card:#161922;--bg-card-alt:#1c2030;--bg-input:#1a1e2a;
     --fg:#e4e7f0;--fg-muted:#6b7194;--fg-dim:#464b6a;
     --border:#252a3a;--border-light:#2f3549;
-    --green:#00e68a;--cyan:#00d4ff;--orange:#ff8c42;--rose:#ff4f7b;
+    --green:#00e68a;--cyan:#00d4ff;--orange:#ff8c42;--rose:#ff4f7b;--violet:#a78bfa;
     --green-dim:rgba(0,230,138,0.08);--cyan-dim:rgba(0,212,255,0.08);
     --radius:12px;--radius-sm:8px;
   }
@@ -132,6 +132,12 @@
   .card-rose:hover{background:linear-gradient(160deg,rgba(255,79,123,0.18),rgba(255,79,123,0.05));
     border-color:rgba(255,79,123,0.35);box-shadow:0 8px 32px rgba(255,79,123,0.12);transform:translateY(-3px);}
   .card-rose .card-icon{background:rgba(255,79,123,0.15);}
+
+  .card-violet{background:linear-gradient(160deg,rgba(167,139,250,0.12),rgba(167,139,250,0.03));
+    border:1px solid rgba(167,139,250,0.2);color:var(--violet);}
+  .card-violet:hover{background:linear-gradient(160deg,rgba(167,139,250,0.18),rgba(167,139,250,0.05));
+    border-color:rgba(167,139,250,0.35);box-shadow:0 8px 32px rgba(167,139,250,0.12);transform:translateY(-3px);}
+  .card-violet .card-icon{background:rgba(167,139,250,0.15);}
 
   /* Table Section */
   .table-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
@@ -385,6 +391,11 @@
         <div class="card-title">Export CSV</div>
         <div class="card-desc">Download all customer data as CSV</div>
       </button>
+      <button class="action-card card-violet" onclick="openReportModal()">
+        <div class="card-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="card-title">Merge Source Reports</div>
+        <div class="card-desc">Combine North, North (Sup) &amp; Zalpro exports into one report</div>
+      </button>
     </section>
 
     <!-- Data Table -->
@@ -546,6 +557,60 @@
       <button class="btn-secondary" onclick="closeModal('modalUpload')">Cancel</button>
       <button class="btn-danger" id="uploadBtn" disabled onclick="executeUpload()">
         <i class="fa-solid fa-upload"></i>&nbsp; Replace All Data
+      </button>
+    </div>
+  </div>
+</div>
+<!-- ══════════ MODAL: MERGE SOURCE REPORTS ══════════ -->
+<div class="modal-overlay" id="modalReport">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-layer-group" style="color:var(--violet)"></i> Merge Source Reports</h3>
+      <button class="modal-close" onclick="closeModal('modalReport')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:14px;">
+        Upload all three source files. Every customer (any status) is included. Output columns:
+        Sr., Customer ID, Package, Expiration Date, Customer Name, Terminated Date, Remarks, Amount, Balance, Contact.
+      </p>
+
+      <div class="form-group">
+        <label>North List (CSV)</label>
+        <div class="upload-zone" id="reportZoneNorth" onclick="document.getElementById('reportFileNorth').click()">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <div class="uz-main">Click to select file</div>
+          <div class="uz-hint">.csv, .xlsx, .xls accepted</div>
+        </div>
+        <input type="file" id="reportFileNorth" accept=".csv,.xlsx,.xls" style="display:none;">
+        <div class="upload-status" id="reportStatusNorth"></div>
+      </div>
+
+      <div class="form-group">
+        <label>North List 2 / Sup (CSV)</label>
+        <div class="upload-zone" id="reportZoneNorthSup" onclick="document.getElementById('reportFileNorthSup').click()">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <div class="uz-main">Click to select file</div>
+          <div class="uz-hint">.csv, .xlsx, .xls accepted</div>
+        </div>
+        <input type="file" id="reportFileNorthSup" accept=".csv,.xlsx,.xls" style="display:none;">
+        <div class="upload-status" id="reportStatusNorthSup"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Zalpro Export (XLSX)</label>
+        <div class="upload-zone" id="reportZoneZalpro" onclick="document.getElementById('reportFileZalpro').click()">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <div class="uz-main">Click to select file</div>
+          <div class="uz-hint">.csv, .xlsx, .xls accepted</div>
+        </div>
+        <input type="file" id="reportFileZalpro" accept=".csv,.xlsx,.xls" style="display:none;">
+        <div class="upload-status" id="reportStatusZalpro"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalReport')">Cancel</button>
+      <button class="btn-primary" id="reportGenerateBtn" disabled onclick="generateMergedReport()">
+        <i class="fa-solid fa-file-arrow-down"></i>&nbsp; Generate &amp; Download
       </button>
     </div>
   </div>
@@ -1000,7 +1065,7 @@ document.getElementById('uploadFileInput').addEventListener('change', function(e
       if (text.charCodeAt(0) === 0xFEFF) text = text.substring(1);
       text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n+$/, '');
       const parsed = parseCSV(text);
-      if (!parsed || parsed.length <= 1) {
+      if (!parsed || parsed.length === 0) {
         statusEl.textContent = 'No rows found in that file.';
         return;
       }
@@ -1016,14 +1081,14 @@ document.getElementById('uploadFileInput').addEventListener('change', function(e
         const data = new Uint8Array(ev.target.result);
         const wb = XLSX.read(data, { type: 'array', cellDates: true });
         const sheet = wb.Sheets[wb.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-        if (json.length === 0) {
+        // header:1 => raw array-of-arrays; the header row isn't always row 1
+        // (e.g. report exports with a title above the real header), so we
+        // detect the header row inside processParsedRows instead of assuming row 1.
+        const parsed = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+        if (parsed.length === 0) {
           statusEl.textContent = 'No rows found in that file.';
           return;
         }
-        // Convert array of objects to array of arrays (matching CSV parser output)
-        const headers = Object.keys(json[0]);
-        const parsed = [headers, ...json.map(row => headers.map(h => row[h] ?? ''))];
         processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn);
       } catch (err) {
         statusEl.textContent = 'Could not read that file: ' + err.message;
@@ -1035,17 +1100,32 @@ document.getElementById('uploadFileInput').addEventListener('change', function(e
   e.target.value = '';
 });
 
-function processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn) {
-  const fileHeaders = parsed[0].map(h => String(h).trim());
-  const rowSets = parsed.slice(1).filter(r => r.some(c => String(c).trim() !== ''));
+function findImportHeaderRowIdx(parsed) {
+  for (let i = 0; i < Math.min(parsed.length, 20); i++) {
+    const row = (parsed[i] || []).map(c => String(c ?? '').trim().toLowerCase());
+    if (row.includes('customer id')) return i;
+  }
+  return -1;
+}
 
-  // Map to expected field names
+function processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn) {
+  const hIdx = findImportHeaderRowIdx(parsed);
+  if (hIdx === -1) {
+    statusEl.textContent = 'Missing "Customer ID" column in file.';
+    return;
+  }
+  const fileHeaders = parsed[hIdx].map(h => String(h ?? '').trim());
+  const rowSets = parsed.slice(hIdx + 1).filter(r => r.some(c => String(c ?? '').trim() !== ''));
+
+  // Map to expected field names. Includes known real-world header
+  // variants/typos seen in actual source files (e.g. "Adrees" for "Address").
   const fieldMap = {
     'customer id': 'customer_id',
     'customer name': 'customer_name',
     'contact': 'contact',
     'cnic': 'cnic',
     'address': 'address',
+    'adrees': 'address',
     'package': 'package',
     'expiration date': 'expiration_date',
     'balance': 'balance'
@@ -1068,19 +1148,19 @@ function processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn) {
       if (colIndices[field] !== undefined) return String(row[colIndices[field]] ?? '').trim() || null;
       return null;
     };
-    const expRaw = get('expiration_date');
+    // Check the RAW cell value's type (before stringifying) so real Excel
+    // Date objects convert cleanly instead of falling through as a verbose
+    // JS Date.toString() (e.g. "Mon Jul 06 2026 11:59:58 GMT+0000 ...").
+    const rawExpVal = colIndices.expiration_date !== undefined ? row[colIndices.expiration_date] : null;
     let expDate = null;
-    if (expRaw) {
-      if (expRaw instanceof Date) {
-        expDate = expRaw.toISOString().split('T')[0];
+    if (rawExpVal !== null && rawExpVal !== undefined && String(rawExpVal).trim() !== '') {
+      if (rawExpVal instanceof Date) {
+        expDate = rawExpVal.toISOString().split('T')[0];
       } else {
+        const s = String(rawExpVal).trim();
         // Handle M/D/YYYY from Excel
-        const parts = expRaw.split('/');
-        if (parts.length === 3) {
-          expDate = parts[2] + '-' + parts[0].padStart(2,'0') + '-' + parts[1].padStart(2,'0');
-        } else {
-          expDate = expRaw;
-        }
+        const parts = s.split('/');
+        expDate = parts.length === 3 ? parts[2] + '-' + parts[0].padStart(2,'0') + '-' + parts[1].padStart(2,'0') : s;
       }
     }
     const balRaw = get('balance');
@@ -1089,10 +1169,16 @@ function processParsedRows(parsed, statusEl, previewEl, confirmBox, uploadBtn) {
       const num = parseFloat(String(balRaw).replace(/[^0-9.-]/g, ''));
       balance = isNaN(num) ? null : num;
     }
+    // Numeric contact cells (common in Excel) drop the leading 0 on PK mobile
+    // numbers (e.g. 3004859868 instead of 03004859868). Restore it.
+    let contact = get('contact');
+    if (contact && contact.startsWith('3') && contact.length === 10) {
+      contact = '0' + contact;
+    }
     return {
       customer_id: get('customer_id'),
       customer_name: get('customer_name'),
-      contact: get('contact'),
+      contact,
       cnic: get('cnic'),
       address: get('address'),
       package: get('package'),
@@ -1217,6 +1303,188 @@ function parseCSV(text) {
     currentRow.push(currentField); rows.push(currentRow);
   }
   return rows;
+}
+
+// ═══════════════════════════════════════════════════
+// COPY TO CLIPBOARD
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// MERGE SOURCE REPORTS (North / North-Sup / Zalpro)
+// ═══════════════════════════════════════════════════
+let reportRowsNorth = null;
+let reportRowsNorthSup = null;
+let reportRowsZalpro = null;
+
+const REPORT_OUTPUT_HEADERS = ['Sr.','Customer ID','Package','Expiration Date','Customer Name','Terminated Date','Remarks','Amount','Balance','Contact'];
+
+function openReportModal() {
+  reportRowsNorth = null;
+  reportRowsNorthSup = null;
+  reportRowsZalpro = null;
+  ['North','NorthSup','Zalpro'].forEach(key => {
+    document.getElementById('reportFile' + key).value = '';
+    document.getElementById('reportStatus' + key).textContent = '';
+    document.getElementById('reportStatus' + key).className = 'upload-status';
+  });
+  document.getElementById('reportGenerateBtn').disabled = true;
+  openModal('modalReport');
+}
+
+function readFileToAOA(file) {
+  return new Promise((resolve, reject) => {
+    const isCSV = file.name.toLowerCase().endsWith('.csv');
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read file.'));
+    if (isCSV) {
+      reader.onload = ev => {
+        let text = ev.target.result;
+        if (text.charCodeAt(0) === 0xFEFF) text = text.substring(1);
+        text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n+$/, '');
+        resolve(parseCSV(text));
+      };
+      reader.readAsText(file, 'UTF-8');
+    } else {
+      reader.onload = ev => {
+        try {
+          const data = new Uint8Array(ev.target.result);
+          const wb = XLSX.read(data, { type: 'array', raw: false });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const aoa = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
+          resolve(aoa);
+        } catch (err) { reject(err); }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  });
+}
+
+function normHeader(h) { return String(h || '').trim().toLowerCase(); }
+
+function findHeaderRowIdx(aoa) {
+  for (let i = 0; i < Math.min(aoa.length, 15); i++) {
+    const row = (aoa[i] || []).map(normHeader);
+    if (row.includes('username')) return i;
+  }
+  return -1;
+}
+
+function cleanOnOffTime(val) {
+  const s = String(val || '').trim();
+  if (!s) return '';
+  const idx = s.indexOf('1970-01-01');
+  return idx > -1 ? s.substring(0, idx).trim() : s;
+}
+
+// North CSV schema: Username, Full Name, Package, Expiration Date, Termination Date, Status, Mobile, Phone
+function buildRowsFromNorth(aoa) {
+  const hIdx = findHeaderRowIdx(aoa);
+  if (hIdx === -1) throw new Error('Could not find a "Username" header row in this file.');
+  const headersLower = aoa[hIdx].map(normHeader);
+  const dataRows = aoa.slice(hIdx + 1).filter(r => r.some(c => String(c || '').trim() !== ''));
+
+  const i = name => headersLower.indexOf(name);
+  const iUsername = i('username'), iName = i('full name'), iPackage = i('package'),
+        iExpiry = i('expiration date'), iTerminated = i('termination date'),
+        iStatus = i('status'), iMobile = i('mobile'), iPhone = i('phone');
+
+  const get = (row, idx) => idx > -1 ? String(row[idx] ?? '').trim() : '';
+
+  return dataRows.map(row => {
+    const mobile = get(row, iMobile), phone = get(row, iPhone);
+    return {
+      customer_id: get(row, iUsername),
+      package: get(row, iPackage),
+      expiration_date: get(row, iExpiry),
+      customer_name: get(row, iName),
+      terminated_date: get(row, iTerminated),
+      remarks: get(row, iStatus),
+      amount: '-',
+      balance: '-',
+      contact: mobile || phone
+    };
+  }).filter(r => r.customer_id);
+}
+
+// Zalpro xlsx schema: Username, Full Name, Package, Expiry, On/Off Time, On/Off, Balance, Phone
+function buildRowsFromZalpro(aoa) {
+  const hIdx = findHeaderRowIdx(aoa);
+  if (hIdx === -1) throw new Error('Could not find a "Username" header row in the Zalpro file.');
+  const headersLower = aoa[hIdx].map(normHeader);
+  const dataRows = aoa.slice(hIdx + 1).filter(r => r.some(c => String(c || '').trim() !== ''));
+
+  const i = name => headersLower.indexOf(name);
+  const iUsername = i('username'), iName = i('full name'), iPackage = i('package'),
+        iExpiry = i('expiry'), iOnOffTime = i('on/off time'), iOnOff = i('on/off'),
+        iBalance = i('balance'), iPhone = i('phone');
+
+  const get = (row, idx) => idx > -1 ? String(row[idx] ?? '').trim() : '';
+
+  return dataRows.map(row => ({
+    customer_id: get(row, iUsername),
+    package: get(row, iPackage),
+    expiration_date: get(row, iExpiry),
+    customer_name: get(row, iName),
+    terminated_date: cleanOnOffTime(get(row, iOnOffTime)),
+    remarks: get(row, iOnOff),
+    amount: '-',
+    balance: get(row, iBalance) || '-',
+    contact: get(row, iPhone)
+  })).filter(r => r.customer_id);
+}
+
+function handleReportFileChange(inputId, statusId, builderFn, key) {
+  document.getElementById(inputId).addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const statusEl = document.getElementById(statusId);
+    statusEl.textContent = 'Reading file...';
+    statusEl.className = 'upload-status';
+
+    readFileToAOA(file)
+      .then(aoa => {
+        const rows = builderFn(aoa);
+        if (rows.length === 0) throw new Error('No usable rows found.');
+        if (key === 'North') reportRowsNorth = rows;
+        else if (key === 'NorthSup') reportRowsNorthSup = rows;
+        else if (key === 'Zalpro') reportRowsZalpro = rows;
+        statusEl.textContent = rows.length + ' rows detected.';
+        statusEl.className = 'upload-status ok';
+        document.getElementById('reportGenerateBtn').disabled = !(reportRowsNorth && reportRowsNorthSup && reportRowsZalpro);
+      })
+      .catch(err => {
+        statusEl.textContent = 'Failed: ' + err.message;
+        statusEl.className = 'upload-status';
+      });
+    e.target.value = '';
+  });
+}
+
+handleReportFileChange('reportFileNorth', 'reportStatusNorth', buildRowsFromNorth, 'North');
+handleReportFileChange('reportFileNorthSup', 'reportStatusNorthSup', buildRowsFromNorth, 'NorthSup');
+handleReportFileChange('reportFileZalpro', 'reportStatusZalpro', buildRowsFromZalpro, 'Zalpro');
+
+function rowsToSheet(rows) {
+  const aoa = [REPORT_OUTPUT_HEADERS];
+  rows.forEach((r, idx) => {
+    aoa.push([idx + 1, r.customer_id, r.package, r.expiration_date, r.customer_name, r.terminated_date, r.remarks, r.amount, r.balance, r.contact]);
+  });
+  return XLSX.utils.aoa_to_sheet(aoa);
+}
+
+function generateMergedReport() {
+  if (!reportRowsNorth || !reportRowsNorthSup || !reportRowsZalpro) return;
+  try {
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, rowsToSheet(reportRowsNorth), 'North');
+    XLSX.utils.book_append_sheet(wb, rowsToSheet(reportRowsNorthSup), 'North (Sup)');
+    XLSX.utils.book_append_sheet(wb, rowsToSheet(reportRowsZalpro), 'Zalpro');
+    XLSX.writeFile(wb, 'merged-report-' + timestamp() + '.xlsx');
+    const total = reportRowsNorth.length + reportRowsNorthSup.length + reportRowsZalpro.length;
+    showToast(`Report generated — ${total} rows across 3 sheets.`, 'success');
+    closeModal('modalReport');
+  } catch (err) {
+    showToast('Failed to generate report: ' + err.message, 'error');
+  }
 }
 
 // ═══════════════════════════════════════════════════
