@@ -574,7 +574,8 @@
     <div class="modal-body">
       <p style="font-size:12.5px;color:var(--fg-muted);margin-bottom:14px;">
         Upload all three source files. Every customer (any status) is included. Output columns:
-        Sr., Customer ID, Package, Expiration Date, Customer Name, Terminated Date, Remarks, Amount, Balance, Contact.
+        Sr., Customer ID, CNIC, Package, Expiration Date, Customer Name, Address, Remarks, Amount, Balance, Contact.
+        Remarks and Amount aren't in either source file, so they're left blank for manual entry.
       </p>
 
       <div class="form-group">
@@ -1360,7 +1361,7 @@ let reportRowsNorth = null;
 let reportRowsNorthSup = null;
 let reportRowsZalpro = null;
 
-const REPORT_OUTPUT_HEADERS = ['Sr.','Customer ID','Package','Expiration Date','Customer Name','Terminated Date','Remarks','Amount','Balance','Contact'];
+const REPORT_OUTPUT_HEADERS = ['Sr.','Customer ID','CNIC','Package','Expiration Date','Customer Name','Address','Remarks','Amount','Balance','Contact'];
 
 function openReportModal() {
   reportRowsNorth = null;
@@ -1413,14 +1414,7 @@ function findHeaderRowIdx(aoa) {
   return -1;
 }
 
-function cleanOnOffTime(val) {
-  const s = String(val || '').trim();
-  if (!s) return '';
-  const idx = s.indexOf('1970-01-01');
-  return idx > -1 ? s.substring(0, idx).trim() : s;
-}
-
-// North CSV schema: Username, Full Name, Package, Expiration Date, Termination Date, Status, Mobile, Phone
+// North CSV schema: Username, Full Name, CNIC, Address, Phone, Mobile, Package, Expiration Date
 function buildRowsFromNorth(aoa) {
   const hIdx = findHeaderRowIdx(aoa);
   if (hIdx === -1) throw new Error('Could not find a "Username" header row in this file.');
@@ -1428,9 +1422,9 @@ function buildRowsFromNorth(aoa) {
   const dataRows = aoa.slice(hIdx + 1).filter(r => r.some(c => String(c || '').trim() !== ''));
 
   const i = name => headersLower.indexOf(name);
-  const iUsername = i('username'), iName = i('full name'), iPackage = i('package'),
-        iExpiry = i('expiration date'), iTerminated = i('termination date'),
-        iStatus = i('status'), iMobile = i('mobile'), iPhone = i('phone');
+  const iUsername = i('username'), iName = i('full name'), iCnic = i('cnic'),
+        iAddress = i('address'), iPackage = i('package'), iExpiry = i('expiration date'),
+        iMobile = i('mobile'), iPhone = i('phone');
 
   const get = (row, idx) => idx > -1 ? String(row[idx] ?? '').trim() : '';
 
@@ -1438,19 +1432,20 @@ function buildRowsFromNorth(aoa) {
     const mobile = get(row, iMobile), phone = get(row, iPhone);
     return {
       customer_id: get(row, iUsername),
+      cnic: get(row, iCnic),
       package: get(row, iPackage),
       expiration_date: get(row, iExpiry),
       customer_name: get(row, iName),
-      terminated_date: get(row, iTerminated),
-      remarks: get(row, iStatus),
-      amount: '-',
+      address: get(row, iAddress),
+      remarks: '',
+      amount: '',
       balance: '-',
       contact: mobile || phone
     };
   }).filter(r => r.customer_id);
 }
 
-// Zalpro xlsx schema: Username, Full Name, Package, Expiry, On/Off Time, On/Off, Balance, Phone
+// Zalpro xlsx schema: Username, Full Name, NID (=CNIC), Phone, Address, Package, Balance, Expiry
 function buildRowsFromZalpro(aoa) {
   const hIdx = findHeaderRowIdx(aoa);
   if (hIdx === -1) throw new Error('Could not find a "Username" header row in the Zalpro file.');
@@ -1458,20 +1453,21 @@ function buildRowsFromZalpro(aoa) {
   const dataRows = aoa.slice(hIdx + 1).filter(r => r.some(c => String(c || '').trim() !== ''));
 
   const i = name => headersLower.indexOf(name);
-  const iUsername = i('username'), iName = i('full name'), iPackage = i('package'),
-        iExpiry = i('expiry'), iOnOffTime = i('on/off time'), iOnOff = i('on/off'),
-        iBalance = i('balance'), iPhone = i('phone');
+  const iUsername = i('username'), iName = i('full name'), iNid = i('nid'),
+        iPhone = i('phone'), iAddress = i('address'), iPackage = i('package'),
+        iBalance = i('balance'), iExpiry = i('expiry');
 
   const get = (row, idx) => idx > -1 ? String(row[idx] ?? '').trim() : '';
 
   return dataRows.map(row => ({
     customer_id: get(row, iUsername),
+    cnic: get(row, iNid),
     package: get(row, iPackage),
     expiration_date: get(row, iExpiry),
     customer_name: get(row, iName),
-    terminated_date: cleanOnOffTime(get(row, iOnOffTime)),
-    remarks: get(row, iOnOff),
-    amount: '-',
+    address: get(row, iAddress),
+    remarks: '',
+    amount: '',
     balance: get(row, iBalance) || '-',
     contact: get(row, iPhone)
   })).filter(r => r.customer_id);
@@ -1511,7 +1507,7 @@ handleReportFileChange('reportFileZalpro', 'reportStatusZalpro', buildRowsFromZa
 function rowsToSheet(rows) {
   const aoa = [REPORT_OUTPUT_HEADERS];
   rows.forEach((r, idx) => {
-    aoa.push([idx + 1, r.customer_id, r.package, r.expiration_date, r.customer_name, r.terminated_date, r.remarks, r.amount, r.balance, r.contact]);
+    aoa.push([idx + 1, r.customer_id, r.cnic, r.package, r.expiration_date, r.customer_name, r.address, r.remarks, r.amount, r.balance, r.contact]);
   });
   return XLSX.utils.aoa_to_sheet(aoa);
 }
