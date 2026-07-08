@@ -11,7 +11,7 @@
     --bg:#0c0e14;--bg-card:#161922;--bg-card-alt:#1c2030;--bg-input:#1a1e2a;
     --fg:#e4e7f0;--fg-muted:#6b7194;--fg-dim:#464b6a;
     --border:#252a3a;--border-light:#2f3549;
-    --green:#00e68a;--cyan:#00d4ff;--orange:#ff8c42;--rose:#ff4f7b;--violet:#a78bfa;
+    --green:#00e68a;--cyan:#00d4ff;--orange:#ff8c42;--rose:#ff4f7b;--violet:#a78bfa;--sky:#38bdf8;
     --green-dim:rgba(0,230,138,0.08);--cyan-dim:rgba(0,212,255,0.08);
     --radius:12px;--radius-sm:8px;
   }
@@ -138,6 +138,12 @@
   .card-violet:hover{background:linear-gradient(160deg,rgba(167,139,250,0.18),rgba(167,139,250,0.05));
     border-color:rgba(167,139,250,0.35);box-shadow:0 8px 32px rgba(167,139,250,0.12);transform:translateY(-3px);}
   .card-violet .card-icon{background:rgba(167,139,250,0.15);}
+
+  .card-sky{background:linear-gradient(160deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03));
+    border:1px solid rgba(56,189,248,0.2);color:var(--sky);}
+  .card-sky:hover{background:linear-gradient(160deg,rgba(56,189,248,0.18),rgba(56,189,248,0.05));
+    border-color:rgba(56,189,248,0.35);box-shadow:0 8px 32px rgba(56,189,248,0.12);transform:translateY(-3px);}
+  .card-sky .card-icon{background:rgba(56,189,248,0.15);}
 
   /* Table Section */
   .table-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
@@ -399,6 +405,11 @@
         <div class="card-title">Merge Source Reports</div>
         <div class="card-desc">Combine North, North (Sup) &amp; Zalpro exports into one report</div>
       </button>
+      <button class="action-card card-sky" id="staffCard" onclick="openStaffModal()" style="display:none;">
+        <div class="card-icon"><i class="fa-solid fa-user-gear"></i></div>
+        <div class="card-title">Manage Staff</div>
+        <div class="card-desc">Create logins, reset passwords, set roles</div>
+      </button>
     </section>
 
     <!-- Data Table -->
@@ -620,6 +631,60 @@
   </div>
 </div>
 
+<!-- ══════════ MODAL: MANAGE STAFF ══════════ -->
+<div class="modal-overlay" id="modalStaff">
+  <div class="modal-box" style="max-width:620px;">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-user-gear" style="color:var(--sky)"></i> Manage Staff</h3>
+      <button class="modal-close" onclick="closeModal('modalStaff')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="staffListWrap">
+        <div class="loading-state" id="staffLoading" style="padding:24px;">
+          <i class="fa-solid fa-spinner"></i><p>Loading staff...</p>
+        </div>
+        <table id="staffTable" style="display:none;width:100%;border-collapse:collapse;font-size:12.5px;">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:8px 10px;color:var(--fg-muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border);">Email</th>
+              <th style="text-align:left;padding:8px 10px;color:var(--fg-muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border);">Role</th>
+              <th style="text-align:left;padding:8px 10px;color:var(--fg-muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border);">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="staffTableBody"></tbody>
+        </table>
+      </div>
+
+      <div style="border-top:1px solid var(--border);margin-top:18px;padding-top:16px;">
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;">Add new staff user</label>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="newStaffEmail" placeholder="name@example.com">
+          </div>
+          <div class="form-group">
+            <label>Temporary Password</label>
+            <input type="text" id="newStaffPassword" placeholder="min 8 characters">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="newStaffRole">
+            <option value="editor">Editor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button class="btn-primary" id="createStaffBtn" onclick="createStaffUser()">
+          <i class="fa-solid fa-user-plus"></i>&nbsp; Create Staff User
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalStaff')">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -804,6 +869,8 @@ document.getElementById('loginPassword').addEventListener('keydown', e => {
 });
 
 // Session restore
+let currentUserRole = null;
+
 sb.auth.onAuthStateChange((event, session) => {
   if (session) {
     const email = session.user.email || '';
@@ -811,10 +878,21 @@ sb.auth.onAuthStateChange((event, session) => {
     document.getElementById('adminAvatar').textContent = email.charAt(0).toUpperCase();
     showDash();
     fetchAndRender();
+    fetchOwnRole();
   } else {
+    currentUserRole = null;
     showLogin();
   }
 });
+
+async function fetchOwnRole() {
+  // RLS lets a user read only their own profiles row, so this is safe from the client.
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { data, error } = await sb.from('profiles').select('role').eq('id', user.id).single();
+  currentUserRole = (!error && data) ? data.role : null;
+  document.getElementById('staffCard').style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+}
 
 // ═══════════════════════════════════════════════════
 // DATA FETCHING & RENDERING
@@ -1544,6 +1622,141 @@ async function copyToClipboard(text) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     showToast(`Copied: ${text}`, 'success');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// STAFF MANAGEMENT (admin only — edge functions re-check this server-side)
+// ═══════════════════════════════════════════════════
+let staffCache = [];
+
+function openStaffModal() {
+  document.getElementById('newStaffEmail').value = '';
+  document.getElementById('newStaffPassword').value = '';
+  document.getElementById('newStaffRole').value = 'editor';
+  openModal('modalStaff');
+  fetchStaff();
+}
+
+async function fetchStaff() {
+  const loading = document.getElementById('staffLoading');
+  const table = document.getElementById('staffTable');
+  loading.style.display = 'block';
+  table.style.display = 'none';
+  try {
+    const { data, error } = await sb.functions.invoke('admin-list-staff', {});
+    if (error || !data || data.error || !data.staff) {
+      loading.querySelector('p').textContent = 'Failed to load staff: ' +
+        (error ? await extractErrorMessage(error, 'Unknown error') : ((data && data.error) || 'Unknown error'));
+      return;
+    }
+    staffCache = data.staff;
+    renderStaffTable();
+  } catch (err) {
+    loading.querySelector('p').textContent = 'Error: ' + err.message;
+  }
+}
+
+function renderStaffTable() {
+  const loading = document.getElementById('staffLoading');
+  const table = document.getElementById('staffTable');
+  const tbody = document.getElementById('staffTableBody');
+  loading.style.display = 'none';
+  table.style.display = 'table';
+
+  tbody.innerHTML = staffCache.map(s => `
+    <tr>
+      <td style="padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04);">${esc(s.email)}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <select onchange="updateStaffRole('${s.id}', this.value)"
+          style="background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--fg);padding:4px 8px;font-size:12px;font-family:inherit;">
+          <option value="editor" ${s.role === 'editor' ? 'selected' : ''}>Editor</option>
+          <option value="admin" ${s.role === 'admin' ? 'selected' : ''}>Admin</option>
+        </select>
+      </td>
+      <td style="padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04);white-space:nowrap;">
+        <a class="action-link" onclick="resetStaffPassword('${s.id}','${esc(s.email)}')"><i class="fa-solid fa-key"></i> Reset</a>
+        &nbsp;&nbsp;
+        <a class="action-link" style="color:var(--rose)" onclick="removeStaffUser('${s.id}','${esc(s.email)}')"><i class="fa-solid fa-user-xmark"></i> Remove</a>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function createStaffUser() {
+  const email = document.getElementById('newStaffEmail').value.trim();
+  const password = document.getElementById('newStaffPassword').value;
+  const role = document.getElementById('newStaffRole').value;
+
+  if (!email || !password || password.length < 8) {
+    showToast('Enter a valid email and a password of at least 8 characters.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('createStaffBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Creating...';
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-create-staff', { body: { email, password, role } });
+    if (error || !data || data.error) {
+      showToast('Failed: ' + (error ? await extractErrorMessage(error, 'Unknown error') : data.error), 'error');
+    } else {
+      showToast(`Created ${email} as ${role}.`, 'success');
+      document.getElementById('newStaffEmail').value = '';
+      document.getElementById('newStaffPassword').value = '';
+      fetchStaff();
+    }
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-user-plus"></i>&nbsp; Create Staff User';
+}
+
+async function updateStaffRole(userId, newRole) {
+  try {
+    const { data, error } = await sb.functions.invoke('admin-update-staff-role', { body: { user_id: userId, role: newRole } });
+    if (error || !data || data.error) {
+      showToast('Failed: ' + (error ? await extractErrorMessage(error, 'Unknown error') : data.error), 'error');
+      fetchStaff();
+    } else {
+      showToast('Role updated.', 'success');
+    }
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+    fetchStaff();
+  }
+}
+
+async function resetStaffPassword(userId, email) {
+  const newPassword = prompt(`Enter a new password for ${email} (min 8 characters):`);
+  if (!newPassword) return;
+  if (newPassword.length < 8) { showToast('Password must be at least 8 characters.', 'error'); return; }
+
+  try {
+    const { data, error } = await sb.functions.invoke('admin-reset-staff-password', { body: { user_id: userId, new_password: newPassword } });
+    if (error || !data || data.error) {
+      showToast('Failed: ' + (error ? await extractErrorMessage(error, 'Unknown error') : data.error), 'error');
+    } else {
+      showToast(`Password reset for ${email}.`, 'success');
+    }
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+}
+
+async function removeStaffUser(userId, email) {
+  if (!confirm(`Remove ${email}? They will lose access immediately.`)) return;
+  try {
+    const { data, error } = await sb.functions.invoke('admin-remove-staff', { body: { user_id: userId } });
+    if (error || !data || data.error) {
+      showToast('Failed: ' + (error ? await extractErrorMessage(error, 'Unknown error') : data.error), 'error');
+    } else {
+      showToast(`Removed ${email}.`, 'success');
+      fetchStaff();
+    }
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
   }
 }
 </script>
