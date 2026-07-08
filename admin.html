@@ -822,7 +822,6 @@ document.addEventListener('keydown', e => {
 const loginScreen = document.getElementById('loginScreen');
 const dashboard = document.getElementById('dashboard');
 const loginError = document.getElementById('loginError');
-let currentUserRole = 'admin'; // Default to admin if no role specified
 
 function showLogin() {
   loginScreen.classList.remove('hidden');
@@ -831,7 +830,6 @@ function showLogin() {
 function showDash() {
   loginScreen.classList.add('hidden');
   dashboard.classList.add('active');
-  applyRolePermissions();
 }
 
 async function handleLogin() {
@@ -851,14 +849,9 @@ async function handleLogin() {
     btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>&nbsp; Sign In';
     return;
   }
-  
-  // Get user role from metadata
-  const user = data.user;
-  currentUserRole = user?.user_metadata?.role || user?.app_metadata?.role || 'admin';
-  
   showDash();
   fetchAndRender();
-  showToast(`Welcome back, ${currentUserRole === 'editor' ? 'Editor' : 'Admin'}.`, 'success');
+  showToast('Welcome back, Admin.', 'success');
 }
 
 async function handleLogout() {
@@ -881,8 +874,6 @@ let currentUserRole = null;
 sb.auth.onAuthStateChange((event, session) => {
   if (session) {
     const email = session.user.email || '';
-    const user = session.user;
-    currentUserRole = user?.user_metadata?.role || user?.app_metadata?.role || 'admin';
     document.getElementById('adminEmailDisplay').textContent = email;
     document.getElementById('adminAvatar').textContent = email.charAt(0).toUpperCase();
     showDash();
@@ -904,22 +895,6 @@ async function fetchOwnRole() {
   ['staffCard', 'importCard', 'exportCard', 'mergeCard'].forEach(id => {
     document.getElementById(id).style.display = isAdmin ? 'flex' : 'none';
   });
-}
-
-// ═══════════════════════════════════════════════════
-// ROLE-BASED PERMISSIONS
-// ═══════════════════════════════════════════════════
-function applyRolePermissions() {
-  // Hide Import, Export, and Merge buttons for Editor role
-  if (currentUserRole === 'editor') {
-    const importBtn = document.querySelector('.action-card.card-orange');
-    const exportBtn = document.querySelector('.action-card.card-rose');
-    const mergeBtn = document.querySelector('.action-card.card-violet');
-    
-    if (importBtn) importBtn.style.display = 'none';
-    if (exportBtn) exportBtn.style.display = 'none';
-    if (mergeBtn) mergeBtn.style.display = 'none';
-  }
 }
 
 // ═══════════════════════════════════════════════════
