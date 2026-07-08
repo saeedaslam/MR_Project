@@ -390,17 +390,17 @@
         <div class="card-title">Find & Renew Customer</div>
         <div class="card-desc">Search by ID or phone, renew subscription</div>
       </button>
-      <button class="action-card card-orange" onclick="openUploadModal()">
+      <button class="action-card card-orange" id="importCard" onclick="openUploadModal()">
         <div class="card-icon"><i class="fa-solid fa-file-import"></i></div>
         <div class="card-title">Import CSV / Excel</div>
         <div class="card-desc">Bulk upload customer list from file</div>
       </button>
-      <button class="action-card card-rose" onclick="handleExport()">
+      <button class="action-card card-rose" id="exportCard" onclick="handleExport()">
         <div class="card-icon"><i class="fa-solid fa-file-export"></i></div>
         <div class="card-title">Export CSV</div>
         <div class="card-desc">Download all customer data as CSV</div>
       </button>
-      <button class="action-card card-violet" onclick="openReportModal()">
+      <button class="action-card card-violet" id="mergeCard" onclick="openReportModal()">
         <div class="card-icon"><i class="fa-solid fa-layer-group"></i></div>
         <div class="card-title">Merge Source Reports</div>
         <div class="card-desc">Combine North, North (Sup) &amp; Zalpro exports into one report</div>
@@ -891,7 +891,10 @@ async function fetchOwnRole() {
   if (!user) return;
   const { data, error } = await sb.from('profiles').select('role').eq('id', user.id).single();
   currentUserRole = (!error && data) ? data.role : null;
-  document.getElementById('staffCard').style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+  const isAdmin = currentUserRole === 'admin';
+  ['staffCard', 'importCard', 'exportCard', 'mergeCard'].forEach(id => {
+    document.getElementById(id).style.display = isAdmin ? 'flex' : 'none';
+  });
 }
 
 // ═══════════════════════════════════════════════════
