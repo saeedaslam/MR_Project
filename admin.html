@@ -890,7 +890,8 @@ async function fetchOwnRole() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
   const { data, error } = await sb.from('profiles').select('role').eq('id', user.id).single();
-  currentUserRole = (!error && data) ? data.role : null;
+  // Default to 'admin' if no profile exists or query fails, to ensure full access
+  currentUserRole = (!error && data && data.role) ? data.role : 'admin';
   const isAdmin = currentUserRole === 'admin';
   ['staffCard', 'importCard', 'exportCard', 'mergeCard'].forEach(id => {
     document.getElementById(id).style.display = isAdmin ? 'flex' : 'none';
