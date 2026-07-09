@@ -1,6 +1,8 @@
-import { requireRole, jsonResponse } from '../_shared/auth-helper.ts';
+import { requireRole, jsonResponse, corsHeaders } from '../_shared/auth-helper.ts';
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
   const result = await requireRole(req, ['admin']);
   if (result.error) return jsonResponse({ error: result.error }, result.status);
   const { admin } = result;
